@@ -21,6 +21,8 @@ But you're very welcome to download and change whatever you like, host it, impro
 
 You'll find various functions and statistics. If you open up the hamburger menu you'll find detailed explanations to all of them. Once you start the generator 5 rows of 20 numbers appear below it: 1 solo number is always red; if you get 2 numbers of the same kind successively they'll turn orange; if you get 3 or more numbers of the same kind successively they'll turn green. That means if you manage to influence the generated output with a targeted number in mind you might be able to get a steak of green numbers! This could help visually as feedback.
 
+Have fun testing.
+
 🌐 Website:
 https://gold3nboyy.github.io/Live_RNG_PSI_Training
 
