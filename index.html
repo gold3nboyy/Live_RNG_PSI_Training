@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Random Number Generator v12.2</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#0a0a0a;
+    color:#ddd;
+    overflow:auto;
+}
+
+/* Hamburger */
+#hamburger{
+    position:absolute;
+    top:10px;
+    left:10px;
+    width:28px;
+    height:22px;
+    cursor:pointer;
+    z-index:1000;
+}
+#hamburger div{
+    width:100%;
+    height:4px;
+    background:#ccc;
+    margin:4px 0;
+    border-radius:3px;
+}
+
+/* Menu */
+#menu{
+    position:absolute;
+    top:0;
+    left:0;
+    width:420px;
+    height:100%;
+    background:#111;
+    border-right:1px solid #222;
+    transform:translateX(-100%);
+    transition:0.3s;
+    padding:70px 28px 20px 28px;
+    box-sizing:border-box;
+    overflow-y:auto;
+    z-index:999;
+    pointer-events:none;
+}
+#menu.open{
+    transform:translateX(0);
+    pointer-events:auto;
+}
+#menu h2{
+    margin-top:0;
+    color:#fff;
+}
+#menu p{
+    font-size:14px;
+    line-height:1.55;
+    color:#ccc;
+    margin-bottom:14px;
+}
+
+/* Bullet points */
+.bullet{
+    display:block;
+}
+.bullet::before{
+    content:"• ";
+    color:#888;
+}
+
+/* Center */
+#center{
+    text-align:center;
+    padding:10px 8px 40px 8px;
+}
+#title{
+    margin-top:40px;
+    line-height:1.25;
+}
+.title-line{
+    display:block;
+    font-size:26px;
+}
+
+/* Version number */
+#versionLine{
+    display:block;
+    margin-top:6px;
+    font-size:13px;
+    color:#777;
+}
+
+/* Big number */
+#number{
+    font-size:190px;
+    color:#2f7bff;
+    margin:10px 0;
+}
+.running{ color:#00ff66 !important; }
+
+/* Blocks */
+.block{ 
+    margin:20px 0; 
+    font-size:16px;
+}
+
+/* Inputs */
+input{
+    width:95px;
+    background:#111;
+    border:1px solid #333;
+    color:#ddd;
+    text-align:center;
+    padding:6px 4px;
+    border-radius:4px;
+    margin-left:6px;
+    margin-right:6px;
+}
+
+/* Tooltip (zurückgesetzt) */
+.info{
+    display:inline-block;
+    position:relative;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:#333;
+    color:#aaa;
+    font-size:12px;
+    line-height:16px;
+    text-align:center;
+    cursor:help;
+    margin-left:3px;
+    margin-right:9px;
+}
+.info:hover::after{
+    content:attr(data-tip);
+    position:absolute;
+    left:22px;
+    top:-6px;
+    background:#111;
+    border:1px solid #333;
+    padding:6px;
+    font-size:12px;
+    color:#ddd;
+    width:260px;
+    z-index:999;
+}
+
+/* History */
+#history{
+    display:grid;
+    grid-template-columns:repeat(20, 1fr);
+    gap:6px;
+    max-width:1100px;
+    margin:10px auto 0 auto;
+}
+.entry{
+    font-size:14px;
+    padding:4px 10px;
+    background:#151515;
+    border-radius:4px;
+    text-align:center;
+}
+
+/* Neueste Zahl */
+.latest{
+    font-size:14px;
+    color:#888;
+    border:1px solid #888;
+    padding:2px 10px;
+    background:#333;
+}
+
+
+/* Streak colors */
+.streak1{ color:#ff4d4d; }
+.streak2{ color:#ff9a33; }
+.streak3{ color:#00ff66; }
+
+/* Dashboard */
+#dashboard{
+    width:100%;
+    background:#0d0d0d;
+    border-top:1px solid #222;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.dashboard-layout{
+    max-width:1100px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+/* Cards */
+.grid-3, .grid-4{
+    display:grid;
+    gap:12px;
+}
+.grid-3{ grid-template-columns:repeat(3,1fr); }
+.grid-4{ grid-template-columns:repeat(4,1fr); }
+
+.card{
+    background:#111;
+    border:1px solid #222;
+    border-radius:8px;
+    padding:12px;
+    text-align:center;
+}
+
+/* FIXED TOOLTIP POSITION IN DASHBOARD */
+.card-header{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:6px;
+}
+.card-header h3{
+    margin:0;
+}
+
+/* Heatmap */
+#heatmapCard{
+    background:#111;
+    border:1px solid #222;
+    border-radius:8px;
+    padding:12px;
+    height:330px;
+    width:300px;
+    overflow:hidden;
+}
+#heatmap{
+    margin-top:8px;
+}
+.heat-row{
+    margin:4px 0;
+    display:flex;
+    align-items:center;
+}
+.heat-label{
+    display:inline-block;
+    width:40px;
+    text-align:left;
+    margin-right:8px;
+}
+.bar{
+    height:10px;
+    border-radius:3px;
+    max-width:240px;
+}
+
+/* Chart */
+.chart-card{
+    background:#111;
+    border:1px solid #222;
+    border-radius:8px;
+    padding:12px;
+}
+canvas{
+    display:block;
+    margin:0 auto;
+    background:#0f0f0f;
+    border:1px solid #222;
+}
+
+/* Buttons */
+button{
+    padding:10px 18px;
+    margin:6px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color:white;
+    font-size:16px;
+}
+button:nth-child(1){ background:#1db954; }
+button:nth-child(2){ background:#444; }
+button:nth-child(3){ background:#b33a3a; }
+
+/* Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+  margin-left:8px;
+}
+.switch input { display:none; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #444;
+  transition: .3s;
+  border-radius: 22px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+input:checked + .slider { background-color: #1db954; }
+input:checked + .slider:before { transform: translateX(22px); }
+</style>
+</head>
+
+<body>
+
+<div id="hamburger" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+</div>
+
+<div id="menu">
+    <h2>Detailed Explanations</h2>
+
+    <p class="bullet"><b>Entropy:</b> Entropy describes how unpredictable the generated numbers are. A high entropy value means the results vary widely and no single number dominates the distribution. A low entropy value indicates that certain numbers appear more frequently, reducing randomness. This metric helps you understand whether the generator is producing a broad or narrow range of outcomes.</p>
+
+    <p class="bullet"><b>Chi² p-value:</b> The Chi-square p-value shows how closely the distribution of generated numbers matches a perfectly even random distribution. A high p-value means the numbers appear balanced and statistically uniform. A low p-value suggests that some numbers occur more often than expected, revealing patterns or irregularities. This value is useful for judging the statistical quality of the randomness.</p>
+
+    <p class="bullet"><b>Deviation:</b> Deviation measures how far the actual distribution of numbers differs from an ideal uniform distribution. A high percentage means the frequencies of individual numbers vary significantly. A low percentage indicates that the numbers appear evenly and consistently. This metric complements the Chi-square p-value by giving you an intuitive sense of distribution balance.</p>
+
+    <p class="bullet"><b>Heatmap:</b> The heatmap displays the ten most frequent numbers from the last 100 results. The length and color of each bar give you a quick visual impression of which numbers are currently “hot” or “cold.” This makes it easy to spot trends, clusters, or unusual patterns without analyzing the numbers individually.</p>
+
+    <p class="bullet"><b>Chart:</b> The chart shows the last 80 generated numbers as a continuous line, allowing you to see how values move over time. It helps you visually detect rises, drops, fluctuations, or clusters in the sequence.</p>
+
+    <p class="bullet"><b>History:</b> The history shows the last 100 generated numbers, with the newest value always on the left. Color highlights indicate repeats or short streaks, making it easy to follow the flow of the sequence.</p>
+
+    <p class="bullet"><b>Tip:</b> You can start or stop the generator at any time by pressing the spacebar, making the interaction faster and more intuitive.</p>
+</div>
+
+
+<div id="center">
+
+    <div id="title">
+        <span class="title-line">Continuous Live</span>
+        <span class="title-line">Random Number Generator</span>
+        <span class="title-line">For PSI Training</span>
+        <span id="versionLine">v12.2</span>
+    </div>
+
+    <div id="number">0</div>
+
+    <div class="block">
+        Min <input id="min" value="0">
+        <span class="info" data-tip="Minimum value">i</span>
+
+        Max <input id="max" value="99">
+        <span class="info" data-tip="Maximum value">i</span>
+
+        Speed <input id="speed" value="100">
+        <span class="info" data-tip="Interval speed (ms)">i</span>
+    </div>
+
+    <div class="block">
+        <button onclick="start()">Start</button>
+        <button onclick="stop()">Stop</button>
+        <button onclick="reset()">Reset</button>
+    </div>
+
+    <div class="block">
+        Timer (min)
+        <input id="timerMin" value="5">
+        <span class="info" data-tip="Auto stop timer">i</span>
+
+        <label class="switch">
+            <input type="checkbox" id="timerToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div id="history"></div>
+
+</div>
+
+<div id="dashboard">
+
+    <div class="dashboard-layout">
+
+        <div>
+            <div class="grid-3">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Most Repeating</h3>
+                        <span class="info" data-tip="Number with highest total frequency">i</span>
+                    </div>
+                    <div id="mostRepeat">-</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Least Repeating</h3>
+                        <span class="info" data-tip="Number with lowest total frequency">i</span>
+                    </div>
+                    <div id="leastRepeat">-</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Longest Streak</h3>
+                        <span class="info" data-tip="Longest chain of identical numbers">i</span>
+                    </div>
+                    <div id="longestStreak">-</div>
+                </div>
+
+            </div>
+
+            <div class="grid-4">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Total</h3>
+                        <span class="info" data-tip="Total numbers generated">i</span>
+                    </div>
+                    <div id="total">0</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Entropy</h3>
+                        <span class="info" data-tip="Randomness level">i</span>
+                    </div>
+                    <div id="entropy">0</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Chi² p</h3>
+                        <span class="info" data-tip="Distribution balance">i</span>
+                    </div>
+                    <div id="chi">1.00</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Deviation</h3>
+                        <span class="info" data-tip="Deviation from randomness">i</span>
+                    </div>
+                    <div id="dev">0%</div>
+                </div>
+
+            </div>
+
+            <div class="chart-card">
+                <canvas id="chart" width="900" height="160"></canvas>
+            </div>
+        </div>
+
+        <div id="heatmapCard">
+            <h3>Heatmap (Top 10)</h3>
+            <div id="heatmap"></div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+function toggleMenu(){
+    document.getElementById("menu").classList.toggle("open");
+}
+
+let history = [];
+let timer = null;
+let autoStopTimeout = null;
+
+const numberEl = document.getElementById("number");
+const minInput = document.getElementById("min");
+const maxInput = document.getElementById("max");
+const speedInput = document.getElementById("speed");
+const timerMinInput = document.getElementById("timerMin");
+const timerToggle = document.getElementById("timerToggle");
+
+const totalEl = document.getElementById("total");
+const entropyEl = document.getElementById("entropy");
+const chiEl = document.getElementById("chi");
+const devEl = document.getElementById("dev");
+const mostRepeatEl = document.getElementById("mostRepeat");
+const leastRepeatEl = document.getElementById("leastRepeat");
+const longestStreakEl = document.getElementById("longestStreak");
+const historyEl = document.getElementById("history");
+const heatmapEl = document.getElementById("heatmap");
+
+function rand(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function add(n){ history.unshift(n); }
+
+function step(){
+    let minVal = +minInput.value || 0;
+    let maxVal = +maxInput.value || 99;
+    if(maxVal < minVal) [minVal,maxVal] = [maxVal,minVal];
+
+    let n = rand(minVal,maxVal);
+    numberEl.innerText = n;
+    add(n);
+    update();
+}
+
+function update(){
+    let freq = {};
+    history.forEach(n => freq[n] = (freq[n]||0)+1);
+
+    totalEl.innerText = history.length;
+    entropyEl.innerText = calcEntropy(freq);
+    let chiObj = calcChi(freq);
+    chiEl.innerText = chiObj.p.toFixed(3);
+    devEl.innerText = chiObj.dev + "%";
+
+    updateRepeating(freq);
+    renderHistory();
+    drawHeatmap(freq);
+    drawChart();
+    updateLongestStreak();
+}
+
+function calcEntropy(freq){
+    let total = history.length;
+    if(!total) return "0.00";
+    let e = 0;
+    for(let k in freq){
+        let p = freq[k]/total;
+        e += -p*Math.log2(p);
+    }
+    return e.toFixed(2);
+}
+
+function calcChi(freq){
+    let keys = Object.keys(freq);
+    let n = history.length;
+    if(!n || !keys.length) return {p:1,dev:0};
+    let exp = n/keys.length;
+    let chi = 0;
+    for(let k in freq){
+        chi += (freq[k]-exp)**2/exp;
+    }
+    return {
+        p: Math.max(0,1-chi/50),
+        dev: Math.min(100,Math.round((chi/n)*100))
+    };
+}
+
+function updateRepeating(freq){
+    let entries = Object.entries(freq);
+    if(!entries.length){
+        mostRepeatEl.innerText="-";
+        leastRepeatEl.innerText="-";
+        return;
+    }
+    let most = entries.reduce((a,b)=>a[1]>b[1]?a:b);
+    let least = entries.reduce((a,b)=>a[1]<b[1]?a:b);
+    mostRepeatEl.innerText = `${most[0]} (${most[1]}x)`;
+    leastRepeatEl.innerText = `${least[0]} (${least[1]}x)`;
+}
+
+function renderHistory(){
+    historyEl.innerHTML="";
+    let slice = history.slice(0,100);
+
+    for(let i=0;i<slice.length;i++){
+        let d=document.createElement("div");
+        d.className="entry";
+        d.innerText=slice[i];
+
+        if(i === 0){
+            d.classList.add("latest");
+        }
+
+        let streak = 1;
+        if(i > 0 && slice[i] === slice[i-1]) streak = 2;
+        if(i > 1 && slice[i] === slice[i-1] && slice[i] === slice[i-2]) streak = 3;
+
+        if(streak === 1) d.classList.add("streak1");
+        if(streak === 2) d.classList.add("streak2");
+        if(streak >= 3) d.classList.add("streak3");
+
+        historyEl.appendChild(d);
+    }
+}
+
+function updateLongestStreak(){
+    if(history.length < 2){
+        longestStreakEl.innerText = "-";
+        return;
+    }
+
+    let maxStreak = 1;
+    let maxNum = history[0];
+    let currentStreak = 1;
+
+    for(let i=1;i<history.length;i++){
+        if(history[i] === history[i-1]){
+            currentStreak++;
+            if(currentStreak > maxStreak){
+                maxStreak = currentStreak;
+                maxNum = history[i];
+            }
+        } else {
+            currentStreak = 1;
+        }
+    }
+
+    longestStreakEl.innerText = `${maxNum} (${maxStreak}x)`;
+}
+
+function drawHeatmap(freq){
+    heatmapEl.innerHTML="";
+
+    let recent = history.slice(0,100);
+    let recentFreq = {};
+    recent.forEach(n => recentFreq[n] = (recentFreq[n]||0)+1);
+
+    let entries = Object.entries(recentFreq)
+        .sort((a,b)=>b[1]-a[1])
+        .slice(0,10);
+
+    if(!entries.length) return;
+
+    let maxVal = entries[0][1] || 1;
+
+    entries.forEach(([n,v])=>{
+        let row=document.createElement("div");
+        row.className="heat-row";
+
+        let label=document.createElement("span");
+        label.className="heat-label";
+        label.innerText=n;
+
+        let bar=document.createElement("div");
+        bar.className="bar";
+
+        let rel = v / maxVal;
+        let width = rel * 240;
+        bar.style.width = width + "px";
+
+        if(rel < 0.33){
+            bar.style.background = "linear-gradient(90deg,#ff6666,#ff6666)";
+        } else if(rel < 0.66){
+            bar.style.background = "linear-gradient(90deg,#ff6666,#ffee55)";
+        } else {
+            bar.style.background = "linear-gradient(90deg,#ff6666,#ffee55,#66ff66)";
+        }
+
+        row.appendChild(label);
+        row.appendChild(bar);
+        heatmapEl.appendChild(row);
+    });
+}
+
+function drawChart(){
+    let c=document.getElementById("chart");
+    let ctx=c.getContext("2d");
+    ctx.clearRect(0,0,c.width,c.height);
+
+    let data=history.slice(0,80).reverse();
+    if(!data.length) return;
+
+    let minVal=+minInput.value||0;
+    let maxVal=+maxInput.value||99;
+    if(maxVal<minVal) [minVal,maxVal]=[maxVal,minVal];
+    let range=maxVal-minVal||1;
+
+    ctx.beginPath();
+    data.forEach((v,i)=>{
+        let x=(i/Math.max(1,79))*c.width;
+        let norm=(v-minVal)/range;
+        norm=Math.max(0,Math.min(1,norm));
+        let y=c.height - norm*c.height;
+        if(i===0) ctx.moveTo(x,y);
+        else ctx.lineTo(x,y);
+    });
+    ctx.strokeStyle="#00ff66";
+    ctx.lineWidth=1.5;
+    ctx.stroke();
+
+    ctx.strokeStyle="#222";
+    ctx.beginPath();
+    ctx.moveTo(0,c.height-0.5);
+    ctx.lineTo(c.width,c.height-0.5);
+    ctx.stroke();
+}
+
+function start(){
+    stop();
+    let speedVal=+speedInput.value||100;
+    numberEl.classList.add("running");
+    timer=setInterval(step,speedVal);
+
+    if(timerToggle.checked){
+        let minutes=+timerMinInput.value||5;
+        autoStopTimeout=setTimeout(stop,minutes*60000);
+    }
+}
+
+function stop(){
+    if(timer) clearInterval(timer);
+    timer=null;
+    if(autoStopTimeout) clearTimeout(autoStopTimeout);
+    numberEl.classList.remove("running");
+}
+
+function reset(){
+    history=[];
+    update();
+    numberEl.innerText=0;
+    numberEl.classList.remove("running");
+}
+
+function toggleRunning(){
+    if(timer) stop();
+    else start();
+}
+
+window.addEventListener("keydown",e=>{
+    if(e.code==="Space"){
+        let a=document.activeElement;
+        let t=a.tagName.toUpperCase();
+        let edit=a.isContentEditable||t==="INPUT"||t==="TEXTAREA";
+        if(!edit){
+            e.preventDefault();
+            toggleRunning();
+        }
+    }
+});
+
+(function init(){
+    update();
+})();
+</script>
+
+</body>
+</html>
