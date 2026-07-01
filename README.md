@@ -28,3 +28,4 @@ https://gold3nboyy.github.io/Live_RNG_PSI_Training
 
 📦 Download Code:
 Go to Green „Code“-Button → „Download ZIP“
+(It's all in one HTML file and includes HTML, CSS and JavaScript)
