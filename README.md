@@ -1,6 +1,4 @@
 # Continuous Live Running Random Number Generator For PSI Training
-
-# Random Number Generator for PSI Training
 This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history. It is designed as a simple tool for PSI training, intuitive experiments, and personal exploration.
 
 ## Background and Research
