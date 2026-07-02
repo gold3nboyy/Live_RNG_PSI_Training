@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Random Number Generator v12.2</title>
+<title>Random Number Generator v12.5</title>
 
 <style>
 body{
@@ -36,7 +36,7 @@ body{
     position:absolute;
     top:0;
     left:0;
-    width:420px;
+    width:600px;
     height:100%;
     background:#111;
     border-right:1px solid #222;
@@ -44,7 +44,7 @@ body{
     transition:0.3s;
     padding:70px 28px 20px 28px;
     box-sizing:border-box;
-    overflow-y:auto;
+    overflow-y:visible;
     z-index:999;
     pointer-events:none;
 }
@@ -121,7 +121,7 @@ input{
     margin-right:6px;
 }
 
-/* Tooltip (zurückgesetzt) */
+/* Tooltip */
 .info{
     display:inline-block;
     position:relative;
@@ -167,7 +167,7 @@ input{
     text-align:center;
 }
 
-/* Neueste Zahl */
+/* Latest Number */
 .latest{
     font-size:14px;
     color:#888;
@@ -179,7 +179,7 @@ input{
 
 /* Streak colors */
 .streak1{ color:#ff4d4d; }
-.streak2{ color:#ff9a33; }
+.streak2{ color:#ffff00; }
 .streak3{ color:#00ff66; }
 
 /* Dashboard */
@@ -324,7 +324,16 @@ input:checked + .slider:before { transform: translateX(22px); }
 </div>
 
 <div id="menu">
+
+    <h2>How & Why</h2>
+
+    <p class="bullet"><b>How To Use:</b> This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history.</p>
+
+<p class="bullet"><b>Intention & Effect:</b> Focused attention may create small shifts in random systems. While the effects are subtle, you can explore whether your intention aligns with changes in the number flow. This generator gives you a simple way to try that for yourself and get instant feedback. Each person might have their own method of shifting awareness or influencing reality. If one method fails try another. This won't guarantee success but it does give you a tool for finding and improving your very own unique method.</p>
+
     <h2>Detailed Explanations</h2>
+
+    <p class="bullet"><b>Last 100 Numbers:</b> This section shows the most recent 100 generated values, with the newest number always on the left. Colors indicate short streaks of identical numbers in direct succession: red means a single value, yellow means two identical values in a row, and green means three or more identical values in a row. Once a streak is formed, its color remains even as newer numbers push it to the right, making it easy to spot unusual runs or potential intention-based effects.</p>
 
     <p class="bullet"><b>Entropy:</b> Entropy describes how unpredictable the generated numbers are. A high entropy value means the results vary widely and no single number dominates the distribution. A low entropy value indicates that certain numbers appear more frequently, reducing randomness. This metric helps you understand whether the generator is producing a broad or narrow range of outcomes.</p>
 
@@ -345,10 +354,10 @@ input:checked + .slider:before { transform: translateX(22px); }
 <div id="center">
 
     <div id="title">
-        <span class="title-line">Continuous Live</span>
+        <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">For PSI Training</span>
-        <span id="versionLine">v12.2</span>
+        <span id="versionLine">v12.5</span>
     </div>
 
     <div id="number">0</div>
@@ -567,28 +576,41 @@ function updateRepeating(freq){
 }
 
 function renderHistory(){
-    historyEl.innerHTML="";
-    let slice = history.slice(0,100);
+    historyEl.innerHTML = "";
+    let slice = history.slice(0, 100);
 
-    for(let i=0;i<slice.length;i++){
-        let d=document.createElement("div");
-        d.className="entry";
-        d.innerText=slice[i];
+    let entries = [];
+    for (let i = 0; i < slice.length; i++) {
+        let d = document.createElement("div");
+        d.className = "entry";
+        d.innerText = slice[i];
+        if (i === 0) d.classList.add("latest");
+        entries.push(d);
+    }
 
-        if(i === 0){
-            d.classList.add("latest");
+    let i = 0;
+    while (i < slice.length) {
+        let runStart = i;
+        let runValue = slice[i];
+        let runLength = 1;
+
+        while (i + 1 < slice.length && slice[i + 1] === runValue) {
+            i++;
+            runLength++;
         }
 
-        let streak = 1;
-        if(i > 0 && slice[i] === slice[i-1]) streak = 2;
-        if(i > 1 && slice[i] === slice[i-1] && slice[i] === slice[i-2]) streak = 3;
+        let colorClass = "streak1";
+        if (runLength === 2) colorClass = "streak2";
+        else if (runLength >= 3) colorClass = "streak3";
 
-        if(streak === 1) d.classList.add("streak1");
-        if(streak === 2) d.classList.add("streak2");
-        if(streak >= 3) d.classList.add("streak3");
+        for (let j = runStart; j < runStart + runLength; j++) {
+            entries[j].classList.add(colorClass);
+        }
 
-        historyEl.appendChild(d);
+        i++;
     }
+
+    entries.forEach(d => historyEl.appendChild(d));
 }
 
 function updateLongestStreak(){
