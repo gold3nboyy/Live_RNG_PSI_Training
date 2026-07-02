@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Random Number Generator v13.2</title>
+<title>Random Number Generator v13.4</title>
 
 <style>
 body{
@@ -203,11 +203,17 @@ input{
     gap:20px;
 }
 
-/* Cards */
 .grid-3, .grid-4{
     display:grid;
-    gap:12px;
+    gap:20px;
 }
+
+.dashboard-layout > div > div {
+    margin-bottom: 20px;
+}
+
+/* Cards */
+
 .grid-3{ grid-template-columns:repeat(3,1fr); }
 .grid-4{ grid-template-columns:repeat(4,1fr); }
 
@@ -371,7 +377,7 @@ input:checked + .slider:before { transform: translateX(22px); }
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">For PSI Training</span>
-        <span id="versionLine">v13.2</span>
+        <span id="versionLine">v13.4</span>
     </div>
 
     <div id="number">0</div>
