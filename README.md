@@ -5,7 +5,7 @@ This generator produces a continuous stream of random numbers based on your chos
 This project is inspired by decades of research into mind–matter interaction and random systems. Experiments at the PEAR Lab (Princeton Engineering Anomalies Research), SRI International, and later remote-viewing programs investigated whether focused intention or perception could produce small but measurable deviations in random number generators and other physical systems. The reported effects were subtle and not presented as definitive proof, but they showed statistical patterns that were difficult to explain by chance alone.
 
 ### Disclaimer
-This generator does not claim to demonstrate or prove any paranormal ability. Instead, it offers a simple, transparent way for you to explore these ideas yourself: by watching how the number flow behaves during periods of focused attention, intention, or PSI training, and deciding what—if anything—you make of the patterns you see.
+This generator does not claim to demonstrate or prove any paranormal ability. Instead, it offers a simple, transparent way for you to explore these ideas yourself: by watching how the number flow behaves during periods of focused attention, intention, or PSI training, and deciding what—if anything—you make of the patterns you see. I'm just some guy using Ai to code for me and I'm starting from scratch with no coding skills, so please be lenient. This is a work in progress.
 
 🌐 Website for the RNG: https://gold3nboyy.github.io/Live_RNG_PSI_Training
 
