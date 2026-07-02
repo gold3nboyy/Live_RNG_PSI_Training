@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Random Number Generator v12.5</title>
+<title>Random Number Generator v13.1</title>
 
 <style>
 body{
@@ -183,6 +183,10 @@ input{
 .streak3{ color:#00ff66; }
 
 /* Dashboard */
+.dashboard-hidden {
+    display: none;
+}
+
 #dashboard{
     width:100%;
     background:#0d0d0d;
@@ -314,6 +318,14 @@ button:nth-child(3){ background:#b33a3a; }
 }
 input:checked + .slider { background-color: #1db954; }
 input:checked + .slider:before { transform: translateX(22px); }
+
+#toggleDashboardBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
 </style>
 </head>
 
@@ -322,6 +334,8 @@ input:checked + .slider:before { transform: translateX(22px); }
 <div id="hamburger" onclick="toggleMenu()">
     <div></div><div></div><div></div>
 </div>
+
+<button id="toggleDashboardBtn" onclick="toggleDashboard()">Toggle Dashboard</button>
 
 <div id="menu">
 
@@ -357,7 +371,7 @@ input:checked + .slider:before { transform: translateX(22px); }
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">For PSI Training</span>
-        <span id="versionLine">v12.5</span>
+        <span id="versionLine">v13.1</span>
     </div>
 
     <div id="number">0</div>
@@ -480,6 +494,10 @@ input:checked + .slider:before { transform: translateX(22px); }
 <script>
 function toggleMenu(){
     document.getElementById("menu").classList.toggle("open");
+}
+
+function toggleDashboard(){
+    document.getElementById("dashboard").classList.toggle("dashboard-hidden");
 }
 
 let history = [];
