@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Random Number Generator v13.4</title>
+<title>true Random Number Generator v13.5</title>
 
 <style>
 body{
@@ -347,7 +347,7 @@ input:checked + .slider:before { transform: translateX(22px); }
 
     <h2>How & Why</h2>
 
-    <p class="bullet"><b>How To Use:</b> This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history.</p>
+    <p class="bullet"><b>How To Use:</b> This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history. It doesn’t use seeds, so it never starts from a fixed point or repeats a pattern. Instead, it uses the device’s hardware to create randomness fresh every time — like rolling a real dice inside the phone or computer. That’s why the numbers can’t be predicted and don’t follow any hidden formula.</p>
 
 <p class="bullet"><b>Intention & Effect:</b> Focused attention may create small shifts in random systems. While the effects are subtle, you can explore whether your intention aligns with changes in the number flow. This generator gives you a simple way to try that for yourself and get instant feedback. Each person might have their own method of shifting awareness or influencing reality. If one method fails try another. This won't guarantee success but it does give you a tool for finding and improving your very own unique method.</p>
 
@@ -373,9 +373,9 @@ input:checked + .slider:before { transform: translateX(22px); }
 
     <div id="title">
         <span class="title-line">Continuous Live Running</span>
-        <span class="title-line">Random Number Generator</span>
+        <span class="title-line">true Random Number Generator</span>
         <span class="title-line">For PSI Training</span>
-        <span id="versionLine">v13.4</span>
+        <span id="versionLine">v13.5</span>
     </div>
 
     <div id="number">0</div>
@@ -525,10 +525,44 @@ const longestStreakEl = document.getElementById("longestStreak");
 const historyEl = document.getElementById("history");
 const heatmapEl = document.getElementById("heatmap");
 
-function rand(min, max){
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 function add(n){ history.unshift(n); }
+
+// Vereinfachte, sichere rand()-Implementierung: Ganzzahl zwischen min und max (inkl.)
+function rand(min, max) {
+  // Eingaben normalisieren
+  min = Math.floor(Number(min) || 0);
+  max = Math.floor(Number(max) || 0);
+  if (min > max) [min, max] = [max, min];
+
+  const range = max - min + 1;
+
+  // Falls Bereich irgendwie 0 oder negativ wird, gib einfach min zurück
+  if (range <= 0) {
+    return min;
+  }
+
+  // Prüfen, ob crypto verfügbar ist
+  const hasCrypto = typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function";
+
+  if (!hasCrypto) {
+    console.warn("crypto.getRandomValues nicht verfügbar — unsicherer Fallback auf Math.random()");
+    return min + Math.floor(Math.random() * range);
+  }
+
+  // Bias-freies Sampling mit 32-bit Zufall
+  const maxUint = 2 ** 32;
+  const limit = Math.floor(maxUint / range) * range;
+  const arr = new Uint32Array(1);
+  let r;
+
+  do {
+    crypto.getRandomValues(arr);
+    r = arr[0]; // 0 .. 2**32-1
+  } while (r >= limit);
+
+  return min + (r % range);
+}
+
 
 function step(){
     let minVal = +minInput.value || 0;
