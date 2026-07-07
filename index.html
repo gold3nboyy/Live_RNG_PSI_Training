@@ -1,19 +1,57 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>true Random Number Generator v13.5</title>
+<title>true Random Number Generator v14.0</title>
 
 <style>
+:root{
+    --bg-main:#0a0a0a;
+    --bg-card:#111;
+    --bg-border:#222;
+    --bg-input:#111;
+    --bg-history:#151515;
+    --bg-latest:#333;
+    --text-main:#ddd;
+    --text-muted:#777;
+    --accent:#2f7bff;
+    --accent-running:#00ff66;
+    --button-start:#1db954;
+    --button-stop:#444;
+    --button-reset:#b33a3a;
+    --button-hover:#3a7bd5;
+    --bg-menu:#111;
+    --bg-dashboard:#0d0d0d;
+}
+
+[data-theme="light"]{
+    --bg-main:#f5f5f5;
+    --bg-card:#ffffff;
+    --bg-border:#cccccc;
+    --bg-input:#f0f0f0;
+    --bg-history:#e8e8e8;
+    --bg-latest:#dddddd;
+    --text-main:#222222;
+    --text-muted:#666666;
+    --accent:#0066cc;
+    --accent-running:#00aa44;
+    --button-start:#2b9bff;
+    --button-stop:#888888;
+    --button-reset:#cc4444;
+    --button-hover:#0055aa;
+    --bg-menu:#ffffff;
+    --bg-dashboard:#f0f0f0;
+}
+
 body{
     margin:0;
     font-family:Arial, Helvetica, sans-serif;
-    background:#0a0a0a;
-    color:#ddd;
+    background:var(--bg-main);
+    color:var(--text-main);
     overflow:auto;
+    transition:background 0.3s,color 0.3s;
 }
 
-/* Hamburger */
 #hamburger{
     position:absolute;
     top:10px;
@@ -31,15 +69,52 @@ body{
     border-radius:3px;
 }
 
-/* Menu */
+#themeToggleBtn{
+    position:absolute;
+    top:10px;
+    right:60px;
+    z-index:1000;
+    padding:8px 14px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color:white;
+    font-size:14px;
+    background:#555;
+    transition:background 0.2s,transform 0.1s;
+}
+#themeToggleBtn:hover{
+    background:#777;
+    transform:translateY(-1px);
+}
+
+#toggleDashboardBtn{
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:1000;
+    padding:8px 14px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color:white;
+    font-size:14px;
+    background:#555;
+    transition:background 0.2s,transform 0.1s;
+}
+#toggleDashboardBtn:hover{
+    background:#777;
+    transform:translateY(-1px);
+}
+
 #menu{
     position:absolute;
     top:0;
     left:0;
     width:600px;
     height:100%;
-    background:#111;
-    border-right:1px solid #222;
+    background:var(--bg-menu);
+    border-right:1px solid var(--bg-border);
     transform:translateX(-100%);
     transition:0.3s;
     padding:70px 28px 20px 28px;
@@ -63,7 +138,6 @@ body{
     margin-bottom:14px;
 }
 
-/* Bullet points */
 .bullet{
     display:block;
 }
@@ -72,7 +146,6 @@ body{
     color:#888;
 }
 
-/* Center */
 #center{
     text-align:center;
     padding:10px 8px 40px 8px;
@@ -86,34 +159,34 @@ body{
     font-size:26px;
 }
 
-/* Version number */
 #versionLine{
     display:block;
     margin-top:6px;
     font-size:13px;
-    color:#777;
+    color:var(--text-muted);
 }
 
-/* Big number */
 #number{
     font-size:190px;
-    color:#2f7bff;
+    color:var(--accent);
     margin:10px 0;
+    transition:color 0.2s,transform 0.1s;
 }
-.running{ color:#00ff66 !important; }
+.running{
+    color:var(--accent-running) !important;
+    transform:scale(1.02);
+}
 
-/* Blocks */
 .block{ 
     margin:20px 0; 
     font-size:16px;
 }
 
-/* Inputs */
 input{
     width:95px;
-    background:#111;
-    border:1px solid #333;
-    color:#ddd;
+    background:var(--bg-input);
+    border:1px solid var(--bg-border);
+    color:var(--text-main);
     text-align:center;
     padding:6px 4px;
     border-radius:4px;
@@ -121,7 +194,6 @@ input{
     margin-right:6px;
 }
 
-/* Tooltip */
 .info{
     display:inline-block;
     position:relative;
@@ -142,16 +214,15 @@ input{
     position:absolute;
     left:22px;
     top:-6px;
-    background:#111;
-    border:1px solid #333;
+    background:var(--bg-card);
+    border:1px solid var(--bg-border);
     padding:6px;
     font-size:12px;
-    color:#ddd;
+    color:var(--text-main);
     width:260px;
     z-index:999;
 }
 
-/* History */
 #history{
     display:grid;
     grid-template-columns:repeat(20, 1fr);
@@ -162,35 +233,31 @@ input{
 .entry{
     font-size:14px;
     padding:4px 10px;
-    background:#151515;
+    background:var(--bg-history);
     border-radius:4px;
     text-align:center;
 }
 
-/* Latest Number */
 .latest{
     font-size:14px;
     color:#888;
     border:1px solid #888;
     padding:2px 10px;
-    background:#333;
+    background:var(--bg-latest);
 }
 
-
-/* Streak colors */
 .streak1{ color:#ff4d4d; }
 .streak2{ color:#ffff00; }
 .streak3{ color:#00ff66; }
 
-/* Dashboard */
-.dashboard-hidden {
-    display: none;
+.dashboard-hidden{
+    display:none;
 }
 
 #dashboard{
     width:100%;
-    background:#0d0d0d;
-    border-top:1px solid #222;
+    background:var(--bg-dashboard);
+    border-top:1px solid var(--bg-border);
     padding:20px;
     box-sizing:border-box;
 }
@@ -208,43 +275,69 @@ input{
     gap:20px;
 }
 
-.dashboard-layout > div > div {
-    margin-bottom: 20px;
+.dashboard-layout > div > div{
+    margin-bottom:20px;
 }
-
-/* Cards */
 
 .grid-3{ grid-template-columns:repeat(3,1fr); }
 .grid-4{ grid-template-columns:repeat(4,1fr); }
 
 .card{
-    background:#111;
-    border:1px solid #222;
+    background:var(--bg-card);
+    border:1px solid var(--bg-border);
     border-radius:8px;
     padding:12px;
     text-align:center;
+    transition:background 0.3s,border-color 0.3s,transform 0.1s;
+}
+.card:hover{
+    transform:translateY(-1px);
 }
 
-/* FIXED TOOLTIP POSITION IN DASHBOARD */
 .card-header{
     display:flex;
     justify-content:center;
     align-items:center;
     gap:6px;
+    margin-bottom:8px;
 }
 .card-header h3{
-    margin:0;
+    margin:0 0 6px 0;
 }
 
-/* Heatmap */
+.card-value{
+    margin-top:8px;
+    margin-bottom:8px;
+    font-size:18px;
+}
+
+.card-detect{
+    margin-top:10px;
+    font-size:14px;
+}
+
+.detect-none{
+    color:#ff4444;
+}
+.detect-slight{
+    color:#ff9933;
+}
+.detect-significant{
+    color:#ffee55;
+}
+.detect-strong{
+    color:#00ff66;
+}
+
 #heatmapCard{
-    background:#111;
-    border:1px solid #222;
+    background:var(--bg-card);
+    border:1px solid var(--bg-border);
     border-radius:8px;
     padding:12px;
     height:330px;
     width:300px;
     overflow:hidden;
+    transition:background 0.3s,border-color 0.3s;
 }
 #heatmap{
     margin-top:8px;
@@ -266,21 +359,20 @@ input{
     max-width:240px;
 }
 
-/* Chart */
 .chart-card{
-    background:#111;
-    border:1px solid #222;
+    background:var(--bg-card);
+    border:1px solid var(--bg-border);
     border-radius:8px;
     padding:12px;
+    transition:background 0.3s,border-color 0.3s;
 }
 canvas{
     display:block;
     margin:0 auto;
     background:#0f0f0f;
-    border:1px solid #222;
+    border:1px solid var(--bg-border);
 }
 
-/* Buttons */
 button{
     padding:10px 18px;
     margin:6px;
@@ -289,83 +381,122 @@ button{
     cursor:pointer;
     color:white;
     font-size:16px;
+    background:var(--button-stop);
+    transition:background 0.2s,transform 0.1s,box-shadow 0.2s;
 }
-button:nth-child(1){ background:#1db954; }
-button:nth-child(2){ background:#444; }
-button:nth-child(3){ background:#b33a3a; }
+button:hover{
+    background:var(--button-hover);
+    transform:translateY(-1px);
+    box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+button.start-btn{
+    background:var(--button-start);
+}
+button.stop-btn{
+    background:var(--button-stop);
+}
+button.reset-btn{
+    background:var(--button-reset);
+}
 
-/* Switch */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 22px;
+.switch{
+  position:relative;
+  display:inline-block;
+  width:44px;
+  height:22px;
   margin-left:8px;
 }
-.switch input { display:none; }
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #444;
-  transition: .3s;
-  border-radius: 22px;
+.switch input{ display:none; }
+.slider{
+  position:absolute;
+  cursor:pointer;
+  top:0; left:0; right:0; bottom:0;
+  background-color:#444;
+  transition:.3s;
+  border-radius:22px;
 }
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .3s;
-  border-radius: 50%;
+.slider:before{
+  position:absolute;
+  content:"";
+  height:16px;
+  width:16px;
+  left:3px;
+  bottom:3px;
+  background-color:white;
+  transition:.3s;
+  border-radius:50%;
 }
-input:checked + .slider { background-color: #1db954; }
-input:checked + .slider:before { transform: translateX(22px); }
+input:checked + .slider{ background-color:#1db954; }
+input:checked + .slider:before{ transform:translateX(22px); }
 
-#toggleDashboardBtn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1000;
+@media (max-width:900px){
+    #menu{
+        width:80%;
+    }
+    #history{
+        grid-template-columns:repeat(8,1fr);
+    }
+    .dashboard-layout{
+        grid-template-columns:1fr;
+    }
+    #heatmapCard{
+        width:100%;
+        height:auto;
+    }
+    .chart-card canvas{
+        width:100%;
+        height:160px;
+    }
 }
 
+@media (max-width:600px){
+    #history{
+        grid-template-columns:repeat(5,1fr);
+    }
+    #number{
+        font-size:120px;
+    }
+    .title-line{
+        font-size:20px;
+    }
+}
 </style>
 </head>
 
-<body>
+<body data-theme="dark">
 
 <div id="hamburger" onclick="toggleMenu()">
     <div></div><div></div><div></div>
 </div>
 
+<button id="themeToggleBtn" onclick="toggleTheme()">Light / Dark</button>
 <button id="toggleDashboardBtn" onclick="toggleDashboard()">Toggle Dashboard</button>
 
 <div id="menu">
 
     <h2>How & Why</h2>
 
-    <p class="bullet"><b>How To Use:</b> This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history. It doesn’t use seeds, so it never starts from a fixed point or repeats a pattern. Instead, it uses the device’s hardware to create randomness fresh every time — like rolling a real dice inside the phone or computer. That’s why the numbers can’t be predicted and don’t follow any hidden formula.</p>
+    <p class="bullet"><b>How To Use:</b> This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history. It does not use seeds, so it never starts from a fixed point or repeats a preset pattern. Instead, it uses the device’s hardware to create randomness fresh every time — like rolling a real die inside the phone or computer. That is why the numbers cannot be predicted and do not follow any hidden formula.</p>
 
-<p class="bullet"><b>Intention & Effect:</b> Focused attention may create small shifts in random systems. While the effects are subtle, you can explore whether your intention aligns with changes in the number flow. This generator gives you a simple way to try that for yourself and get instant feedback. Each person might have their own method of shifting awareness or influencing reality. If one method fails try another. This won't guarantee success but it does give you a tool for finding and improving your very own unique method.</p>
+    <p class="bullet"><b>Intention & Psi Training:</b> Research in parapsychology, including work at SRI and later laboratories, has explored whether human intention or psi abilities can subtly bias random systems. Results are mixed and debated, but many people use random number generators as a way to train focus, intuition, and mind–matter interaction. This generator gives you a clean, unbiased target for your own practice. You can focus on influencing the numbers toward a chosen outcome and then use the statistics to see whether, over many trials, your results differ from what chance alone would produce.</p>
 
     <h2>Detailed Explanations</h2>
 
     <p class="bullet"><b>History (Last 100 Numbers):</b> This section shows the most recent 100 generated values, with the newest number always on the left. Colors indicate short streaks of identical numbers in direct succession: red means a single value, yellow means two identical values in a row, and green means three or more identical values in a row. Once a streak is formed, its color remains even as newer numbers push it to the right, making it easy to spot unusual runs or potential intention-based effects.</p>
 
-    <p class="bullet"><b>Entropy:</b> Entropy describes how unpredictable the generated numbers are. A high entropy value means the results vary widely and no single number dominates the distribution. A low entropy value indicates that certain numbers appear more frequently, reducing randomness. This metric helps you understand whether the generator is producing a broad or narrow range of outcomes.</p>
+    <p class="bullet"><b>Entropy:</b> Entropy describes how unpredictable the generated numbers are. A high entropy value means the results vary widely and no single number dominates the distribution. A low entropy value indicates that certain numbers appear more frequently, reducing randomness. The single word below the entropy value summarizes whether the current spread of values shows no psi effect, slight effect, significant effect, or strong effect.</p>
 
-    <p class="bullet"><b>Chi² p-value:</b> The Chi-square p-value shows how closely the distribution of generated numbers matches a perfectly even random distribution. A high p-value means the numbers appear balanced and statistically uniform. A low p-value suggests that some numbers occur more often than expected, revealing patterns or irregularities. This value is useful for judging the statistical quality of the randomness.</p>
+    <p class="bullet"><b>Chi² p-value:</b> The Chi-square p-value shows how closely the distribution of generated numbers matches a perfectly even random distribution. A high p-value means the numbers appear balanced and statistically uniform. A low p-value suggests that some numbers occur more often than expected, revealing patterns or irregularities. The single word below the p-value summarizes whether the current deviation from uniform randomness shows no psi effect, slight effect, significant effect, or strong effect.</p>
 
-    <p class="bullet"><b>Deviation:</b> Deviation measures how far the actual distribution of numbers differs from an ideal uniform distribution. A high percentage means the frequencies of individual numbers vary significantly. A low percentage indicates that the numbers appear evenly and consistently. This metric complements the Chi-square p-value by giving you an intuitive sense of distribution balance.</p>
+    <p class="bullet"><b>Deviation:</b> Deviation measures how far the actual distribution of numbers differs from an ideal uniform distribution. A high percentage means the frequencies of individual numbers vary significantly. A low percentage indicates that the numbers appear evenly and consistently. The single word below the deviation percentage summarizes whether the overall imbalance is consistent with no psi effect, slight effect, significant effect, or strong effect.</p>
 
     <p class="bullet"><b>Heatmap:</b> The heatmap displays the ten most frequent numbers from the last 100 results. The length and color of each bar give you a quick visual impression of which numbers are currently “hot” or “cold.” This makes it easy to spot trends, clusters, or unusual patterns without analyzing the numbers individually.</p>
 
     <p class="bullet"><b>Chart:</b> The chart shows the last 80 generated numbers as a continuous line, allowing you to see how values move over time. It helps you visually detect rises, drops, fluctuations, or clusters in the sequence.</p>
 
-    <p class="bullet"><b>Tip:</b> You can start or stop the generator at any time by pressing the spacebar, making the interaction faster and more intuitive.</p>
+    <p class="bullet"><b>Hope & Feedback:</b> This tool is designed for people who are genuinely curious about psi, ESP, and mind–matter interaction. It does not promise results, but it gives you clear feedback. If you see patterns that go beyond chance, you can explore them. If you do not, you still gain practice in focus and self-observation. Either way, the numbers are honest, and the statistics help you see where you stand.</p>
+
+    <p class="bullet"><b>Tip:</b> You can start or stop the generator at any time by pressing the spacebar or by tapping the big number on a touch device, making the interaction faster and more intuitive.</p>
 </div>
 
 
@@ -374,8 +505,8 @@ input:checked + .slider:before { transform: translateX(22px); }
     <div id="title">
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">true Random Number Generator</span>
-        <span class="title-line">For PSI Training</span>
-        <span id="versionLine">v13.5</span>
+        <span class="title-line">for Psi & ESP Training</span>
+        <span id="versionLine">v14.0</span>
     </div>
 
     <div id="number">0</div>
@@ -392,9 +523,9 @@ input:checked + .slider:before { transform: translateX(22px); }
     </div>
 
     <div class="block">
-        <button onclick="start()">Start</button>
-        <button onclick="stop()">Stop</button>
-        <button onclick="reset()">Reset</button>
+        <button class="start-btn" onclick="start()">Start</button>
+        <button class="stop-btn" onclick="stop()">Stop</button>
+        <button class="reset-btn" onclick="reset()">Reset</button>
     </div>
 
     <div class="block">
@@ -424,7 +555,7 @@ input:checked + .slider:before { transform: translateX(22px); }
                         <h3>Most Repeating</h3>
                         <span class="info" data-tip="Number with highest total frequency">i</span>
                     </div>
-                    <div id="mostRepeat">-</div>
+                    <div class="card-value" id="mostRepeat">-</div>
                 </div>
 
                 <div class="card">
@@ -432,7 +563,7 @@ input:checked + .slider:before { transform: translateX(22px); }
                         <h3>Least Repeating</h3>
                         <span class="info" data-tip="Number with lowest total frequency">i</span>
                     </div>
-                    <div id="leastRepeat">-</div>
+                    <div class="card-value" id="leastRepeat">-</div>
                 </div>
 
                 <div class="card">
@@ -440,7 +571,7 @@ input:checked + .slider:before { transform: translateX(22px); }
                         <h3>Longest Streak</h3>
                         <span class="info" data-tip="Longest chain of identical numbers">i</span>
                     </div>
-                    <div id="longestStreak">-</div>
+                    <div class="card-value" id="longestStreak">-</div>
                 </div>
 
             </div>
@@ -452,31 +583,34 @@ input:checked + .slider:before { transform: translateX(22px); }
                         <h3>Total</h3>
                         <span class="info" data-tip="Total numbers generated">i</span>
                     </div>
-                    <div id="total">0</div>
+                    <div class="card-value" id="total">0</div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
                         <h3>Entropy</h3>
-                        <span class="info" data-tip="Randomness level">i</span>
+                        <span class="info" data-tip="Spread of values; used here as a psi effect indicator">i</span>
                     </div>
-                    <div id="entropy">0</div>
+                    <div class="card-value" id="entropy">0.00</div>
+                    <div class="card-detect detect-none" id="entropyDetect">No effect</div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
                         <h3>Chi² p</h3>
-                        <span class="info" data-tip="Distribution balance">i</span>
+                        <span class="info" data-tip="Deviation from ideal uniform distribution; used here as a psi effect indicator">i</span>
                     </div>
-                    <div id="chi">1.00</div>
+                    <div class="card-value" id="chi">1.000</div>
+                    <div class="card-detect detect-none" id="chiDetect">No effect</div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
                         <h3>Deviation</h3>
-                        <span class="info" data-tip="Deviation from randomness">i</span>
+                        <span class="info" data-tip="Overall deviation from uniform randomness (percentage); used here as a psi effect indicator">i</span>
                     </div>
-                    <div id="dev">0%</div>
+                    <div class="card-value" id="dev">0%</div>
+                    <div class="card-detect detect-none" id="devDetect">No effect</div>
                 </div>
 
             </div>
@@ -504,6 +638,13 @@ function toggleDashboard(){
     document.getElementById("dashboard").classList.toggle("dashboard-hidden");
 }
 
+function toggleTheme(){
+    const body = document.body;
+    const current = body.getAttribute("data-theme") || "dark";
+    const next = current === "dark" ? "light" : "dark";
+    body.setAttribute("data-theme", next);
+}
+
 let history = [];
 let timer = null;
 let autoStopTimeout = null;
@@ -517,59 +658,56 @@ const timerToggle = document.getElementById("timerToggle");
 
 const totalEl = document.getElementById("total");
 const entropyEl = document.getElementById("entropy");
+const entropyDetectEl = document.getElementById("entropyDetect");
 const chiEl = document.getElementById("chi");
+const chiDetectEl = document.getElementById("chiDetect");
 const devEl = document.getElementById("dev");
+const devDetectEl = document.getElementById("devDetect");
 const mostRepeatEl = document.getElementById("mostRepeat");
 const leastRepeatEl = document.getElementById("leastRepeat");
 const longestStreakEl = document.getElementById("longestStreak");
 const historyEl = document.getElementById("history");
 const heatmapEl = document.getElementById("heatmap");
 
-function add(n){ history.unshift(n); }
-
-// Vereinfachte, sichere rand()-Implementierung: Ganzzahl zwischen min und max (inkl.)
-function rand(min, max) {
-  // Eingaben normalisieren
-  min = Math.floor(Number(min) || 0);
-  max = Math.floor(Number(max) || 0);
-  if (min > max) [min, max] = [max, min];
-
-  const range = max - min + 1;
-
-  // Falls Bereich irgendwie 0 oder negativ wird, gib einfach min zurück
-  if (range <= 0) {
-    return min;
-  }
-
-  // Prüfen, ob crypto verfügbar ist
-  const hasCrypto = typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function";
-
-  if (!hasCrypto) {
-    console.warn("crypto.getRandomValues nicht verfügbar — unsicherer Fallback auf Math.random()");
-    return min + Math.floor(Math.random() * range);
-  }
-
-  // Bias-freies Sampling mit 32-bit Zufall
-  const maxUint = 2 ** 32;
-  const limit = Math.floor(maxUint / range) * range;
-  const arr = new Uint32Array(1);
-  let r;
-
-  do {
-    crypto.getRandomValues(arr);
-    r = arr[0]; // 0 .. 2**32-1
-  } while (r >= limit);
-
-  return min + (r % range);
+function add(n){
+    history.unshift(n);
 }
 
+function rand(min, max){
+    min = Math.floor(Number(min) || 0);
+    max = Math.floor(Number(max) || 0);
+    if(min > max) [min, max] = [max, min];
+
+    const range = max - min + 1;
+    if(range <= 0){
+        return min;
+    }
+
+    const hasCrypto = typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function";
+
+    if(!hasCrypto){
+        return min + Math.floor(Math.random() * range);
+    }
+
+    const maxUint = 2 ** 32;
+    const limit = Math.floor(maxUint / range) * range;
+    const arr = new Uint32Array(1);
+    let r;
+
+    do{
+        crypto.getRandomValues(arr);
+        r = arr[0];
+    }while(r >= limit);
+
+    return min + (r % range);
+}
 
 function step(){
     let minVal = +minInput.value || 0;
     let maxVal = +maxInput.value || 99;
-    if(maxVal < minVal) [minVal,maxVal] = [maxVal,minVal];
+    if(maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
 
-    let n = rand(minVal,maxVal);
+    let n = rand(minVal, maxVal);
     numberEl.innerText = n;
     add(n);
     update();
@@ -577,13 +715,20 @@ function step(){
 
 function update(){
     let freq = {};
-    history.forEach(n => freq[n] = (freq[n]||0)+1);
+    history.forEach(n => freq[n] = (freq[n] || 0) + 1);
 
     totalEl.innerText = history.length;
-    entropyEl.innerText = calcEntropy(freq);
+
+    const entropyVal = calcEntropy(freq);
+    entropyEl.innerText = entropyVal.toFixed(2);
+    applyEntropyDetection(entropyVal, freq);
+
     let chiObj = calcChi(freq);
     chiEl.innerText = chiObj.p.toFixed(3);
+    applyChiDetection(chiObj.p);
+
     devEl.innerText = chiObj.dev + "%";
+    applyDevDetection(chiObj.dev);
 
     updateRepeating(freq);
     renderHistory();
@@ -594,39 +739,103 @@ function update(){
 
 function calcEntropy(freq){
     let total = history.length;
-    if(!total) return "0.00";
+    if(!total) return 0;
     let e = 0;
     for(let k in freq){
-        let p = freq[k]/total;
-        e += -p*Math.log2(p);
+        let p = freq[k] / total;
+        e += -p * Math.log2(p);
     }
-    return e.toFixed(2);
+    return e;
+}
+
+function applyEntropyDetection(entropyVal, freq){
+    const keys = Object.keys(freq);
+    entropyDetectEl.className = "card-detect";
+    if(keys.length === 0){
+        entropyDetectEl.classList.add("detect-none");
+        entropyDetectEl.innerText = "No effect";
+        return;
+    }
+    const maxEntropy = Math.log2(keys.length);
+    if(maxEntropy <= 0){
+        entropyDetectEl.classList.add("detect-none");
+        entropyDetectEl.innerText = "No effect";
+        return;
+    }
+    const ratio = entropyVal / maxEntropy;
+    if(ratio >= 0.8){
+        entropyDetectEl.classList.add("detect-none");
+        entropyDetectEl.innerText = "No effect";
+    }else if(ratio >= 0.5){
+        entropyDetectEl.classList.add("detect-slight");
+        entropyDetectEl.innerText = "Slight";
+    }else if(ratio >= 0.2){
+        entropyDetectEl.classList.add("detect-significant");
+        entropyDetectEl.innerText = "Significant";
+    }else{
+        entropyDetectEl.classList.add("detect-strong");
+        entropyDetectEl.innerText = "Strong";
+    }
 }
 
 function calcChi(freq){
     let keys = Object.keys(freq);
     let n = history.length;
-    if(!n || !keys.length) return {p:1,dev:0};
-    let exp = n/keys.length;
+    if(!n || !keys.length) return { p:1, dev:0 };
+    let exp = n / keys.length;
     let chi = 0;
     for(let k in freq){
-        chi += (freq[k]-exp)**2/exp;
+        chi += (freq[k] - exp) ** 2 / exp;
     }
     return {
-        p: Math.max(0,1-chi/50),
-        dev: Math.min(100,Math.round((chi/n)*100))
+        p: Math.max(0, 1 - chi / 50),
+        dev: Math.min(100, Math.round((chi / n) * 100))
     };
+}
+
+function applyChiDetection(p){
+    chiDetectEl.className = "card-detect";
+    if(p >= 0.10){
+        chiDetectEl.classList.add("detect-none");
+        chiDetectEl.innerText = "No effect";
+    }else if(p >= 0.05){
+        chiDetectEl.classList.add("detect-slight");
+        chiDetectEl.innerText = "Slight";
+    }else if(p >= 0.01){
+        chiDetectEl.classList.add("detect-significant");
+        chiDetectEl.innerText = "Significant";
+    }else{
+        chiDetectEl.classList.add("detect-strong");
+        chiDetectEl.innerText = "Strong";
+    }
+}
+
+function applyDevDetection(dev){
+    devDetectEl.className = "card-detect";
+    if(dev < 10){
+        devDetectEl.classList.add("detect-none");
+        devDetectEl.innerText = "No effect";
+    }else if(dev < 25){
+        devDetectEl.classList.add("detect-slight");
+        devDetectEl.innerText = "Slight";
+    }else if(dev < 50){
+        devDetectEl.classList.add("detect-significant");
+        devDetectEl.innerText = "Significant";
+    }else{
+        devDetectEl.classList.add("detect-strong");
+        devDetectEl.innerText = "Strong";
+    }
 }
 
 function updateRepeating(freq){
     let entries = Object.entries(freq);
     if(!entries.length){
-        mostRepeatEl.innerText="-";
-        leastRepeatEl.innerText="-";
+        mostRepeatEl.innerText = "-";
+        leastRepeatEl.innerText = "-";
         return;
     }
-    let most = entries.reduce((a,b)=>a[1]>b[1]?a:b);
-    let least = entries.reduce((a,b)=>a[1]<b[1]?a:b);
+    let most = entries.reduce((a, b) => a[1] > b[1] ? a : b);
+    let least = entries.reduce((a, b) => a[1] < b[1] ? a : b);
     mostRepeatEl.innerText = `${most[0]} (${most[1]}x)`;
     leastRepeatEl.innerText = `${least[0]} (${least[1]}x)`;
 }
@@ -636,30 +845,30 @@ function renderHistory(){
     let slice = history.slice(0, 100);
 
     let entries = [];
-    for (let i = 0; i < slice.length; i++) {
+    for(let i = 0; i < slice.length; i++){
         let d = document.createElement("div");
         d.className = "entry";
         d.innerText = slice[i];
-        if (i === 0) d.classList.add("latest");
+        if(i === 0) d.classList.add("latest");
         entries.push(d);
     }
 
     let i = 0;
-    while (i < slice.length) {
+    while(i < slice.length){
         let runStart = i;
         let runValue = slice[i];
         let runLength = 1;
 
-        while (i + 1 < slice.length && slice[i + 1] === runValue) {
+        while(i + 1 < slice.length && slice[i + 1] === runValue){
             i++;
             runLength++;
         }
 
         let colorClass = "streak1";
-        if (runLength === 2) colorClass = "streak2";
-        else if (runLength >= 3) colorClass = "streak3";
+        if(runLength === 2) colorClass = "streak2";
+        else if(runLength >= 3) colorClass = "streak3";
 
-        for (let j = runStart; j < runStart + runLength; j++) {
+        for(let j = runStart; j < runStart + runLength; j++){
             entries[j].classList.add(colorClass);
         }
 
@@ -679,14 +888,14 @@ function updateLongestStreak(){
     let maxNum = history[0];
     let currentStreak = 1;
 
-    for(let i=1;i<history.length;i++){
-        if(history[i] === history[i-1]){
+    for(let i = 1; i < history.length; i++){
+        if(history[i] === history[i - 1]){
             currentStreak++;
             if(currentStreak > maxStreak){
                 maxStreak = currentStreak;
                 maxNum = history[i];
             }
-        } else {
+        }else{
             currentStreak = 1;
         }
     }
@@ -695,30 +904,30 @@ function updateLongestStreak(){
 }
 
 function drawHeatmap(freq){
-    heatmapEl.innerHTML="";
+    heatmapEl.innerHTML = "";
 
-    let recent = history.slice(0,100);
+    let recent = history.slice(0, 100);
     let recentFreq = {};
-    recent.forEach(n => recentFreq[n] = (recentFreq[n]||0)+1);
+    recent.forEach(n => recentFreq[n] = (recentFreq[n] || 0) + 1);
 
     let entries = Object.entries(recentFreq)
-        .sort((a,b)=>b[1]-a[1])
-        .slice(0,10);
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
 
     if(!entries.length) return;
 
     let maxVal = entries[0][1] || 1;
 
-    entries.forEach(([n,v])=>{
-        let row=document.createElement("div");
-        row.className="heat-row";
+    entries.forEach(([n, v]) => {
+        let row = document.createElement("div");
+        row.className = "heat-row";
 
-        let label=document.createElement("span");
-        label.className="heat-label";
-        label.innerText=n;
+        let label = document.createElement("span");
+        label.className = "heat-label";
+        label.innerText = n;
 
-        let bar=document.createElement("div");
-        bar.className="bar";
+        let bar = document.createElement("div");
+        bar.className = "bar";
 
         let rel = v / maxVal;
         let width = rel * 240;
@@ -726,9 +935,9 @@ function drawHeatmap(freq){
 
         if(rel < 0.33){
             bar.style.background = "linear-gradient(90deg,#ff6666,#ff6666)";
-        } else if(rel < 0.66){
+        }else if(rel < 0.66){
             bar.style.background = "linear-gradient(90deg,#ff6666,#ffee55)";
-        } else {
+        }else{
             bar.style.background = "linear-gradient(90deg,#ff6666,#ffee55,#66ff66)";
         }
 
@@ -739,61 +948,61 @@ function drawHeatmap(freq){
 }
 
 function drawChart(){
-    let c=document.getElementById("chart");
-    let ctx=c.getContext("2d");
-    ctx.clearRect(0,0,c.width,c.height);
+    let c = document.getElementById("chart");
+    let ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, c.width, c.height);
 
-    let data=history.slice(0,80).reverse();
+    let data = history.slice(0, 80).reverse();
     if(!data.length) return;
 
-    let minVal=+minInput.value||0;
-    let maxVal=+maxInput.value||99;
-    if(maxVal<minVal) [minVal,maxVal]=[maxVal,minVal];
-    let range=maxVal-minVal||1;
+    let minVal = +minInput.value || 0;
+    let maxVal = +maxInput.value || 99;
+    if(maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
+    let range = maxVal - minVal || 1;
 
     ctx.beginPath();
-    data.forEach((v,i)=>{
-        let x=(i/Math.max(1,79))*c.width;
-        let norm=(v-minVal)/range;
-        norm=Math.max(0,Math.min(1,norm));
-        let y=c.height - norm*c.height;
-        if(i===0) ctx.moveTo(x,y);
-        else ctx.lineTo(x,y);
+    data.forEach((v, i) => {
+        let x = (i / Math.max(1, 79)) * c.width;
+        let norm = (v - minVal) / range;
+        norm = Math.max(0, Math.min(1, norm));
+        let y = c.height - norm * c.height;
+        if(i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
     });
-    ctx.strokeStyle="#00ff66";
-    ctx.lineWidth=1.5;
+    ctx.strokeStyle = "#00ff66";
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    ctx.strokeStyle="#222";
+    ctx.strokeStyle = "#222";
     ctx.beginPath();
-    ctx.moveTo(0,c.height-0.5);
-    ctx.lineTo(c.width,c.height-0.5);
+    ctx.moveTo(0, c.height - 0.5);
+    ctx.lineTo(c.width, c.height - 0.5);
     ctx.stroke();
 }
 
 function start(){
     stop();
-    let speedVal=+speedInput.value||100;
+    let speedVal = +speedInput.value || 100;
     numberEl.classList.add("running");
-    timer=setInterval(step,speedVal);
+    timer = setInterval(step, speedVal);
 
     if(timerToggle.checked){
-        let minutes=+timerMinInput.value||5;
-        autoStopTimeout=setTimeout(stop,minutes*60000);
+        let minutes = +timerMinInput.value || 5;
+        autoStopTimeout = setTimeout(stop, minutes * 60000);
     }
 }
 
 function stop(){
     if(timer) clearInterval(timer);
-    timer=null;
+    timer = null;
     if(autoStopTimeout) clearTimeout(autoStopTimeout);
     numberEl.classList.remove("running");
 }
 
 function reset(){
-    history=[];
+    history = [];
     update();
-    numberEl.innerText=0;
+    numberEl.innerText = 0;
     numberEl.classList.remove("running");
 }
 
@@ -802,16 +1011,20 @@ function toggleRunning(){
     else start();
 }
 
-window.addEventListener("keydown",e=>{
-    if(e.code==="Space"){
-        let a=document.activeElement;
-        let t=a.tagName.toUpperCase();
-        let edit=a.isContentEditable||t==="INPUT"||t==="TEXTAREA";
+window.addEventListener("keydown", e => {
+    if(e.code === "Space"){
+        let a = document.activeElement;
+        let t = a.tagName.toUpperCase();
+        let edit = a.isContentEditable || t === "INPUT" || t === "TEXTAREA";
         if(!edit){
             e.preventDefault();
             toggleRunning();
         }
     }
+});
+
+numberEl.addEventListener("click", () => {
+    toggleRunning();
 });
 
 (function init(){
