@@ -7,7 +7,7 @@ This project is inspired by decades of research into mind–matter interaction a
 ### Disclaimer
 This generator does not claim to demonstrate or prove any paranormal ability. Instead, it offers a simple, transparent way for you to explore these ideas yourself: by watching how the number flow behaves during periods of focused attention, intention, or PSI training, and deciding what—if anything—you make of the patterns you see. I'm just some guy vibe coding. This is a work in progress.
 
-🌐 Website for the RNG: https://gold3nboyy.github.io/Live_RNG_PSI_Training
+🌐 Find the Generator here: https://gold3nboyy.github.io/Live_RNG_PSI_Training
 
 📦 Download Code: Go to Green „Code“-Button → „Download ZIP“ 
 (It's all in one HTML file and includes HTML, CSS and JavaScript)
