@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>true Random Number Generator v14.0</title>
+<title>true Random Number Generator v14.1</title>
 
 <style>
 :root{
@@ -39,8 +39,8 @@
     --button-stop:#888888;
     --button-reset:#cc4444;
     --button-hover:#0055aa;
-    --bg-menu:#ffffff;
-    --bg-dashboard:#f0f0f0;
+    --bg-menu:#fafafa;
+    --bg-dashboard:#f2f2f2;
 }
 
 body{
@@ -48,7 +48,6 @@ body{
     font-family:Arial, Helvetica, sans-serif;
     background:var(--bg-main);
     color:var(--text-main);
-    overflow:auto;
     transition:background 0.3s,color 0.3s;
 }
 
@@ -72,7 +71,7 @@ body{
 #themeToggleBtn{
     position:absolute;
     top:10px;
-    right:60px;
+    right:140px;
     z-index:1000;
     padding:8px 14px;
     border:none;
@@ -131,11 +130,17 @@ body{
     margin-top:0;
     color:#fff;
 }
+[data-theme="light"] #menu h2{
+    color:#111;
+}
 #menu p{
     font-size:14px;
     line-height:1.55;
     color:#ccc;
     margin-bottom:14px;
+}
+[data-theme="light"] #menu p{
+    color:#333;
 }
 
 .bullet{
@@ -144,6 +149,9 @@ body{
 .bullet::before{
     content:"• ";
     color:#888;
+}
+[data-theme="light"] .bullet::before{
+    color:#555;
 }
 
 #center{
@@ -157,6 +165,9 @@ body{
 .title-line{
     display:block;
     font-size:26px;
+}
+[data-theme="light"] .title-line{
+    color:#222;
 }
 
 #versionLine{
@@ -177,8 +188,8 @@ body{
     transform:scale(1.02);
 }
 
-.block{ 
-    margin:20px 0; 
+.block{
+    margin:20px 0;
     font-size:16px;
 }
 
@@ -192,6 +203,11 @@ input{
     border-radius:4px;
     margin-left:6px;
     margin-right:6px;
+}
+[data-theme="light"] input{
+    background:#f7f7f7;
+    border:1px solid #bbbbbb;
+    color:#222;
 }
 
 .info{
@@ -222,10 +238,15 @@ input{
     width:260px;
     z-index:999;
 }
+[data-theme="light"] .info:hover::after{
+    background:#fff;
+    border-color:#ccc;
+    color:#222;
+}
 
 #history{
     display:grid;
-    grid-template-columns:repeat(20, 1fr);
+    grid-template-columns:repeat(20,1fr);
     gap:6px;
     max-width:1100px;
     margin:10px auto 0 auto;
@@ -237,13 +258,18 @@ input{
     border-radius:4px;
     text-align:center;
 }
-
+[data-theme="light"] .entry{
+    background:#e8e8e8;
+}
 .latest{
     font-size:14px;
     color:#888;
     border:1px solid #888;
     padding:2px 10px;
     background:var(--bg-latest);
+}
+[data-theme="light"] .latest{
+    background:#ddd;
 }
 
 .streak1{ color:#ff4d4d; }
@@ -270,13 +296,9 @@ input{
     gap:20px;
 }
 
-.grid-3, .grid-4{
+.grid-3,.grid-4{
     display:grid;
     gap:20px;
-}
-
-.dashboard-layout > div > div{
-    margin-bottom:20px;
 }
 
 .grid-3{ grid-template-columns:repeat(3,1fr); }
@@ -289,6 +311,10 @@ input{
     padding:12px;
     text-align:center;
     transition:background 0.3s,border-color 0.3s,transform 0.1s;
+}
+[data-theme="light"] .card{
+    background:#fff;
+    border-color:#ccc;
 }
 .card:hover{
     transform:translateY(-1px);
@@ -306,28 +332,21 @@ input{
 }
 
 .card-value{
-    margin-top:8px;
-    margin-bottom:8px;
+    margin-top:14px;
+    margin-bottom:14px;
     font-size:18px;
 }
 
 .card-detect{
-    margin-top:10px;
+    margin-top:14px;
+    margin-bottom:6px;
     font-size:14px;
 }
 
-.detect-none{
-    color:#ff4444;
-}
-.detect-slight{
-    color:#ff9933;
-}
-.detect-significant{
-    color:#ffee55;
-}
-.detect-strong{
-    color:#00ff66;
-}
+.detect-none{ color:#ff4444; }
+.detect-slight{ color:#ff9933; }
+.detect-significant{ color:#ffee55; }
+.detect-strong{ color:#00ff66; }
 
 #heatmapCard{
     background:var(--bg-card);
@@ -339,6 +358,11 @@ input{
     overflow:hidden;
     transition:background 0.3s,border-color 0.3s;
 }
+[data-theme="light"] #heatmapCard{
+    background:#fff;
+    border-color:#ccc;
+}
+
 #heatmap{
     margin-top:8px;
 }
@@ -366,11 +390,20 @@ input{
     padding:12px;
     transition:background 0.3s,border-color 0.3s;
 }
+[data-theme="light"] .chart-card{
+    background:#fff;
+    border-color:#ccc;
+}
+
 canvas{
     display:block;
     margin:0 auto;
     background:#0f0f0f;
     border:1px solid var(--bg-border);
+}
+[data-theme="light"] canvas{
+    background:#fff;
+    border-color:#ccc;
 }
 
 button{
@@ -386,8 +419,8 @@ button{
 }
 button:hover{
     background:var(--button-hover);
-    transform:translateY(-1px);
-    box-shadow:0 4px 10px rgba(0,0,0,0.4);
+    transform:translateY(-2px);
+    box-shadow:0 6px 14px rgba(0,0,0,0.35);
 }
 button.start-btn{
     background:var(--button-start);
@@ -470,33 +503,33 @@ input:checked + .slider:before{ transform:translateX(22px); }
 </div>
 
 <button id="themeToggleBtn" onclick="toggleTheme()">Light / Dark</button>
-<button id="toggleDashboardBtn" onclick="toggleDashboard()">Toggle Dashboard</button>
+<button id="toggleDashboardBtn" onclick="toggleDashboard()">Dashboard</button>
 
 <div id="menu">
 
     <h2>How & Why</h2>
 
-    <p class="bullet"><b>How To Use:</b> This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history. It does not use seeds, so it never starts from a fixed point or repeats a preset pattern. Instead, it uses the device’s hardware to create randomness fresh every time — like rolling a real die inside the phone or computer. That is why the numbers cannot be predicted and do not follow any hidden formula.</p>
+    <p class="bullet"><b>How To Use:</b> This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history. It does not use seeds, so it never starts from a fixed point or repeats a preset pattern. Instead, it uses the device’s hardware to create randomness fresh every time — like rolling a real die inside the phone or computer.</p>
 
     <p class="bullet"><b>Intention & Psi Training:</b> Research in parapsychology, including work at SRI and later laboratories, has explored whether human intention or psi abilities can subtly bias random systems. Results are mixed and debated, but many people use random number generators as a way to train focus, intuition, and mind–matter interaction. This generator gives you a clean, unbiased target for your own practice. You can focus on influencing the numbers toward a chosen outcome and then use the statistics to see whether, over many trials, your results differ from what chance alone would produce.</p>
 
     <h2>Detailed Explanations</h2>
 
-    <p class="bullet"><b>History (Last 100 Numbers):</b> This section shows the most recent 100 generated values, with the newest number always on the left. Colors indicate short streaks of identical numbers in direct succession: red means a single value, yellow means two identical values in a row, and green means three or more identical values in a row. Once a streak is formed, its color remains even as newer numbers push it to the right, making it easy to spot unusual runs or potential intention-based effects.</p>
+    <p class="bullet"><b>History (Last 100 Numbers):</b> Shows the most recent 100 values. Colors mark streaks: red for single values, yellow for pairs, green for longer streaks.</p>
 
-    <p class="bullet"><b>Entropy:</b> Entropy describes how unpredictable the generated numbers are. A high entropy value means the results vary widely and no single number dominates the distribution. A low entropy value indicates that certain numbers appear more frequently, reducing randomness. The single word below the entropy value summarizes whether the current spread of values shows no psi effect, slight effect, significant effect, or strong effect.</p>
+    <p class="bullet"><b>Entropy:</b> Measures how widely values are spread. The word below the value indicates whether the spread suggests no psi effect, slight effect, significant effect, or strong effect.</p>
 
-    <p class="bullet"><b>Chi² p-value:</b> The Chi-square p-value shows how closely the distribution of generated numbers matches a perfectly even random distribution. A high p-value means the numbers appear balanced and statistically uniform. A low p-value suggests that some numbers occur more often than expected, revealing patterns or irregularities. The single word below the p-value summarizes whether the current deviation from uniform randomness shows no psi effect, slight effect, significant effect, or strong effect.</p>
+    <p class="bullet"><b>Chi² p-value:</b> Shows how close the distribution is to uniform randomness. The word below the value summarizes the psi effect strength.</p>
 
-    <p class="bullet"><b>Deviation:</b> Deviation measures how far the actual distribution of numbers differs from an ideal uniform distribution. A high percentage means the frequencies of individual numbers vary significantly. A low percentage indicates that the numbers appear evenly and consistently. The single word below the deviation percentage summarizes whether the overall imbalance is consistent with no psi effect, slight effect, significant effect, or strong effect.</p>
+    <p class="bullet"><b>Deviation:</b> Shows how far the distribution differs from uniform randomness. The word below the percentage indicates psi effect strength.</p>
 
-    <p class="bullet"><b>Heatmap:</b> The heatmap displays the ten most frequent numbers from the last 100 results. The length and color of each bar give you a quick visual impression of which numbers are currently “hot” or “cold.” This makes it easy to spot trends, clusters, or unusual patterns without analyzing the numbers individually.</p>
+    <p class="bullet"><b>Heatmap:</b> Displays the ten most frequent numbers from the last 100 results.</p>
 
-    <p class="bullet"><b>Chart:</b> The chart shows the last 80 generated numbers as a continuous line, allowing you to see how values move over time. It helps you visually detect rises, drops, fluctuations, or clusters in the sequence.</p>
+    <p class="bullet"><b>Chart:</b> Shows the last 80 generated numbers as a continuous line.</p>
 
-    <p class="bullet"><b>Hope & Feedback:</b> This tool is designed for people who are genuinely curious about psi, ESP, and mind–matter interaction. It does not promise results, but it gives you clear feedback. If you see patterns that go beyond chance, you can explore them. If you do not, you still gain practice in focus and self-observation. Either way, the numbers are honest, and the statistics help you see where you stand.</p>
+    <p class="bullet"><b>Hope & Feedback:</b> This tool is designed for people who are genuinely curious about psi, ESP, and mind–matter interaction. It does not promise results, but it gives you clear feedback. If you see patterns that go beyond chance, you can explore them. If you do not, you still gain practice in focus and self-observation.</p>
 
-    <p class="bullet"><b>Tip:</b> You can start or stop the generator at any time by pressing the spacebar or by tapping the big number on a touch device, making the interaction faster and more intuitive.</p>
+    <p class="bullet"><b>Tip:</b> You can start or stop the generator by pressing the spacebar or tapping the big number.</p>
 </div>
 
 
@@ -506,7 +539,7 @@ input:checked + .slider:before{ transform:translateX(22px); }
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">true Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v14.0</span>
+        <span id="versionLine">v14.1</span>
     </div>
 
     <div id="number">0</div>
@@ -542,6 +575,7 @@ input:checked + .slider:before{ transform:translateX(22px); }
     <div id="history"></div>
 
 </div>
+
 
 <div id="dashboard">
 
@@ -589,7 +623,7 @@ input:checked + .slider:before{ transform:translateX(22px); }
                 <div class="card">
                     <div class="card-header">
                         <h3>Entropy</h3>
-                        <span class="info" data-tip="Spread of values; used here as a psi effect indicator">i</span>
+                        <span class="info" data-tip="Spread of values; psi effect indicator">i</span>
                     </div>
                     <div class="card-value" id="entropy">0.00</div>
                     <div class="card-detect detect-none" id="entropyDetect">No effect</div>
@@ -598,7 +632,7 @@ input:checked + .slider:before{ transform:translateX(22px); }
                 <div class="card">
                     <div class="card-header">
                         <h3>Chi² p</h3>
-                        <span class="info" data-tip="Deviation from ideal uniform distribution; used here as a psi effect indicator">i</span>
+                        <span class="info" data-tip="Deviation from uniform randomness; psi effect indicator">i</span>
                     </div>
                     <div class="card-value" id="chi">1.000</div>
                     <div class="card-detect detect-none" id="chiDetect">No effect</div>
@@ -607,7 +641,7 @@ input:checked + .slider:before{ transform:translateX(22px); }
                 <div class="card">
                     <div class="card-header">
                         <h3>Deviation</h3>
-                        <span class="info" data-tip="Overall deviation from uniform randomness (percentage); used here as a psi effect indicator">i</span>
+                        <span class="info" data-tip="Overall deviation; psi effect indicator">i</span>
                     </div>
                     <div class="card-value" id="dev">0%</div>
                     <div class="card-detect detect-none" id="devDetect">No effect</div>
@@ -969,7 +1003,8 @@ function drawChart(){
         if(i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
     });
-    ctx.strokeStyle = "#00ff66";
+
+    ctx.strokeStyle = document.body.getAttribute("data-theme") === "light" ? "#00aa44" : "#00ff66";
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
@@ -1027,6 +1062,10 @@ numberEl.addEventListener("click", () => {
     toggleRunning();
 });
 
+numberEl.addEventListener("touchstart", () => {
+    toggleRunning();
+});
+
 (function init(){
     update();
 })();
@@ -1034,3 +1073,4 @@ numberEl.addEventListener("click", () => {
 
 </body>
 </html>
+
