@@ -2,557 +2,785 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>true Random Number Generator v14.1</title>
+<title>true Random Number Generator v14.9.1</title>
 
 <style>
-:root{
-    --bg-main:#0a0a0a;
-    --bg-card:#111;
-    --bg-border:#222;
-    --bg-input:#111;
-    --bg-history:#151515;
-    --bg-latest:#333;
-    --text-main:#ddd;
-    --text-muted:#777;
-    --accent:#2f7bff;
-    --accent-running:#00ff66;
-    --button-start:#1db954;
-    --button-stop:#444;
-    --button-reset:#b33a3a;
-    --button-hover:#3a7bd5;
-    --bg-menu:#111;
-    --bg-dashboard:#0d0d0d;
+:root {
+    --bg-main-dark:#0a0a0a;
+    --bg-main-light:#f5f5f7;
+    --bg-card-dark:#111;
+    --bg-card-light:#ffffff;
+    --bg-border-dark:#222;
+    --bg-border-light:#d2d2d7;
+    --text-main-dark:#e5e5e7;
+    --text-main-light:#1d1d1f;
+    --accent-blue:#007aff;
+    --accent-green:#34c759;
+    --panel-dark:#1c1c1e;
+    --panel-light:#ffffff;
+    --panel-border-dark:#2c2c2e;
+    --panel-border-light:#e5e5ea;
+    --overlay-bg:rgba(0,0,0,0.45);
+
+    /* Traffic‑light colors */
+    --color-red:#ff3b30;
+    --color-yellow:#ffcc00;
+    --color-green:#34c759;
 }
 
-[data-theme="light"]{
-    --bg-main:#f5f5f5;
-    --bg-card:#ffffff;
-    --bg-border:#cccccc;
-    --bg-input:#f0f0f0;
-    --bg-history:#e8e8e8;
-    --bg-latest:#dddddd;
-    --text-main:#222222;
-    --text-muted:#666666;
-    --accent:#0066cc;
-    --accent-running:#00aa44;
-    --button-start:#2b9bff;
-    --button-stop:#888888;
-    --button-reset:#cc4444;
-    --button-hover:#0055aa;
-    --bg-menu:#fafafa;
-    --bg-dashboard:#f2f2f2;
-}
-
-body{
+/* BODY THEMING */
+body[data-theme="dark"] {background:var(--bg-main-dark);color:var(--text-main-dark);}
+body[data-theme="light"] {background:var(--bg-main-light);color:var(--text-main-light);}
+body {
     margin:0;
-    font-family:Arial, Helvetica, sans-serif;
-    background:var(--bg-main);
-    color:var(--text-main);
-    transition:background 0.3s,color 0.3s;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    transition:background 0.3s ease,color 0.3s ease;
 }
 
-#hamburger{
+/* Focus mode */
+body.focus-mode #title,
+body.focus-mode .block,
+body.focus-mode #history,
+body.focus-mode #dashboard,
+body.focus-mode #settingsPanel {display:none;}
+
+/* HAMBURGER */
+#hamburger {
     position:absolute;
-    top:10px;
-    left:10px;
-    width:28px;
+    top:14px;
+    left:14px;
+    width:30px;
     height:22px;
     cursor:pointer;
-    z-index:1000;
+    z-index:3001;
 }
-#hamburger div{
+#hamburger div {
     width:100%;
-    height:4px;
-    background:#ccc;
+    height:3px;
+    background:var(--text-main-dark);
     margin:4px 0;
     border-radius:3px;
+    transition:background 0.3s;
 }
+body[data-theme="light"] #hamburger div {background:var(--text-main-light);}
 
-#themeToggleBtn{
-    position:absolute;
-    top:10px;
-    right:140px;
-    z-index:1000;
-    padding:8px 14px;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-    color:white;
-    font-size:14px;
-    background:#555;
-    transition:background 0.2s,transform 0.1s;
-}
-#themeToggleBtn:hover{
-    background:#777;
-    transform:translateY(-1px);
-}
-
-#toggleDashboardBtn{
-    position:absolute;
-    top:10px;
-    right:10px;
-    z-index:1000;
-    padding:8px 14px;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-    color:white;
-    font-size:14px;
-    background:#555;
-    transition:background 0.2s,transform 0.1s;
-}
-#toggleDashboardBtn:hover{
-    background:#777;
-    transform:translateY(-1px);
-}
-
-#menu{
-    position:absolute;
+/* SETTINGS PANEL */
+#settingsPanel {
+    position:fixed;
     top:0;
     left:0;
-    width:600px;
+    width:360px;
     height:100%;
-    background:var(--bg-menu);
-    border-right:1px solid var(--bg-border);
+    background:var(--panel-dark);
+    border-right:1px solid var(--panel-border-dark);
     transform:translateX(-100%);
-    transition:0.3s;
-    padding:70px 28px 20px 28px;
+    transition:transform 0.35s ease,box-shadow 0.3s ease;
+    z-index:3000;
+    padding:20px;
+    padding-top:60px;
     box-sizing:border-box;
-    overflow-y:visible;
-    z-index:999;
-    pointer-events:none;
+    overflow-y:auto;
+    overflow-x:visible;
+    box-shadow:8px 0 24px rgba(0,0,0,0.6);
 }
-#menu.open{
-    transform:translateX(0);
-    pointer-events:auto;
+body[data-theme="light"] #settingsPanel {
+    background:var(--panel-light);
+    border-color:var(--panel-border-light);
 }
-#menu h2{
-    margin-top:0;
-    color:#fff;
-}
-[data-theme="light"] #menu h2{
-    color:#111;
-}
-#menu p{
-    font-size:14px;
-    line-height:1.55;
-    color:#ccc;
-    margin-bottom:14px;
-}
-[data-theme="light"] #menu p{
-    color:#333;
-}
+#settingsPanel.open {transform:translateX(0);}
 
-.bullet{
-    display:block;
+/* SETTINGS STRUCTURE */
+.settings-header h2 {
+    margin:0 0 16px 0;
+    font-size:20px;
 }
-.bullet::before{
-    content:"• ";
-    color:#888;
+.settings-section {
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-bottom:20px;
 }
-[data-theme="light"] .bullet::before{
-    color:#555;
+.settings-row,
+.settings-subsection {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:6px 0;
+    border-bottom:1px solid var(--panel-border-dark);
 }
-
-#center{
-    text-align:center;
-    padding:10px 8px 40px 8px;
+body[data-theme="light"] .settings-row,
+body[data-theme="light"] .settings-subsection {
+    border-bottom-color:var(--panel-border-light);
 }
-#title{
-    margin-top:40px;
-    line-height:1.25;
+.settings-subsection {
+    flex-direction:column;
+    align-items:flex-start;
 }
-.title-line{
-    display:block;
-    font-size:26px;
-}
-[data-theme="light"] .title-line{
-    color:#222;
-}
-
-#versionLine{
-    display:block;
-    margin-top:6px;
-    font-size:13px;
-    color:var(--text-muted);
-}
-
-#number{
-    font-size:190px;
-    color:var(--accent);
-    margin:10px 0;
-    transition:color 0.2s,transform 0.1s;
-}
-.running{
-    color:var(--accent-running) !important;
-    transform:scale(1.02);
-}
-
-.block{
-    margin:20px 0;
-    font-size:16px;
-}
-
-input{
-    width:95px;
-    background:var(--bg-input);
-    border:1px solid var(--bg-border);
-    color:var(--text-main);
-    text-align:center;
-    padding:6px 4px;
-    border-radius:4px;
-    margin-left:6px;
-    margin-right:6px;
-}
-[data-theme="light"] input{
-    background:#f7f7f7;
-    border:1px solid #bbbbbb;
-    color:#222;
-}
-
-.info{
-    display:inline-block;
-    position:relative;
-    width:16px;
-    height:16px;
-    border-radius:50%;
-    background:#333;
-    color:#aaa;
-    font-size:12px;
-    line-height:16px;
-    text-align:center;
-    cursor:help;
-    margin-left:3px;
-    margin-right:9px;
-}
-.info:hover::after{
-    content:attr(data-tip);
-    position:absolute;
-    left:22px;
-    top:-6px;
-    background:var(--bg-card);
-    border:1px solid var(--bg-border);
-    padding:6px;
-    font-size:12px;
-    color:var(--text-main);
-    width:260px;
-    z-index:999;
-}
-[data-theme="light"] .info:hover::after{
-    background:#fff;
-    border-color:#ccc;
-    color:#222;
-}
-
-#history{
-    display:grid;
-    grid-template-columns:repeat(20,1fr);
+.settings-label {
+    display:flex;
+    align-items:center;
     gap:6px;
-    max-width:1100px;
-    margin:10px auto 0 auto;
-}
-.entry{
     font-size:14px;
-    padding:4px 10px;
-    background:var(--bg-history);
-    border-radius:4px;
-    text-align:center;
+    font-weight:500;
 }
-[data-theme="light"] .entry{
-    background:#e8e8e8;
-}
-.latest{
-    font-size:14px;
-    color:#888;
-    border:1px solid #888;
-    padding:2px 10px;
-    background:var(--bg-latest);
-}
-[data-theme="light"] .latest{
-    background:#ddd;
+.settings-subsection select,
+.settings-subsection input {
+    margin-top:6px;
 }
 
-.streak1{ color:#ff4d4d; }
-.streak2{ color:#ffff00; }
-.streak3{ color:#00ff66; }
+/* SETTINGS FOOTER */
+.settings-footer {
+    margin-top:20px;
+    display:flex;
+    justify-content:flex-end;
+}
 
-.dashboard-hidden{
+/* INFO ICON */
+.info-trigger {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    margin-left:6px;
+}
+.info-trigger::before {
+    content:"i";
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:var(--accent-blue);
+    color:#fff;
+    font-size:12px;
+    font-weight:bold;
+}
+
+/* GLOBAL INFO POPUP */
+#infoOverlay {
+    position:fixed;
+    inset:0;
+    background:var(--overlay-bg);
     display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:4500;
 }
+#infoOverlay.open {display:flex;}
 
-#dashboard{
-    width:100%;
-    background:var(--bg-dashboard);
-    border-top:1px solid var(--bg-border);
+#infoContent {
+    max-width:520px;
+    max-height:70vh;
+    overflow-y:auto;
+    background:var(--panel-dark);
+    border-radius:14px;
+    border:1px solid var(--panel-border-dark);
     padding:20px;
     box-sizing:border-box;
 }
+body[data-theme="light"] #infoContent {
+    background:var(--panel-light);
+    border-color:var(--panel-border-light);
+}
 
-.dashboard-layout{
+#infoTitle {
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+#infoText {
+    font-size:14px;
+    line-height:1.5;
+}
+
+#infoClose {
+    margin-top:16px;
+    background:var(--accent-blue);
+    color:white;
+}
+
+/* ABOUT OVERLAY */
+#aboutOverlay {
+    position:fixed;
+    inset:0;
+    background:var(--overlay-bg);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:4000;
+}
+#aboutOverlay.open {display:flex;}
+
+#aboutContent {
     max-width:1100px;
-    margin:0 auto;
+    max-height:80vh;
+    overflow-y:auto;
+    background:var(--panel-dark);
+    border-radius:16px;
+    border:1px solid var(--panel-border-dark);
+    padding:24px;
+    box-sizing:border-box;
+}
+body[data-theme="light"] #aboutContent {
+    background:var(--panel-light);
+    border-color:var(--panel-border-light);
+}
+
+#aboutClose {
+    margin-top:20px;
+    background:var(--accent-blue);
+    color:white;
+}
+
+/* ABOUT COLUMNS */
+.about-columns {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:20px;
+}
+.about-columns h2,h3 {
+    margin-top:0;
+}
+
+/* UI-HIDE LAYER */
+#uiHideLayer {
+    position:fixed;
+    inset:0;
+    z-index:2000;
+    display:none;
+}
+#uiHideLayer.active {display:block;cursor:pointer;}
+
+/* MAIN UI */
+#center {
+    text-align:center;
+    padding:40px 10px;
+}
+#title {margin-top:40px;}
+.title-line {
+    display:block;
+    font-size:26px;
+    margin-bottom:4px;
+}
+#versionLine {
+    font-size:13px;
+    opacity:0.6;
+}
+#number {
+    font-size:180px;
+    margin:20px 0;
+    color:var(--accent-blue);
+    transition:transform 0.2s,color 0.2s;
+    position:relative;
+    z-index:1600;
+}
+#number.running {
+    color:var(--accent-green);
+    transform:scale(1.03);
+}
+.block {margin:10px 0;}
+input {
+    width:90px;
+    padding:8px;
+    border-radius:8px;
+    border:1px solid var(--panel-border-dark);
+    background:var(--bg-card-dark);
+    color:var(--text-main-dark);
+    font-size:15px;
+}
+body[data-theme="light"] input {
+    background:var(--bg-card-light);
+    border-color:var(--panel-border-light);
+    color:var(--text-main-light);
+}
+select {
+    padding:6px 10px;
+    border-radius:8px;
+    border:1px solid var(--panel-border-dark);
+    background:var(--bg-card-dark);
+    color:var(--text-main-dark);
+}
+body[data-theme="light"] select {
+    background:var(--bg-card-light);
+    border-color:var(--panel-border-light);
+    color:var(--text-main-light);
+}
+button {
+    padding:12px 20px;
+    margin:6px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+    color:white;
+    transition:opacity 0.2s,transform 0.1s;
+}
+button:hover {
+    opacity:0.85;
+    transform:translateY(-2px);
+}
+.start-btn {background:var(--accent-green);}
+.stop-btn {background:#555;}
+.reset-btn {background:#ff3b30;}
+.settings-footer #aboutBtn {background:var(--accent-blue);color:white;}
+
+/* SWITCH */
+.switch {
+    position:relative;
+    width:50px;
+    height:28px;
+}
+.switch input {display:none;}
+.slider {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#767577;
+    border-radius:28px;
+    transition:0.3s;
+}
+.slider:before {
+    content:"";
+    position:absolute;
+    width:22px;
+    height:22px;
+    left:3px;
+    top:3px;
+    background:white;
+    border-radius:50%;
+    transition:0.3s;
+}
+input:checked + .slider {background:var(--accent-blue);}
+input:checked + .slider:before {transform:translateX(22px);}
+
+/* HISTORY – 5 rows × 20 columns */
+#history {
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:repeat(20,1fr);
+    grid-auto-rows:auto;
+    width:1000px;
+    max-width:100%;
+    margin-left:auto;
+    margin-right:auto;
+    gap:4px;
+}
+.entry {
+    padding:6px 4px;
+    border-radius:6px;
+    border:1px solid var(--bg-border-dark);
+    background:var(--bg-card-dark);
+    font-size:13px;
+    color:var(--color-red); /* ALWAYS red by default */
+}
+body[data-theme="light"] .entry {
+    background:var(--bg-card-light);
+    border-color:var(--bg-border-light);
+    color:var(--color-red);
+}
+.entry.latest {
+    border-color:var(--accent-blue);
+}
+
+/* Traffic‑light classes */
+.num-red   { color:var(--color-red) !important; }
+.num-yellow{ color:var(--color-yellow) !important; }
+.num-green { color:var(--color-green) !important; }
+
+/* DASHBOARD */
+#dashboard {
+    margin:30px auto;
+    max-width:1100px;
+}
+.dashboard-layout {
     display:grid;
     grid-template-columns:2fr 1fr;
     gap:20px;
 }
 
-.grid-3,.grid-4{
+/* Extra spacing between dashboard rows */
+.grid-3 { 
     display:grid;
-    gap:20px;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:20px; /* NEW spacing */
+}
+.grid-4 {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
 }
 
-.grid-3{ grid-template-columns:repeat(3,1fr); }
-.grid-4{ grid-template-columns:repeat(4,1fr); }
-
-.card{
-    background:var(--bg-card);
-    border:1px solid var(--bg-border);
-    border-radius:8px;
-    padding:12px;
-    text-align:center;
-    transition:background 0.3s,border-color 0.3s,transform 0.1s;
+.card {
+    background:var(--panel-dark);
+    border-radius:12px;
+    border:1px solid var(--panel-border-dark);
+    padding:12px 14px;
+    box-sizing:border-box;
 }
-[data-theme="light"] .card{
-    background:#fff;
-    border-color:#ccc;
+body[data-theme="light"] .card {
+    background:var(--panel-light);
+    border-color:var(--panel-border-light);
 }
-.card:hover{
-    transform:translateY(-1px);
-}
-
-.card-header{
+.card h3 {
+    margin:0 0 8px 0;
+    font-size:16px;
     display:flex;
-    justify-content:center;
     align-items:center;
     gap:6px;
-    margin-bottom:8px;
 }
-.card-header h3{
-    margin:0 0 6px 0;
+.card-value {
+    font-size:20px;
+    font-weight:bold;
 }
-
-.card-value{
-    margin-top:14px;
-    margin-bottom:14px;
-    font-size:18px;
-}
-
-.card-detect{
-    margin-top:14px;
-    margin-bottom:6px;
-    font-size:14px;
+.card-detect {
+    margin-top:4px;
+    font-size:13px;
+    opacity:0.9;
 }
 
-.detect-none{ color:#ff4444; }
-.detect-slight{ color:#ff9933; }
-.detect-significant{ color:#ffee55; }
-.detect-strong{ color:#00ff66; }
+/* Traffic‑light detect colors */
+.card-detect.red {color:var(--color-red);}
+.card-detect.yellow {color:var(--color-yellow);}
+.card-detect.orange {color:#ff9500;}
+.card-detect.green {color:var(--color-green);}
 
-#heatmapCard{
-    background:var(--bg-card);
-    border:1px solid var(--bg-border);
-    border-radius:8px;
-    padding:12px;
-    height:330px;
-    width:300px;
-    overflow:hidden;
-    transition:background 0.3s,border-color 0.3s;
+/* CHART CARD */
+.chart-card {
+    margin-top:20px;
+    background:var(--panel-dark);
+    border-radius:12px;
+    border:1px solid var(--panel-border-dark);
+    padding:12px 14px;
 }
-[data-theme="light"] #heatmapCard{
-    background:#fff;
-    border-color:#ccc;
+body[data-theme="light"] .chart-card {
+    background:var(--panel-light);
+    border-color:var(--panel-border-light);
 }
-
-#heatmap{
-    margin-top:8px;
-}
-.heat-row{
-    margin:4px 0;
+.chart-card h3 {
+    margin:0 0 8px 0;
+    font-size:16px;
     display:flex;
     align-items:center;
+    gap:6px;
 }
-.heat-label{
-    display:inline-block;
-    width:40px;
-    text-align:left;
-    margin-right:8px;
-}
-.bar{
-    height:10px;
-    border-radius:3px;
-    max-width:240px;
+#chart {
+    width:100%;
+    height:160px;
 }
 
-.chart-card{
-    background:var(--bg-card);
-    border:1px solid var(--bg-border);
-    border-radius:8px;
-    padding:12px;
-    transition:background 0.3s,border-color 0.3s;
+/* Fix dynamic height for heatmap card */
+#heatmapCard {
+    background:var(--panel-dark);
+    border-radius:12px;
+    border:1px solid var(--panel-border-dark);
+    padding:12px 14px;
+    height:auto !important;
+    align-self:start;
 }
-[data-theme="light"] .chart-card{
-    background:#fff;
-    border-color:#ccc;
-}
-
-canvas{
-    display:block;
-    margin:0 auto;
-    background:#0f0f0f;
-    border:1px solid var(--bg-border);
-}
-[data-theme="light"] canvas{
-    background:#fff;
-    border-color:#ccc;
+body[data-theme="light"] #heatmapCard {
+    background:var(--panel-light);
+    border-color:var(--panel-border-light);
 }
 
-button{
-    padding:10px 18px;
-    margin:6px;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-    color:white;
+#heatmap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    height: auto !important;
+}
+
+#heatmapCard h3 {
+    margin:0 0 8px 0;
     font-size:16px;
-    background:var(--button-stop);
-    transition:background 0.2s,transform 0.1s,box-shadow 0.2s;
+    display:flex;
+    align-items:center;
+    gap:6px;
 }
-button:hover{
-    background:var(--button-hover);
-    transform:translateY(-2px);
-    box-shadow:0 6px 14px rgba(0,0,0,0.35);
+#heatmap {
+    margin-top:8px;
 }
-button.start-btn{
-    background:var(--button-start);
+.heat-row {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:4px;
 }
-button.stop-btn{
-    background:var(--button-stop);
+.heat-label {
+    width:40px;
+    text-align:right;
+    font-size:13px;
 }
-button.reset-btn{
-    background:var(--button-reset);
+.bar {
+    height:10px;
+    border-radius:6px;
+    background:linear-gradient(90deg,var(--color-red),var(--color-yellow),var(--color-green));
 }
 
-.switch{
-  position:relative;
-  display:inline-block;
-  width:44px;
-  height:22px;
-  margin-left:8px;
+/* DASHBOARD HIDDEN */
+.dashboard-hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
 }
-.switch input{ display:none; }
-.slider{
-  position:absolute;
-  cursor:pointer;
-  top:0; left:0; right:0; bottom:0;
-  background-color:#444;
-  transition:.3s;
-  border-radius:22px;
-}
-.slider:before{
-  position:absolute;
-  content:"";
-  height:16px;
-  width:16px;
-  left:3px;
-  bottom:3px;
-  background-color:white;
-  transition:.3s;
-  border-radius:50%;
-}
-input:checked + .slider{ background-color:#1db954; }
-input:checked + .slider:before{ transform:translateX(22px); }
 
-@media (max-width:900px){
-    #menu{
-        width:80%;
+/* RESPONSIVE */
+@media (max-width:900px) {
+    .about-columns {
+        grid-template-columns:repeat(2,minmax(0,1fr));
     }
-    #history{
-        grid-template-columns:repeat(8,1fr);
-    }
-    .dashboard-layout{
+    .dashboard-layout {
         grid-template-columns:1fr;
     }
-    #heatmapCard{
-        width:100%;
-        height:auto;
-    }
-    .chart-card canvas{
-        width:100%;
-        height:160px;
-    }
 }
-
-@media (max-width:600px){
-    #history{
-        grid-template-columns:repeat(5,1fr);
+@media (max-width:600px) {
+    .about-columns {
+        grid-template-columns:1fr;
     }
-    #number{
-        font-size:120px;
-    }
-    .title-line{
-        font-size:20px;
-    }
+    #center {padding:20px 10px;}
+    #number {font-size:120px;}
 }
 </style>
 </head>
 
 <body data-theme="dark">
 
-<div id="hamburger" onclick="toggleMenu()">
+<!-- GLOBAL HAMBURGER -->
+<div id="hamburger" onclick="toggleSettings()">
     <div></div><div></div><div></div>
 </div>
 
-<button id="themeToggleBtn" onclick="toggleTheme()">Light / Dark</button>
-<button id="toggleDashboardBtn" onclick="toggleDashboard()">Dashboard</button>
-
-<div id="menu">
-
-    <h2>How & Why</h2>
-
-    <p class="bullet"><b>How To Use:</b> This generator produces a continuous stream of random numbers based on your chosen range and speed. You can start or stop it at any moment, and the newest number always appears on the left side of the history. It does not use seeds, so it never starts from a fixed point or repeats a preset pattern. Instead, it uses the device’s hardware to create randomness fresh every time — like rolling a real die inside the phone or computer.</p>
-
-    <p class="bullet"><b>Intention & Psi Training:</b> Research in parapsychology, including work at SRI and later laboratories, has explored whether human intention or psi abilities can subtly bias random systems. Results are mixed and debated, but many people use random number generators as a way to train focus, intuition, and mind–matter interaction. This generator gives you a clean, unbiased target for your own practice. You can focus on influencing the numbers toward a chosen outcome and then use the statistics to see whether, over many trials, your results differ from what chance alone would produce.</p>
-
-    <h2>Detailed Explanations</h2>
-
-    <p class="bullet"><b>History (Last 100 Numbers):</b> Shows the most recent 100 values. Colors mark streaks: red for single values, yellow for pairs, green for longer streaks.</p>
-
-    <p class="bullet"><b>Entropy:</b> Measures how widely values are spread. The word below the value indicates whether the spread suggests no psi effect, slight effect, significant effect, or strong effect.</p>
-
-    <p class="bullet"><b>Chi² p-value:</b> Shows how close the distribution is to uniform randomness. The word below the value summarizes the psi effect strength.</p>
-
-    <p class="bullet"><b>Deviation:</b> Shows how far the distribution differs from uniform randomness. The word below the percentage indicates psi effect strength.</p>
-
-    <p class="bullet"><b>Heatmap:</b> Displays the ten most frequent numbers from the last 100 results.</p>
-
-    <p class="bullet"><b>Chart:</b> Shows the last 80 generated numbers as a continuous line.</p>
-
-    <p class="bullet"><b>Hope & Feedback:</b> This tool is designed for people who are genuinely curious about psi, ESP, and mind–matter interaction. It does not promise results, but it gives you clear feedback. If you see patterns that go beyond chance, you can explore them. If you do not, you still gain practice in focus and self-observation.</p>
-
-    <p class="bullet"><b>Tip:</b> You can start or stop the generator by pressing the spacebar or tapping the big number.</p>
+<!-- GLOBAL INFO POPUP -->
+<div id="infoOverlay">
+    <div id="infoContent">
+        <div id="infoTitle"></div>
+        <div id="infoText"></div>
+        <button id="infoClose">Close</button>
+    </div>
 </div>
 
+<!-- SETTINGS PANEL -->
+<div id="settingsPanel">
 
+    <div class="settings-header"><h2>Settings</h2></div>
+
+    <div class="settings-section">
+
+        <!-- Light Mode -->
+        <div class="settings-row">
+            <span>Light Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="themeSlider">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Hide UI -->
+        <div class="settings-row">
+            <span>Hide UI (tap background)</span>
+            <label class="switch">
+                <input type="checkbox" id="hideUiToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Show History -->
+        <div class="settings-row">
+            <span>Show Last 100 Numbers</span>
+            <label class="switch">
+                <input type="checkbox" id="showHistoryToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- History Mode -->
+        <div class="settings-subsection">
+            <label class="settings-label">
+                History – Last 100 Numbers
+                <span class="info-trigger"
+                      data-title="History (Last 100)"
+                      data-info="The history view displays the latest 100 generated numbers in five rows of twenty values each. Each number is always shown in red by default, turning yellow or green depending on the selected mode and the strength of the detected pattern. This layout helps you visually inspect clustering, streaks, and distribution behavior in real time.">
+                </span>
+            </label>
+
+            <select id="historyMode">
+                <option value="none">None</option>
+                <option value="high">High Numbers</option>
+                <option value="low">Low Numbers</option>
+                <option value="target">Target Number</option>
+                <option value="street">Street Mode</option>
+            </select>
+
+            <label>
+                Target Value
+                <input id="historyParam" placeholder="Target Value" disabled>
+            </label>
+        </div>
+
+        <!-- Dashboard Toggle -->
+        <div class="settings-row">
+            <span>Dashboard</span>
+            <label class="switch">
+                <input type="checkbox" id="dashboardToggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Heatmap Mode -->
+        <div class="settings-subsection">
+            <label class="settings-label">
+                Heatmap Mode
+                <span class="info-trigger"
+                      data-title="Heatmap Mode"
+                      data-info="The heatmap summarizes how often specific numbers appear. In 'Last 100' mode, it focuses on recent values, while 'All Time' uses the entire session. The bars use a red‑to‑yellow‑to‑green gradient to show relative frequency, making dominant numbers easy to spot.">
+                </span>
+            </label>
+
+            <select id="heatmapMode">
+                <option value="recent">Last 100</option>
+                <option value="all">All Time</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- ABOUT BUTTON -->
+    <div class="settings-footer">
+        <button id="aboutBtn">About</button>
+    </div>
+
+</div>
+
+<!-- ABOUT OVERLAY -->
+<div id="aboutOverlay">
+    <div id="aboutContent">
+
+        <div class="about-columns">
+
+            <!-- COLUMN 1 -->
+            <div>
+                <h2>About this generator</h2>
+
+                <h3>How it works</h3>
+                <p>
+                    This generator produces a continuous stream of hardware‑based random numbers, similar to the noise sources used in scientific random event generators. Each number is independent and unpredictable, allowing you to observe natural fluctuations without algorithmic bias. The system is intentionally minimalistic to reduce cognitive load and support meditative or experimental use. By watching the live stream, you can explore how randomness behaves under different mental states.
+                </p>
+
+                <h3>Background and research</h3>
+                <p>
+                    The concept is inspired by decades of mind–matter research at institutions such as the PEAR Lab and SRI International. These studies explored whether focused intention, emotional coherence, or meditative states could correlate with subtle statistical shifts in random systems. Results are debated, but modern work continues to investigate how mindset and physiological states influence perception of randomness. This generator provides a transparent way to explore similar ideas personally.
+                </p>
+
+                <h3>Disclaimer</h3>
+                <p>
+                    This tool does not claim to demonstrate or validate any paranormal ability. All deviations you observe can be explained through normal statistical variation, cognitive bias, or psychological factors such as expectation and pattern seeking. The generator is intended for personal exploration, mindfulness practice, and curiosity‑driven experimentation. Use it as a reflective tool rather than a diagnostic instrument. This tool is resource‑efficient and runs entirely in your browser. It places only a moderate load on your system, even during extended sessions. It's a work in progress, so please forgive any bugs or problems, I'm still testing and exploring, new to vibecoding.
+                </p>
+            </div>
+
+            <!-- COLUMN 2 -->
+            <div>
+                <h3>Features overview</h3>
+
+                <p><b>Live number stream:</b> Generates numbers continuously between Min and Max, allowing you to observe real‑time fluctuations. Because the randomness is hardware‑based, patterns arise naturally rather than through algorithmic bias.</p>
+
+                <p><b>History (Last 100):</b> Shows the latest 100 numbers with streak colors to highlight repetition strength. This helps visualize clustering and natural variance in random systems.</p>
+
+                <h3>Dashboard (Detailed explanation)</h3>
+
+                <p><b>Entropy:</b> Entropy describes how unpredictable the generated numbers are. A high entropy value means the results vary widely and no single number dominates the distribution. A low entropy value indicates that certain numbers appear more frequently, reducing randomness. This metric helps you understand whether the generator is producing a broad or narrow range of outcomes.</p>
+
+                <p><b>Chi² p‑value:</b> The Chi-square p-value shows how closely the distribution of generated numbers matches a perfectly even random distribution. A high p-value means the numbers appear balanced and statistically uniform. A low p-value suggests that some numbers occur more often than expected, revealing patterns or irregularities. This value is useful for judging the statistical quality of the randomness.</p>
+
+                <p><b>Deviation:</b> Deviation measures how far the actual distribution of numbers differs from an ideal uniform distribution. A high percentage means the frequencies of individual numbers vary significantly. A low percentage indicates that the numbers appear evenly and consistently. This metric complements the Chi-square p-value by giving you an intuitive sense of distribution balance.</p>
+
+                <p><b>Totals:</b> Counts how many numbers have been generated in the session. A higher total increases statistical reliability and shows how long you’ve been running the generator.</p>
+
+                <p><b>Repeating & Streaks:</b> Tracks how often identical numbers appear consecutively or dominate the dataset. Streaks are normal in randomness but often feel meaningful.</p>
+
+                <p><b>Heatmap:</b> Displays the most frequent numbers as colored bars. Longer bars indicate dominance and help identify recurring values or potential biases.</p>
+
+                <p><b>Chart:</b> Plots the last 80 numbers as a line graph, showing rises, drops, and oscillations over time.</p>
+            </div>
+
+            <!-- COLUMN 3 -->
+            <div>
+                <h3>Modes and examples</h3>
+
+                <p><b>High Numbers:</b> Highlights values above your threshold. Useful for exploring intention toward higher outcomes.</p>
+
+                <p><b>Low Numbers:</b> Highlights values below your threshold. Ideal for exploring downward intention.</p>
+
+                <p><b>Target Number:</b> Highlights only the chosen number. Designed for PSI focus training.</p>
+
+                <p><b>Street Mode:</b> Highlights repeating sequences of identical numbers. Streaks are natural but often feel meaningful.</p>
+
+                <h3>How to use for PSI training</h3>
+                <p>
+                    Modern studies on attention, meditation, and altered states suggest that mindset strongly influences how people perceive randomness. Before starting, take a moment to settle your breathing and adopt a calm, receptive mental state, similar to mindfulness practices used in contemporary research. Many experiments recommend entering a lightly altered state characterized by relaxed focus, reduced internal chatter, and heightened sensory awareness. As the generator begins producing numbers and you observe them, maintain a soft, non forceful intention—this mirrors protocols used in modern psi and consciousness studies. You are not generating the numbers yourself; instead, you are exploring whether your inner state correlates with how the random output behaves. Observe the stream without trying to force control; let your attention rest gently on the numbers. Over time, you may notice patterns, streaks, or shifts in distribution that feel meaningful or interesting. Whether these arise from cognitive bias, emotional resonance, or genuine statistical fluctuation, the process can be introspective and grounding. Use the dashboard metrics to track changes during different mental states, such as deep relaxation, focused intention, or creative flow. The goal is not to prove anything but to explore how your inner state interacts with your perception of randomness.
+                </p>
+
+		<h3>Tip</h3>
+                <p>
+                    You can use spacebar or click/tap the number, to start and stop the generator.
+                </p>
+			
+            </div>
+
+        </div>
+
+        <button id="aboutClose">Close</button>
+    </div>
+</div>
+
+<!-- UI-HIDE LAYER -->
+<div id="uiHideLayer"></div>
+
+<!-- MAIN CENTER AREA -->
 <div id="center">
 
     <div id="title">
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">true Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v14.1</span>
+        <span id="versionLine">v14.9.1</span>
     </div>
 
     <div id="number">0</div>
 
     <div class="block">
-        Min <input id="min" value="0">
-        <span class="info" data-tip="Minimum value">i</span>
+        <label>
+            Min
+            <span class="info-trigger"
+                  data-title="Minimum Value"
+                  data-info="The minimum value defines the lowest possible number the generator can produce. Together with the maximum value, it sets the numeric range for all outputs. Adjusting this lets you tailor the difficulty or focus of your session.">
+            </span>
+            <input id="min" value="0">
+        </label>
 
-        Max <input id="max" value="99">
-        <span class="info" data-tip="Maximum value">i</span>
+        <label>
+            Max
+            <span class="info-trigger"
+                  data-title="Maximum Value"
+                  data-info="The maximum value defines the highest possible number the generator can produce. Combined with the minimum value, it determines the span of the random output. Larger ranges create more variety, while smaller ranges make patterns easier to spot.">
+            </span>
+            <input id="max" value="99">
+        </label>
 
-        Speed <input id="speed" value="100">
-        <span class="info" data-tip="Interval speed (ms)">i</span>
+        <label>
+            Speed
+            <span class="info-trigger"
+                  data-title="Speed"
+                  data-info="Speed controls how many milliseconds pass between each generated number. Faster speeds create a more intense stream, while slower speeds give you more time to observe each value. Choose a pace that matches your focus level.">
+            </span>
+            <input id="speed" value="100">
+        </label>
     </div>
 
     <div class="block">
@@ -562,9 +790,14 @@ input:checked + .slider:before{ transform:translateX(22px); }
     </div>
 
     <div class="block">
-        Timer (min)
-        <input id="timerMin" value="5">
-        <span class="info" data-tip="Auto stop timer">i</span>
+        <label>
+            Timer (min)
+            <span class="info-trigger"
+                  data-title="Timer"
+                  data-info="The timer automatically stops the generator after a chosen number of minutes. This is useful for structured sessions or experiments with fixed durations. When enabled, the generator will shut off once the time is up.">
+            </span>
+            <input id="timerMin" value="5">
+        </label>
 
         <label class="switch">
             <input type="checkbox" id="timerToggle">
@@ -576,35 +809,44 @@ input:checked + .slider:before{ transform:translateX(22px); }
 
 </div>
 
-
+<!-- DASHBOARD -->
 <div id="dashboard">
-
     <div class="dashboard-layout">
 
         <div>
+
             <div class="grid-3">
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Most Repeating</h3>
-                        <span class="info" data-tip="Number with highest total frequency">i</span>
-                    </div>
+                    <h3>
+                        Most Repeating
+                        <span class="info-trigger"
+                              data-title="Most Repeating"
+                              data-info="Shows which number has appeared most often in the current session. This helps identify dominant values that may stand out from the rest of the distribution.">
+                        </span>
+                    </h3>
                     <div class="card-value" id="mostRepeat">-</div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Least Repeating</h3>
-                        <span class="info" data-tip="Number with lowest total frequency">i</span>
-                    </div>
+                    <h3>
+                        Least Repeating
+                        <span class="info-trigger"
+                              data-title="Least Repeating"
+                              data-info="Indicates which number has appeared the fewest times so far. This highlights values that are underrepresented in the current session.">
+                        </span>
+                    </h3>
                     <div class="card-value" id="leastRepeat">-</div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Longest Streak</h3>
-                        <span class="info" data-tip="Longest chain of identical numbers">i</span>
-                    </div>
+                    <h3>
+                        Longest Streak
+                        <span class="info-trigger"
+                              data-title="Longest Streak"
+                              data-info="Shows the longest run of identical numbers in a row. Long streaks are a natural part of randomness but often feel meaningful.">
+                        </span>
+                    </h3>
                     <div class="card-value" id="longestStreak">-</div>
                 </div>
 
@@ -613,72 +855,239 @@ input:checked + .slider:before{ transform:translateX(22px); }
             <div class="grid-4">
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Total</h3>
-                        <span class="info" data-tip="Total numbers generated">i</span>
-                    </div>
+                    <h3>
+                        Total
+                        <span class="info-trigger"
+                              data-title="Total Count"
+                              data-info="Counts how many numbers have been generated in the current session. Larger totals provide more reliable statistical insights.">
+                        </span>
+                    </h3>
                     <div class="card-value" id="total">0</div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Entropy</h3>
-                        <span class="info" data-tip="Spread of values; psi effect indicator">i</span>
-                    </div>
+                    <h3>
+                        Entropy
+                        <span class="info-trigger"
+                              data-title="Entropy"
+                              data-info="Entropy measures how evenly numbers are distributed across the range. High entropy indicates uniform randomness, while low entropy suggests clustering or bias.">
+                        </span>
+                    </h3>
                     <div class="card-value" id="entropy">0.00</div>
-                    <div class="card-detect detect-none" id="entropyDetect">No effect</div>
+                    <div class="card-detect red" id="entropyDetect">No effect</div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Chi² p</h3>
-                        <span class="info" data-tip="Deviation from uniform randomness; psi effect indicator">i</span>
-                    </div>
+                    <h3>
+                        Chi² p
+                        <span class="info-trigger"
+                              data-title="Chi² p‑value"
+                              data-info="The Chi² p‑value compares the observed distribution to an ideal uniform distribution. High p‑values indicate normal randomness; low values signal deviation.">
+                        </span>
+                    </h3>
                     <div class="card-value" id="chi">1.000</div>
-                    <div class="card-detect detect-none" id="chiDetect">No effect</div>
+                    <div class="card-detect red" id="chiDetect">No effect</div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Deviation</h3>
-                        <span class="info" data-tip="Overall deviation; psi effect indicator">i</span>
-                    </div>
+                    <h3>
+                        Deviation
+                        <span class="info-trigger"
+                              data-title="Deviation"
+                              data-info="Deviation expresses how far the distribution diverges from uniform randomness, shown as a percentage. Larger deviations highlight stronger imbalances.">
+                        </span>
+                    </h3>
                     <div class="card-value" id="dev">0%</div>
-                    <div class="card-detect detect-none" id="devDetect">No effect</div>
+                    <div class="card-detect red" id="devDetect">No effect</div>
                 </div>
 
             </div>
 
             <div class="chart-card">
+                <h3>
+                    Chart (Last 80)
+                    <span class="info-trigger"
+                          data-title="Chart"
+                          data-info="The chart plots the last 80 generated numbers as a line graph. It shows rises, drops, and oscillations over time.">
+                    </span>
+                </h3>
                 <canvas id="chart" width="900" height="160"></canvas>
             </div>
+
         </div>
 
+        <!-- HEATMAP CARD -->
         <div id="heatmapCard">
-            <h3>Heatmap (Top 10)</h3>
+            <h3>
+                Heatmap (Top 10)
+                <span class="info-trigger"
+                      data-title="Heatmap"
+                      data-info="The heatmap displays the ten most frequent numbers as colored bars. Longer bars indicate dominance. The red‑yellow‑green gradient shows relative frequency.">
+                </span>
+            </h3>
             <div id="heatmap"></div>
         </div>
 
     </div>
-
 </div>
 
 <script>
-function toggleMenu(){
-    document.getElementById("menu").classList.toggle("open");
+/* ---------------------------------------------------------
+   SETTINGS PANEL TOGGLE
+--------------------------------------------------------- */
+function toggleSettings() {
+    const panel = document.getElementById("settingsPanel");
+    panel.classList.toggle("open");
 }
 
-function toggleDashboard(){
-    document.getElementById("dashboard").classList.toggle("dashboard-hidden");
+/* ---------------------------------------------------------
+   GLOBAL INFO POPUP
+--------------------------------------------------------- */
+const infoOverlay = document.getElementById("infoOverlay");
+const infoTitleEl = document.getElementById("infoTitle");
+const infoTextEl = document.getElementById("infoText");
+const infoCloseBtn = document.getElementById("infoClose");
+
+function openInfoBox(title, text) {
+    infoTitleEl.innerText = title || "";
+    infoTextEl.innerText = text || "";
+    infoOverlay.classList.add("open");
 }
 
-function toggleTheme(){
-    const body = document.body;
-    const current = body.getAttribute("data-theme") || "dark";
-    const next = current === "dark" ? "light" : "dark";
-    body.setAttribute("data-theme", next);
+infoCloseBtn.addEventListener("click", () => {
+    infoOverlay.classList.remove("open");
+});
+
+infoOverlay.addEventListener("click", (e) => {
+    if (e.target === infoOverlay) infoOverlay.classList.remove("open");
+});
+
+document.addEventListener("click", (e) => {
+    const trigger = e.target.closest(".info-trigger");
+    if (!trigger) return;
+    const title = trigger.getAttribute("data-title") || "";
+    const text = trigger.getAttribute("data-info") || "";
+    openInfoBox(title, text);
+});
+
+/* ---------------------------------------------------------
+   ABOUT OVERLAY
+--------------------------------------------------------- */
+const aboutOverlay = document.getElementById("aboutOverlay");
+document.getElementById("aboutBtn").onclick = () => {
+    aboutOverlay.classList.add("open");
+};
+document.getElementById("aboutClose").onclick = () => {
+    aboutOverlay.classList.remove("open");
+};
+
+/* ---------------------------------------------------------
+   THEME SLIDER
+--------------------------------------------------------- */
+const themeSlider = document.getElementById("themeSlider");
+themeSlider.addEventListener("change", () => {
+    const next = themeSlider.checked ? "light" : "dark";
+    document.body.setAttribute("data-theme", next);
+});
+
+/* ---------------------------------------------------------
+   HIDE UI MODE
+--------------------------------------------------------- */
+const hideUiToggle = document.getElementById("hideUiToggle");
+const uiHideLayer = document.getElementById("uiHideLayer");
+
+hideUiToggle.addEventListener("change", () => {
+    if (hideUiToggle.checked) {
+        uiHideLayer.classList.add("active");
+        document.body.classList.add("focus-mode");
+    } else {
+        uiHideLayer.classList.remove("active");
+        document.body.classList.remove("focus-mode");
+    }
+});
+
+uiHideLayer.addEventListener("click", () => {
+    if (!hideUiToggle.checked) return;
+    hideUiToggle.checked = false;
+    uiHideLayer.classList.remove("active");
+    document.body.classList.remove("focus-mode");
+});
+
+/* ---------------------------------------------------------
+   HISTORY TOGGLE
+--------------------------------------------------------- */
+const showHistoryToggle = document.getElementById("showHistoryToggle");
+const historyEl = document.getElementById("history");
+
+showHistoryToggle.addEventListener("change", () => {
+    historyEl.style.display = showHistoryToggle.checked ? "grid" : "none";
+});
+
+/* ---------------------------------------------------------
+   DASHBOARD TOGGLE
+--------------------------------------------------------- */
+const dashboardToggle = document.getElementById("dashboardToggle");
+const dashboardEl = document.getElementById("dashboard");
+
+dashboardToggle.addEventListener("change", () => {
+    dashboardEl.classList.toggle("dashboard-hidden", !dashboardToggle.checked);
+});
+
+/* ---------------------------------------------------------
+   HISTORY MODES
+--------------------------------------------------------- */
+const historyMode = document.getElementById("historyMode");
+const historyParam = document.getElementById("historyParam");
+
+historyMode.addEventListener("change", () => {
+    if (["target","high","low"].includes(historyMode.value)) {
+        historyParam.disabled = false;
+    } else {
+        historyParam.disabled = true;
+        historyParam.value = "";
+    }
+});
+
+/* ---------------------------------------------------------
+   TRAFFIC-LIGHT COLOR LOGIC FOR HISTORY
+--------------------------------------------------------- */
+function colorNumber(entry, colorClass) {
+    entry.classList.remove("num-red","num-yellow","num-green");
+    entry.classList.add(colorClass);
 }
 
+function applyHistoryColor(entry, value, slice, index) {
+    const mode = historyMode.value;
+    const param = Number(historyParam.value);
+
+    // Default: always red
+    let color = "num-red";
+
+    if (mode === "high") {
+        if (!isNaN(param) && value >= param) color = "num-yellow";
+    }
+
+    if (mode === "low") {
+        if (!isNaN(param) && value <= param) color = "num-yellow";
+    }
+
+    if (mode === "target") {
+        if (!isNaN(param) && value === param) color = "num-yellow";
+    }
+
+    if (mode === "street") {
+        // detect streaks
+        const prev = slice[index - 1];
+        const next = slice[index + 1];
+        if (value === prev || value === next) color = "num-yellow";
+    }
+
+    colorNumber(entry, color);
+}
+
+/* ---------------------------------------------------------
+   RNG ENGINE
+--------------------------------------------------------- */
 let history = [];
 let timer = null;
 let autoStopTimeout = null;
@@ -700,26 +1109,29 @@ const devDetectEl = document.getElementById("devDetect");
 const mostRepeatEl = document.getElementById("mostRepeat");
 const leastRepeatEl = document.getElementById("leastRepeat");
 const longestStreakEl = document.getElementById("longestStreak");
-const historyEl = document.getElementById("history");
 const heatmapEl = document.getElementById("heatmap");
 
-function add(n){
+let lastUpdate = 0;
+const UPDATE_INTERVAL_MS = 60;
+
+/* ---------------------------------------------------------
+   RANDOM NUMBER GENERATION
+--------------------------------------------------------- */
+function add(n) {
     history.unshift(n);
 }
 
-function rand(min, max){
+function rand(min, max) {
     min = Math.floor(Number(min) || 0);
     max = Math.floor(Number(max) || 0);
-    if(min > max) [min, max] = [max, min];
+    if (min > max) [min, max] = [max, min];
 
     const range = max - min + 1;
-    if(range <= 0){
-        return min;
-    }
+    if (range <= 0) return min;
 
     const hasCrypto = typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function";
 
-    if(!hasCrypto){
+    if (!hasCrypto) {
         return min + Math.floor(Math.random() * range);
     }
 
@@ -728,18 +1140,18 @@ function rand(min, max){
     const arr = new Uint32Array(1);
     let r;
 
-    do{
+    do {
         crypto.getRandomValues(arr);
         r = arr[0];
-    }while(r >= limit);
+    } while (r >= limit);
 
     return min + (r % range);
 }
 
-function step(){
+function step() {
     let minVal = +minInput.value || 0;
     let maxVal = +maxInput.value || 99;
-    if(maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
+    if (maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
 
     let n = rand(minVal, maxVal);
     numberEl.innerText = n;
@@ -747,7 +1159,14 @@ function step(){
     update();
 }
 
-function update(){
+/* ---------------------------------------------------------
+   UPDATE ALL STATS (throttled)
+--------------------------------------------------------- */
+function update() {
+    const now = Date.now();
+    if (now - lastUpdate < UPDATE_INTERVAL_MS) return;
+    lastUpdate = now;
+
     let freq = {};
     history.forEach(n => freq[n] = (freq[n] || 0) + 1);
 
@@ -771,54 +1190,55 @@ function update(){
     updateLongestStreak();
 }
 
-function calcEntropy(freq){
+/* ---------------------------------------------------------
+   ENTROPY
+--------------------------------------------------------- */
+function calcEntropy(freq) {
     let total = history.length;
-    if(!total) return 0;
+    if (!total) return 0;
     let e = 0;
-    for(let k in freq){
+    for (let k in freq) {
         let p = freq[k] / total;
         e += -p * Math.log2(p);
     }
     return e;
 }
 
-function applyEntropyDetection(entropyVal, freq){
+function applyEntropyDetection(entropyVal, freq) {
     const keys = Object.keys(freq);
-    entropyDetectEl.className = "card-detect";
-    if(keys.length === 0){
-        entropyDetectEl.classList.add("detect-none");
+    entropyDetectEl.className = "card-detect red";
+    if (keys.length === 0) {
         entropyDetectEl.innerText = "No effect";
         return;
     }
     const maxEntropy = Math.log2(keys.length);
-    if(maxEntropy <= 0){
-        entropyDetectEl.classList.add("detect-none");
-        entropyDetectEl.innerText = "No effect";
-        return;
-    }
     const ratio = entropyVal / maxEntropy;
-    if(ratio >= 0.8){
-        entropyDetectEl.classList.add("detect-none");
+
+    if (ratio >= 0.8) {
         entropyDetectEl.innerText = "No effect";
-    }else if(ratio >= 0.5){
-        entropyDetectEl.classList.add("detect-slight");
+        entropyDetectEl.className = "card-detect red";
+    } else if (ratio >= 0.5) {
         entropyDetectEl.innerText = "Slight";
-    }else if(ratio >= 0.2){
-        entropyDetectEl.classList.add("detect-significant");
+        entropyDetectEl.className = "card-detect yellow";
+    } else if (ratio >= 0.2) {
         entropyDetectEl.innerText = "Significant";
-    }else{
-        entropyDetectEl.classList.add("detect-strong");
+        entropyDetectEl.className = "card-detect orange";
+    } else {
         entropyDetectEl.innerText = "Strong";
+        entropyDetectEl.className = "card-detect green";
     }
 }
 
-function calcChi(freq){
+/* ---------------------------------------------------------
+   CHI²
+--------------------------------------------------------- */
+function calcChi(freq) {
     let keys = Object.keys(freq);
     let n = history.length;
-    if(!n || !keys.length) return { p:1, dev:0 };
+    if (!n || !keys.length) return { p: 1, dev: 0 };
     let exp = n / keys.length;
     let chi = 0;
-    for(let k in freq){
+    for (let k in freq) {
         chi += (freq[k] - exp) ** 2 / exp;
     }
     return {
@@ -827,43 +1247,49 @@ function calcChi(freq){
     };
 }
 
-function applyChiDetection(p){
-    chiDetectEl.className = "card-detect";
-    if(p >= 0.10){
-        chiDetectEl.classList.add("detect-none");
+function applyChiDetection(p) {
+    chiDetectEl.className = "card-detect red";
+    if (p >= 0.10) {
         chiDetectEl.innerText = "No effect";
-    }else if(p >= 0.05){
-        chiDetectEl.classList.add("detect-slight");
+        chiDetectEl.className = "card-detect red";
+    } else if (p >= 0.05) {
         chiDetectEl.innerText = "Slight";
-    }else if(p >= 0.01){
-        chiDetectEl.classList.add("detect-significant");
+        chiDetectEl.className = "card-detect yellow";
+    } else if (p >= 0.01) {
         chiDetectEl.innerText = "Significant";
-    }else{
-        chiDetectEl.classList.add("detect-strong");
+        chiDetectEl.className = "card-detect orange";
+    } else {
         chiDetectEl.innerText = "Strong";
+        chiDetectEl.className = "card-detect green";
     }
 }
 
-function applyDevDetection(dev){
-    devDetectEl.className = "card-detect";
-    if(dev < 10){
-        devDetectEl.classList.add("detect-none");
+/* ---------------------------------------------------------
+   DEVIATION
+--------------------------------------------------------- */
+function applyDevDetection(dev) {
+    devDetectEl.className = "card-detect red";
+    if (dev < 10) {
         devDetectEl.innerText = "No effect";
-    }else if(dev < 25){
-        devDetectEl.classList.add("detect-slight");
+        devDetectEl.className = "card-detect red";
+    } else if (dev < 25) {
         devDetectEl.innerText = "Slight";
-    }else if(dev < 50){
-        devDetectEl.classList.add("detect-significant");
+        devDetectEl.className = "card-detect yellow";
+    } else if (dev < 50) {
         devDetectEl.innerText = "Significant";
-    }else{
-        devDetectEl.classList.add("detect-strong");
+        devDetectEl.className = "card-detect orange";
+    } else {
         devDetectEl.innerText = "Strong";
+        devDetectEl.className = "card-detect green";
     }
 }
 
-function updateRepeating(freq){
+/* ---------------------------------------------------------
+   REPEATING
+--------------------------------------------------------- */
+function updateRepeating(freq) {
     let entries = Object.entries(freq);
-    if(!entries.length){
+    if (!entries.length) {
         mostRepeatEl.innerText = "-";
         leastRepeatEl.innerText = "-";
         return;
@@ -874,46 +1300,33 @@ function updateRepeating(freq){
     leastRepeatEl.innerText = `${least[0]} (${least[1]}x)`;
 }
 
-function renderHistory(){
+/* ---------------------------------------------------------
+   HISTORY RENDERING
+--------------------------------------------------------- */
+function renderHistory() {
     historyEl.innerHTML = "";
     let slice = history.slice(0, 100);
 
     let entries = [];
-    for(let i = 0; i < slice.length; i++){
+    for (let i = 0; i < slice.length; i++) {
         let d = document.createElement("div");
-        d.className = "entry";
+        d.className = "entry num-red"; // default red
         d.innerText = slice[i];
-        if(i === 0) d.classList.add("latest");
+        if (i === 0) d.classList.add("latest");
+
+        applyHistoryColor(d, slice[i], slice, i);
+
         entries.push(d);
-    }
-
-    let i = 0;
-    while(i < slice.length){
-        let runStart = i;
-        let runValue = slice[i];
-        let runLength = 1;
-
-        while(i + 1 < slice.length && slice[i + 1] === runValue){
-            i++;
-            runLength++;
-        }
-
-        let colorClass = "streak1";
-        if(runLength === 2) colorClass = "streak2";
-        else if(runLength >= 3) colorClass = "streak3";
-
-        for(let j = runStart; j < runStart + runLength; j++){
-            entries[j].classList.add(colorClass);
-        }
-
-        i++;
     }
 
     entries.forEach(d => historyEl.appendChild(d));
 }
 
-function updateLongestStreak(){
-    if(history.length < 2){
+/* ---------------------------------------------------------
+   LONGEST STREAK
+--------------------------------------------------------- */
+function updateLongestStreak() {
+    if (history.length < 2) {
         longestStreakEl.innerText = "-";
         return;
     }
@@ -922,14 +1335,14 @@ function updateLongestStreak(){
     let maxNum = history[0];
     let currentStreak = 1;
 
-    for(let i = 1; i < history.length; i++){
-        if(history[i] === history[i - 1]){
+    for (let i = 1; i < history.length; i++) {
+        if (history[i] === history[i - 1]) {
             currentStreak++;
-            if(currentStreak > maxStreak){
+            if (currentStreak > maxStreak) {
                 maxStreak = currentStreak;
                 maxNum = history[i];
             }
-        }else{
+        } else {
             currentStreak = 1;
         }
     }
@@ -937,18 +1350,26 @@ function updateLongestStreak(){
     longestStreakEl.innerText = `${maxNum} (${maxStreak}x)`;
 }
 
-function drawHeatmap(freq){
+/* ---------------------------------------------------------
+   HEATMAP
+--------------------------------------------------------- */
+function drawHeatmap(freq) {
     heatmapEl.innerHTML = "";
 
-    let recent = history.slice(0, 100);
-    let recentFreq = {};
-    recent.forEach(n => recentFreq[n] = (recentFreq[n] || 0) + 1);
+    let dataFreq = {};
 
-    let entries = Object.entries(recentFreq)
+    if (heatmapMode.value === "recent") {
+        let recent = history.slice(0, 100);
+        recent.forEach(n => dataFreq[n] = (dataFreq[n] || 0) + 1);
+    } else {
+        dataFreq = freq;
+    }
+
+    let entries = Object.entries(dataFreq)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 10);
 
-    if(!entries.length) return;
+    if (!entries.length) return;
 
     let maxVal = entries[0][1] || 1;
 
@@ -964,16 +1385,7 @@ function drawHeatmap(freq){
         bar.className = "bar";
 
         let rel = v / maxVal;
-        let width = rel * 240;
-        bar.style.width = width + "px";
-
-        if(rel < 0.33){
-            bar.style.background = "linear-gradient(90deg,#ff6666,#ff6666)";
-        }else if(rel < 0.66){
-            bar.style.background = "linear-gradient(90deg,#ff6666,#ffee55)";
-        }else{
-            bar.style.background = "linear-gradient(90deg,#ff6666,#ffee55,#66ff66)";
-        }
+        bar.style.width = (rel * 240) + "px";
 
         row.appendChild(label);
         row.appendChild(bar);
@@ -981,17 +1393,20 @@ function drawHeatmap(freq){
     });
 }
 
-function drawChart(){
+/* ---------------------------------------------------------
+   CHART
+--------------------------------------------------------- */
+function drawChart() {
     let c = document.getElementById("chart");
     let ctx = c.getContext("2d");
     ctx.clearRect(0, 0, c.width, c.height);
 
     let data = history.slice(0, 80).reverse();
-    if(!data.length) return;
+    if (!data.length) return;
 
     let minVal = +minInput.value || 0;
     let maxVal = +maxInput.value || 99;
-    if(maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
+    if (maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
     let range = maxVal - minVal || 1;
 
     ctx.beginPath();
@@ -1000,77 +1415,83 @@ function drawChart(){
         let norm = (v - minVal) / range;
         norm = Math.max(0, Math.min(1, norm));
         let y = c.height - norm * c.height;
-        if(i === 0) ctx.moveTo(x, y);
+        if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
     });
 
-    ctx.strokeStyle = document.body.getAttribute("data-theme") === "light" ? "#00aa44" : "#00ff66";
+    ctx.strokeStyle = document.body.getAttribute("data-theme") === "light" ? "#007aff" : "#34c759";
     ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.strokeStyle = "#222";
-    ctx.beginPath();
-    ctx.moveTo(0, c.height - 0.5);
-    ctx.lineTo(c.width, c.height - 0.5);
     ctx.stroke();
 }
 
-function start(){
+/* ---------------------------------------------------------
+   START / STOP / RESET
+--------------------------------------------------------- */
+function start() {
     stop();
     let speedVal = +speedInput.value || 100;
     numberEl.classList.add("running");
     timer = setInterval(step, speedVal);
 
-    if(timerToggle.checked){
+    if (timerToggle.checked) {
         let minutes = +timerMinInput.value || 5;
         autoStopTimeout = setTimeout(stop, minutes * 60000);
     }
 }
 
-function stop(){
-    if(timer) clearInterval(timer);
+function stop() {
+    if (timer) clearInterval(timer);
     timer = null;
-    if(autoStopTimeout) clearTimeout(autoStopTimeout);
+    if (autoStopTimeout) clearTimeout(autoStopTimeout);
+    autoStopTimeout = null;
     numberEl.classList.remove("running");
 }
 
-function reset(){
+function reset() {
     history = [];
-    update();
     numberEl.innerText = 0;
     numberEl.classList.remove("running");
+    update();
 }
 
-function toggleRunning(){
-    if(timer) stop();
+/* ---------------------------------------------------------
+   SPACEBAR & TAP TOGGLE
+--------------------------------------------------------- */
+function toggleRunning() {
+    if (timer) stop();
     else start();
 }
 
 window.addEventListener("keydown", e => {
-    if(e.code === "Space"){
+    if (e.code === "Space") {
         let a = document.activeElement;
         let t = a.tagName.toUpperCase();
         let edit = a.isContentEditable || t === "INPUT" || t === "TEXTAREA";
-        if(!edit){
+        if (!edit) {
             e.preventDefault();
             toggleRunning();
         }
     }
 });
 
-numberEl.addEventListener("click", () => {
+numberEl.addEventListener("click", toggleRunning);
+
+numberEl.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+});
+
+numberEl.addEventListener("touchend", (e) => {
+    e.preventDefault();
     toggleRunning();
 });
 
-numberEl.addEventListener("touchstart", () => {
-    toggleRunning();
-});
-
-(function init(){
+/* ---------------------------------------------------------
+   INIT
+--------------------------------------------------------- */
+(function init() {
     update();
 })();
 </script>
 
 </body>
 </html>
-
