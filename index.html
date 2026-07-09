@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>true Random Number Generator v14.9.1</title>
+<title>true Random Number Generator v14.9.6</title>
 
 <style>
 :root {
@@ -22,7 +22,6 @@
     --panel-border-light:#e5e5ea;
     --overlay-bg:rgba(0,0,0,0.45);
 
-    /* Traffic‑light colors */
     --color-red:#ff3b30;
     --color-yellow:#ffcc00;
     --color-green:#34c759;
@@ -245,6 +244,20 @@ body[data-theme="light"] #aboutContent {
     margin-top:0;
 }
 
+/* MOBILE FIX FOR ABOUT */
+@media (max-width:900px) {
+    .about-columns {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+}
+@media (max-width:600px) {
+    .about-columns {
+        grid-template-columns:1fr;
+    }
+    #center {padding:20px 10px;}
+    #number {font-size:120px;}
+}
+
 /* UI-HIDE LAYER */
 #uiHideLayer {
     position:fixed;
@@ -254,12 +267,20 @@ body[data-theme="light"] #aboutContent {
 }
 #uiHideLayer.active {display:block;cursor:pointer;}
 
-/* MAIN UI */
+<!-- MAIN UI -->
 #center {
-    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
     padding:40px 10px;
+    max-width:1100px;
+    margin:0 auto;
 }
-#title {margin-top:40px;}
+#title {
+    margin-top:40px;
+    width:100%;
+    text-align:center;
+}
 .title-line {
     display:block;
     font-size:26px;
@@ -276,12 +297,18 @@ body[data-theme="light"] #aboutContent {
     transition:transform 0.2s,color 0.2s;
     position:relative;
     z-index:1600;
+    width:100%;
+    text-align:center
 }
 #number.running {
     color:var(--accent-green);
     transform:scale(1.03);
 }
-.block {margin:10px 0;}
+.block {
+    margin:10px 0;
+    width:100%;        /* ← NEU */
+    text-align:center; /* ← NEU */
+}
 input {
     width:90px;
     padding:8px;
@@ -358,7 +385,7 @@ button:hover {
 input:checked + .slider {background:var(--accent-blue);}
 input:checked + .slider:before {transform:translateX(22px);}
 
-/* HISTORY – 5 rows × 20 columns */
+/* HISTORY */
 #history {
     margin-top:20px;
     display:grid;
@@ -376,7 +403,7 @@ input:checked + .slider:before {transform:translateX(22px);}
     border:1px solid var(--bg-border-dark);
     background:var(--bg-card-dark);
     font-size:13px;
-    color:var(--color-red); /* ALWAYS red by default */
+    color:var(--color-red);
 }
 body[data-theme="light"] .entry {
     background:var(--bg-card-light);
@@ -387,28 +414,45 @@ body[data-theme="light"] .entry {
     border-color:var(--accent-blue);
 }
 
-/* Traffic‑light classes */
 .num-red   { color:var(--color-red) !important; }
 .num-yellow{ color:var(--color-yellow) !important; }
 .num-green { color:var(--color-green) !important; }
+
+.num-white { color:#ffffff !important; }
+body[data-theme="light"] .num-white { color:var(--text-main-light) !important; }
 
 /* DASHBOARD */
 #dashboard {
     margin:30px auto;
     max-width:1100px;
 }
+#mainWrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+#mainWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#uiLayer {
+    position: relative;
+    width: 100%;
+}
+
 .dashboard-layout {
     display:grid;
     grid-template-columns:2fr 1fr;
     gap:20px;
 }
 
-/* Extra spacing between dashboard rows */
 .grid-3 { 
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));
     gap:12px;
-    margin-bottom:20px; /* NEW spacing */
+    margin-bottom:20px;
 }
 .grid-4 {
     display:grid;
@@ -444,7 +488,6 @@ body[data-theme="light"] .card {
     opacity:0.9;
 }
 
-/* Traffic‑light detect colors */
 .card-detect.red {color:var(--color-red);}
 .card-detect.yellow {color:var(--color-yellow);}
 .card-detect.orange {color:#ff9500;}
@@ -474,7 +517,7 @@ body[data-theme="light"] .chart-card {
     height:160px;
 }
 
-/* Fix dynamic height for heatmap card */
+/* HEATMAP */
 #heatmapCard {
     background:var(--panel-dark);
     border-radius:12px;
@@ -489,20 +532,10 @@ body[data-theme="light"] #heatmapCard {
 }
 
 #heatmap {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    height: auto !important;
-}
-
-#heatmapCard h3 {
-    margin:0 0 8px 0;
-    font-size:16px;
     display:flex;
-    align-items:center;
-    gap:6px;
-}
-#heatmap {
+    flex-direction:column;
+    gap:4px;
+    height:auto !important;
     margin-top:8px;
 }
 .heat-row {
@@ -520,60 +553,46 @@ body[data-theme="light"] #heatmapCard {
     height:10px;
     border-radius:6px;
     background:linear-gradient(90deg,var(--color-red),var(--color-yellow),var(--color-green));
+    background-size:240px 100%;
+    background-repeat:no-repeat;
+    max-width:240px;
+    overflow:hidden;
 }
 
 /* DASHBOARD HIDDEN */
 .dashboard-hidden {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    height: 0 !important;
-    overflow: hidden !important;
+    display:none !important;
+    visibility:hidden !important;
+    opacity:0 !important;
+    height:0 !important;
+    overflow:hidden !important;
 }
 
-/* RESPONSIVE */
-@media (max-width:900px) {
-    .about-columns {
-        grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-    .dashboard-layout {
-        grid-template-columns:1fr;
-    }
-}
-@media (max-width:600px) {
-    .about-columns {
-        grid-template-columns:1fr;
-    }
-    #center {padding:20px 10px;}
-    #number {font-size:120px;}
-}
 </style>
 </head>
 
 <body data-theme="dark">
 
-<!-- GLOBAL HAMBURGER -->
+<div id="uiLayer">
+
 <div id="hamburger" onclick="toggleSettings()">
     <div></div><div></div><div></div>
 </div>
 
-<!-- GLOBAL INFO POPUP -->
-<div id="infoOverlay">
-    <div id="infoContent">
-        <div id="infoTitle"></div>
-        <div id="infoText"></div>
-        <button id="infoClose">Close</button>
+    <div id="infoOverlay">
+        <div id="infoContent">
+            <div id="infoTitle"></div>
+            <div id="infoText"></div>
+            <button id="infoClose">Close</button>
+        </div>
     </div>
-</div>
 
-<!-- SETTINGS PANEL -->
 <div id="settingsPanel">
 
     <div class="settings-header"><h2>Settings</h2></div>
 
     <div class="settings-section">
 
-        <!-- Light Mode -->
         <div class="settings-row">
             <span>Light Mode</span>
             <label class="switch">
@@ -582,7 +601,6 @@ body[data-theme="light"] #heatmapCard {
             </label>
         </div>
 
-        <!-- Hide UI -->
         <div class="settings-row">
             <span>Hide UI (tap background)</span>
             <label class="switch">
@@ -591,7 +609,6 @@ body[data-theme="light"] #heatmapCard {
             </label>
         </div>
 
-        <!-- Show History -->
         <div class="settings-row">
             <span>Show Last 100 Numbers</span>
             <label class="switch">
@@ -600,13 +617,22 @@ body[data-theme="light"] #heatmapCard {
             </label>
         </div>
 
-        <!-- History Mode -->
         <div class="settings-subsection">
             <label class="settings-label">
-                History – Last 100 Numbers
+                Last 100 Numbers Modes
                 <span class="info-trigger"
-                      data-title="History (Last 100)"
-                      data-info="The history view displays the latest 100 generated numbers in five rows of twenty values each. Each number is always shown in red by default, turning yellow or green depending on the selected mode and the strength of the detected pattern. This layout helps you visually inspect clustering, streaks, and distribution behavior in real time.">
+                      data-title="Last 100 Numbers Modes"
+                      data-info="High Numbers:
+Highlights values above your chosen threshold. Useful for exploring intention toward higher outcomes.
+
+Low Numbers:
+Highlights values below your chosen threshold. Ideal for exploring downward intention.
+
+Target Number:
+Highlights only the chosen number. Designed for PSI focus training.
+
+Street Mode:
+Highlights repeating sequences of identical numbers. Streaks are natural but often feel meaningful.">
                 </span>
             </label>
 
@@ -624,22 +650,24 @@ body[data-theme="light"] #heatmapCard {
             </label>
         </div>
 
-        <!-- Dashboard Toggle -->
         <div class="settings-row">
-            <span>Dashboard</span>
+            <span>Show Dashboard</span>
             <label class="switch">
                 <input type="checkbox" id="dashboardToggle" checked>
                 <span class="slider"></span>
             </label>
         </div>
 
-        <!-- Heatmap Mode -->
         <div class="settings-subsection">
             <label class="settings-label">
                 Heatmap Mode
                 <span class="info-trigger"
                       data-title="Heatmap Mode"
-                      data-info="The heatmap summarizes how often specific numbers appear. In 'Last 100' mode, it focuses on recent values, while 'All Time' uses the entire session. The bars use a red‑to‑yellow‑to‑green gradient to show relative frequency, making dominant numbers easy to spot.">
+                      data-info="Last 100:
+Summarizes how often specific numbers appear in the most recent 100 values. Highlights short-term fluctuations.
+
+All Time:
+Uses the entire session to show long-term frequency dominance. Helps identify persistent patterns.">
                 </span>
             </label>
 
@@ -651,20 +679,17 @@ body[data-theme="light"] #heatmapCard {
 
     </div>
 
-    <!-- ABOUT BUTTON -->
     <div class="settings-footer">
         <button id="aboutBtn">About</button>
     </div>
 
 </div>
 
-<!-- ABOUT OVERLAY -->
 <div id="aboutOverlay">
     <div id="aboutContent">
 
         <div class="about-columns">
 
-            <!-- COLUMN 1 -->
             <div>
                 <h2>About this generator</h2>
 
@@ -684,7 +709,6 @@ body[data-theme="light"] #heatmapCard {
                 </p>
             </div>
 
-            <!-- COLUMN 2 -->
             <div>
                 <h3>Features overview</h3>
 
@@ -709,7 +733,6 @@ body[data-theme="light"] #heatmapCard {
                 <p><b>Chart:</b> Plots the last 80 numbers as a line graph, showing rises, drops, and oscillations over time.</p>
             </div>
 
-            <!-- COLUMN 3 -->
             <div>
                 <h3>Modes and examples</h3>
 
@@ -726,11 +749,10 @@ body[data-theme="light"] #heatmapCard {
                     Modern studies on attention, meditation, and altered states suggest that mindset strongly influences how people perceive randomness. Before starting, take a moment to settle your breathing and adopt a calm, receptive mental state, similar to mindfulness practices used in contemporary research. Many experiments recommend entering a lightly altered state characterized by relaxed focus, reduced internal chatter, and heightened sensory awareness. As the generator begins producing numbers and you observe them, maintain a soft, non forceful intention—this mirrors protocols used in modern psi and consciousness studies. You are not generating the numbers yourself; instead, you are exploring whether your inner state correlates with how the random output behaves. Observe the stream without trying to force control; let your attention rest gently on the numbers. Over time, you may notice patterns, streaks, or shifts in distribution that feel meaningful or interesting. Whether these arise from cognitive bias, emotional resonance, or genuine statistical fluctuation, the process can be introspective and grounding. Use the dashboard metrics to track changes during different mental states, such as deep relaxation, focused intention, or creative flow. The goal is not to prove anything but to explore how your inner state interacts with your perception of randomness.
                 </p>
 
-		<h3>Tip</h3>
+                <h3>Tip</h3>
                 <p>
                     You can use spacebar or click/tap the number, to start and stop the generator.
                 </p>
-			
             </div>
 
         </div>
@@ -739,17 +761,19 @@ body[data-theme="light"] #heatmapCard {
     </div>
 </div>
 
-<!-- UI-HIDE LAYER -->
 <div id="uiHideLayer"></div>
 
-<!-- MAIN CENTER AREA -->
+</div>
+
+<div id="mainWrapper">
+
 <div id="center">
 
     <div id="title">
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">true Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v14.9.1</span>
+        <span id="versionLine">v14.9.6</span>
     </div>
 
     <div id="number">0</div>
@@ -809,7 +833,6 @@ body[data-theme="light"] #heatmapCard {
 
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard">
     <div class="dashboard-layout">
 
@@ -916,7 +939,6 @@ body[data-theme="light"] #heatmapCard {
 
         </div>
 
-        <!-- HEATMAP CARD -->
         <div id="heatmapCard">
             <h3>
                 Heatmap (Top 10)
@@ -930,19 +952,14 @@ body[data-theme="light"] #heatmapCard {
 
     </div>
 </div>
+</div>
 
 <script>
-/* ---------------------------------------------------------
-   SETTINGS PANEL TOGGLE
---------------------------------------------------------- */
 function toggleSettings() {
     const panel = document.getElementById("settingsPanel");
     panel.classList.toggle("open");
 }
 
-/* ---------------------------------------------------------
-   GLOBAL INFO POPUP
---------------------------------------------------------- */
 const infoOverlay = document.getElementById("infoOverlay");
 const infoTitleEl = document.getElementById("infoTitle");
 const infoTextEl = document.getElementById("infoText");
@@ -964,15 +981,24 @@ infoOverlay.addEventListener("click", (e) => {
 
 document.addEventListener("click", (e) => {
     const trigger = e.target.closest(".info-trigger");
-    if (!trigger) return;
-    const title = trigger.getAttribute("data-title") || "";
-    const text = trigger.getAttribute("data-info") || "";
-    openInfoBox(title, text);
+    if (trigger) {
+        const title = trigger.getAttribute("data-title") || "";
+        const text = trigger.getAttribute("data-info") || "";
+        openInfoBox(title, text);
+        return;
+    }
+
+    const panel = document.getElementById("settingsPanel");
+    const hamburger = document.getElementById("hamburger");
+    if (panel.classList.contains("open")) {
+        const clickInsidePanel = panel.contains(e.target);
+        const clickOnHamburger = hamburger.contains(e.target);
+        if (!clickInsidePanel && !clickOnHamburger) {
+            panel.classList.remove("open");
+        }
+    }
 });
 
-/* ---------------------------------------------------------
-   ABOUT OVERLAY
---------------------------------------------------------- */
 const aboutOverlay = document.getElementById("aboutOverlay");
 document.getElementById("aboutBtn").onclick = () => {
     aboutOverlay.classList.add("open");
@@ -981,18 +1007,12 @@ document.getElementById("aboutClose").onclick = () => {
     aboutOverlay.classList.remove("open");
 };
 
-/* ---------------------------------------------------------
-   THEME SLIDER
---------------------------------------------------------- */
 const themeSlider = document.getElementById("themeSlider");
 themeSlider.addEventListener("change", () => {
     const next = themeSlider.checked ? "light" : "dark";
     document.body.setAttribute("data-theme", next);
 });
 
-/* ---------------------------------------------------------
-   HIDE UI MODE
---------------------------------------------------------- */
 const hideUiToggle = document.getElementById("hideUiToggle");
 const uiHideLayer = document.getElementById("uiHideLayer");
 
@@ -1013,9 +1033,6 @@ uiHideLayer.addEventListener("click", () => {
     document.body.classList.remove("focus-mode");
 });
 
-/* ---------------------------------------------------------
-   HISTORY TOGGLE
---------------------------------------------------------- */
 const showHistoryToggle = document.getElementById("showHistoryToggle");
 const historyEl = document.getElementById("history");
 
@@ -1023,9 +1040,6 @@ showHistoryToggle.addEventListener("change", () => {
     historyEl.style.display = showHistoryToggle.checked ? "grid" : "none";
 });
 
-/* ---------------------------------------------------------
-   DASHBOARD TOGGLE
---------------------------------------------------------- */
 const dashboardToggle = document.getElementById("dashboardToggle");
 const dashboardEl = document.getElementById("dashboard");
 
@@ -1033,9 +1047,6 @@ dashboardToggle.addEventListener("change", () => {
     dashboardEl.classList.toggle("dashboard-hidden", !dashboardToggle.checked);
 });
 
-/* ---------------------------------------------------------
-   HISTORY MODES
---------------------------------------------------------- */
 const historyMode = document.getElementById("historyMode");
 const historyParam = document.getElementById("historyParam");
 
@@ -1048,9 +1059,6 @@ historyMode.addEventListener("change", () => {
     }
 });
 
-/* ---------------------------------------------------------
-   TRAFFIC-LIGHT COLOR LOGIC FOR HISTORY
---------------------------------------------------------- */
 function colorNumber(entry, colorClass) {
     entry.classList.remove("num-red","num-yellow","num-green");
     entry.classList.add(colorClass);
@@ -1058,36 +1066,53 @@ function colorNumber(entry, colorClass) {
 
 function applyHistoryColor(entry, value, slice, index) {
     const mode = historyMode.value;
-    const param = Number(historyParam.value);
 
-    // Default: always red
+    // Range aus den Inputs holen
+    const minVal = Number(minInput.value) || 0;
+    const maxVal = Number(maxInput.value) || 0;
+
+    const range = maxVal - minVal;
+    const tenPct = minVal + range * 0.90;   // oberste 10%
+    const thirtyPct = minVal + range * 0.70; // oberste 30%
+
+    const tenPctLow = minVal + range * 0.10;   // unterste 10%
+    const thirtyPctLow = minVal + range * 0.30; // unterste 30%
+
     let color = "num-red";
 
-    if (mode === "high") {
-        if (!isNaN(param) && value >= param) color = "num-yellow";
+    if (mode === "none") {
+        color = "num-white";
     }
 
-    if (mode === "low") {
-        if (!isNaN(param) && value <= param) color = "num-yellow";
+    else if (mode === "high") {
+        if (value >= tenPct) color = "num-green";
+        else if (value >= thirtyPct) color = "num-yellow";
+        else color = "num-red";
     }
 
-    if (mode === "target") {
-        if (!isNaN(param) && value === param) color = "num-yellow";
+    else if (mode === "low") {
+        if (value <= tenPctLow) color = "num-green";
+        else if (value <= thirtyPctLow) color = "num-yellow";
+        else color = "num-red";
     }
 
-    if (mode === "street") {
-        // detect streaks
+    else if (mode === "target") {
+        const param = Number(historyParam.value);
+        if (!isNaN(param) && value === param) color = "num-green";
+        else color = "num-red";
+    }
+
+    else if (mode === "street") {
         const prev = slice[index - 1];
         const next = slice[index + 1];
-        if (value === prev || value === next) color = "num-yellow";
+        if (value === prev || value === next) color = "num-green";
+        else color = "num-red";
     }
 
     colorNumber(entry, color);
 }
 
-/* ---------------------------------------------------------
-   RNG ENGINE
---------------------------------------------------------- */
+
 let history = [];
 let timer = null;
 let autoStopTimeout = null;
@@ -1114,9 +1139,6 @@ const heatmapEl = document.getElementById("heatmap");
 let lastUpdate = 0;
 const UPDATE_INTERVAL_MS = 60;
 
-/* ---------------------------------------------------------
-   RANDOM NUMBER GENERATION
---------------------------------------------------------- */
 function add(n) {
     history.unshift(n);
 }
@@ -1159,9 +1181,6 @@ function step() {
     update();
 }
 
-/* ---------------------------------------------------------
-   UPDATE ALL STATS (throttled)
---------------------------------------------------------- */
 function update() {
     const now = Date.now();
     if (now - lastUpdate < UPDATE_INTERVAL_MS) return;
@@ -1190,9 +1209,6 @@ function update() {
     updateLongestStreak();
 }
 
-/* ---------------------------------------------------------
-   ENTROPY
---------------------------------------------------------- */
 function calcEntropy(freq) {
     let total = history.length;
     if (!total) return 0;
@@ -1229,9 +1245,6 @@ function applyEntropyDetection(entropyVal, freq) {
     }
 }
 
-/* ---------------------------------------------------------
-   CHI²
---------------------------------------------------------- */
 function calcChi(freq) {
     let keys = Object.keys(freq);
     let n = history.length;
@@ -1264,9 +1277,6 @@ function applyChiDetection(p) {
     }
 }
 
-/* ---------------------------------------------------------
-   DEVIATION
---------------------------------------------------------- */
 function applyDevDetection(dev) {
     devDetectEl.className = "card-detect red";
     if (dev < 10) {
@@ -1284,9 +1294,6 @@ function applyDevDetection(dev) {
     }
 }
 
-/* ---------------------------------------------------------
-   REPEATING
---------------------------------------------------------- */
 function updateRepeating(freq) {
     let entries = Object.entries(freq);
     if (!entries.length) {
@@ -1300,9 +1307,6 @@ function updateRepeating(freq) {
     leastRepeatEl.innerText = `${least[0]} (${least[1]}x)`;
 }
 
-/* ---------------------------------------------------------
-   HISTORY RENDERING
---------------------------------------------------------- */
 function renderHistory() {
     historyEl.innerHTML = "";
     let slice = history.slice(0, 100);
@@ -1310,7 +1314,7 @@ function renderHistory() {
     let entries = [];
     for (let i = 0; i < slice.length; i++) {
         let d = document.createElement("div");
-        d.className = "entry num-red"; // default red
+        d.className = "entry num-red";
         d.innerText = slice[i];
         if (i === 0) d.classList.add("latest");
 
@@ -1322,9 +1326,6 @@ function renderHistory() {
     entries.forEach(d => historyEl.appendChild(d));
 }
 
-/* ---------------------------------------------------------
-   LONGEST STREAK
---------------------------------------------------------- */
 function updateLongestStreak() {
     if (history.length < 2) {
         longestStreakEl.innerText = "-";
@@ -1350,9 +1351,6 @@ function updateLongestStreak() {
     longestStreakEl.innerText = `${maxNum} (${maxStreak}x)`;
 }
 
-/* ---------------------------------------------------------
-   HEATMAP
---------------------------------------------------------- */
 function drawHeatmap(freq) {
     heatmapEl.innerHTML = "";
 
@@ -1393,9 +1391,6 @@ function drawHeatmap(freq) {
     });
 }
 
-/* ---------------------------------------------------------
-   CHART
---------------------------------------------------------- */
 function drawChart() {
     let c = document.getElementById("chart");
     let ctx = c.getContext("2d");
@@ -1424,9 +1419,6 @@ function drawChart() {
     ctx.stroke();
 }
 
-/* ---------------------------------------------------------
-   START / STOP / RESET
---------------------------------------------------------- */
 function start() {
     stop();
     let speedVal = +speedInput.value || 100;
@@ -1454,9 +1446,6 @@ function reset() {
     update();
 }
 
-/* ---------------------------------------------------------
-   SPACEBAR & TAP TOGGLE
---------------------------------------------------------- */
 function toggleRunning() {
     if (timer) stop();
     else start();
@@ -1485,9 +1474,6 @@ numberEl.addEventListener("touchend", (e) => {
     toggleRunning();
 });
 
-/* ---------------------------------------------------------
-   INIT
---------------------------------------------------------- */
 (function init() {
     update();
 })();
