@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Random Number Generator v14.9.8</title>
+<title>Random Number Generator v15.0</title>
 
 <style>
 :root {
@@ -334,6 +334,17 @@ body[data-theme="light"] #aboutContent {
     color:var(--accent-green);
     transform:scale(1.03);
 }
+/* LCD DOT */
+#lcdDot {
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    margin:20px 0;
+    display:none;
+    background:radial-gradient(circle at 30% 30%, #ff7b7b, #b00000);
+    transition:background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow:0 0 22px rgba(255, 0, 0, 0.35);
+}
 .block {
     margin:10px 0;
     width:100%;
@@ -623,6 +634,45 @@ body[data-theme="light"] #heatmapCard {
                 <span class="slider"></span>
             </label>
         </div>
+		
+		<div class="settings-row">
+			<span>Show Visual Indicator</span>
+			<label class="switch">
+				<input type="checkbox" id="showVisualToggle" checked>
+				<span class="slider"></span>
+			</label>
+		</div>
+
+		<div class="settings-subsection">
+			<label class="settings-label">
+			Visual Indicator Type
+			<span class="settings-help"
+				data-title="Visual Indicator Type"
+				data-tip="The Visual Indicator shows how the random number generator behaves in real time. You can choose between Digit Mode or Dot Mode depending on how you prefer to observe subtle changes in randomness.
+
+				🔵 Blue — Very stable randomness. The system behaves calmly and exactly as statistics predict. Nothing unusual is happening, and the RNG is in a neutral, balanced state.
+
+				🟦 Light Blue — Strong stability with only tiny fluctuations. This is a healthy baseline where the RNG behaves normally and predictably.
+
+				🟢 Green — Normal randomness. Small variations appear, but they are expected and common. This is the typical state during regular operation.
+
+				🟡 Yellow — Mild deviation. The system begins to drift slightly, showing a gentle imbalance. This can happen during focus, meditation, or emotional engagement.
+
+				🟠 Orange — Clear deviation. The RNG produces patterns or biases that are less likely to occur by chance. The system is reacting more strongly to short-term influences.
+
+				🔴 Red — Strong deviation. The output differs significantly from what pure randomness would produce. Red is considered a high-interest state where meaningful anomalies may be present.
+
+				The classic Global Consciousness Project (GCP) used physical random number generators placed around the world. During major emotional or collective events, these devices often showed measurable shifts away from randomness. The project interpreted these shifts as possible correlations between human consciousness and physical randomness.
+
+				The Local Consciousness Dot works in a similar spirit but operates entirely on your device. It reacts more sensitively to short-term fluctuations and updates instantly as your session evolves. The Dot is not a measurement of psi ability but a visualization of statistical drift. It helps you observe subtle changes in randomness during focus, meditation, or intention. Digit Mode simply shows the raw output without interpretation. Choose the mode that fits your style of training or observation.">
+			</span>
+		</label>
+
+			<select id="visualType">
+				<option value="number">Number</option>
+				<option value="dot">Dot (LCD)</option>
+			</select>
+		</div>
 
         <div class="settings-row">
             <span>Show Controls</span>
@@ -881,10 +931,11 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v14.9.8</span>
+        <span id="versionLine">v15.0</span>
     </div>
 
     <div id="number">0</div>
+	<div id="lcdDot"></div>
 
     <div class="block" id="controlsBlock">
         <label>
@@ -1029,6 +1080,11 @@ themeSlider.addEventListener("change", () => {
     document.body.setAttribute("data-theme", next);
 });
 
+// Visual Indicator
+const showVisualToggle = document.getElementById("showVisualToggle");
+const visualType = document.getElementById("visualType");
+const lcdDot = document.getElementById("lcdDot");
+
 // Hide UI / focus mode
 const hideUiToggle = document.getElementById("hideUiToggle");
 const uiHideLayer = document.getElementById("uiHideLayer");
@@ -1050,12 +1106,43 @@ uiHideLayer.addEventListener("click", () => {
     document.body.classList.remove("focus-mode");
 });
 
+function updateVisualIndicator(p) {
+    // If visual indicator is disabled → hide both
+    if (!showVisualToggle.checked) {
+        numberEl.style.display = "none";
+        lcdDot.style.display = "none";
+        return;
+    }
+
+    // If Number mode → show number, hide dot
+    if (visualType.value === "number") {
+        numberEl.style.display = "block";
+        lcdDot.style.display = "none";
+        return;
+    }
+
+    // If Dot mode → hide number, show dot
+    numberEl.style.display = "none";
+    lcdDot.style.display = "block";
+
+    // Set dot color based on p-value
+    lcdDot.style.background = getDotColor(p);
+}
+
 // Show/hide history
 const showHistoryToggle = document.getElementById("showHistoryToggle");
 const historyEl = document.getElementById("history");
 
 showHistoryToggle.addEventListener("change", () => {
     historyEl.style.display = showHistoryToggle.checked ? "grid" : "none";
+});
+
+showVisualToggle.addEventListener("change", () => {
+    updateVisualIndicator(chiObj.p);
+});
+
+visualType.addEventListener("change", () => {
+    updateVisualIndicator(chiObj.p);
 });
 
 // Show/hide controls and timer
@@ -1317,6 +1404,8 @@ function update() {
     drawHeatmap();
     drawChart();
     updateLongestStreak();
+	
+	updateVisualIndicator(chiObj.p);
 }
 
 // ----------------------------
@@ -1356,6 +1445,15 @@ function applyEntropyDetection(entropyVal, freq) {
         entropyDetectEl.innerText = "Strong";
         entropyDetectEl.className = "card-detect green";
     }
+}
+
+function getDotColor(p) {
+    if (p > 0.95) return "radial-gradient(circle at 30% 30%, #7bbcff, #0044aa)";
+    if (p > 0.90) return "radial-gradient(circle at 30% 30%, #a0e0ff, #007aff)";
+    if (p > 0.70) return "radial-gradient(circle at 30% 30%, #b4ffb4, #1f8f1f)";
+    if (p > 0.40) return "radial-gradient(circle at 30% 30%, #fff6a0, #c7a000)";
+    if (p > 0.10) return "radial-gradient(circle at 30% 30%, #ffcf7b, #c76a00)";
+    return "radial-gradient(circle at 30% 30%, #ff7b7b, #b00000)";
 }
 
 // ----------------------------
@@ -1672,9 +1770,19 @@ function stop() {
 
 function reset() {
     history = [];
-    numberEl.innerText = 0;
-    numberEl.classList.remove("running");
-    update();
+    totalEl.innerText = "0";
+    entropyEl.innerText = "0.00";
+    chiEl.innerText = "0.000";
+    devEl.innerText = "0%";
+    longestStreak = 0;
+    longestStreakEl.innerText = "0";
+
+    renderHistory();
+    drawHeatmap();
+    drawChart();
+
+    numberEl.style.display = "block";
+    lcdDot.style.display = "none";
 }
 
 // ----------------------------
