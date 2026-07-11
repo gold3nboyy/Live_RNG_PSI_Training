@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Random Number Generator v14.9.8</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Number Generator v14.9.9</title>
 
 <style>
 :root {
@@ -273,16 +274,30 @@ body[data-theme="light"] #aboutContent {
 }
 
 /* MOBILE FIX FOR ABOUT */
+/* MOBILE FIX */
 @media (max-width:900px) {
+
+    /* ABOUT: immer 1 Spalte */
     .about-columns {
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        display:block;
+    }
+
+    /* DASHBOARD: zentriert + 1 Spalte */
+    #dashboard {
+        max-width:600px;
+        margin:30px auto;
+    }
+    .dashboard-layout {
+        display:block;
     }
 }
+
 @media (max-width:700px) {
     .about-columns {
         grid-template-columns:1fr;
     }
 }
+
 @media (max-width:600px) {
     #center {padding:20px 10px;}
     #number {font-size:120px;}
@@ -475,6 +490,7 @@ body[data-theme="light"] .num-white { color:var(--text-main-light) !important; }
     grid-template-columns:2fr 1fr;
     gap:20px;
 }
+
 .grid-3 { 
     display:grid;
     grid-template-columns:repeat(3,minmax(0,1fr));
@@ -881,7 +897,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v14.9.8</span>
+        <span id="versionLine">v14.9.9</span>
     </div>
 
     <div id="number">0</div>
