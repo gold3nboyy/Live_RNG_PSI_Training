@@ -1182,13 +1182,14 @@ body[data-theme="light"] #heatmapCard {
         gap:8px;
         width:100%;
         max-width:520px;
+        margin:0 auto;
     }
     
     #controlsBlock label {
         width:100%;
         margin:0;
-        align-items:stretch;
-        text-align:left;
+        align-items:center;
+        text-align:center;
     }
     
     #controlsBlock input {
@@ -1202,6 +1203,8 @@ body[data-theme="light"] #heatmapCard {
         max-width:520px;
         gap: 8px;
         margin-top: 10px;
+        margin-left:auto;
+        margin-right:auto;
     }
     
     #buttonsBlock button {
@@ -1214,16 +1217,17 @@ body[data-theme="light"] #heatmapCard {
     #timerBlock {
         width:100%;
         max-width:420px;
-        justify-content:space-between;
+        justify-content:center;
         align-items:center;
         gap:10px;
+        margin:0 auto;
     }
 
     #timerBlock label:first-child {
         flex:1;
         max-width:220px;
-        align-items:stretch;
-        text-align:left;
+        align-items:center;
+        text-align:center;
     }
 
     #timerBlock #timerMin {
@@ -1446,9 +1450,7 @@ body[data-theme="light"] #heatmapCard {
         </div>
 		
 		<div class="settings-row">
-			<label class="settings-label">
-				Show Visual Indicator
-			</label>
+            <span>Show Visual Indicator</span>
 			<label class="switch">
 				<input type="checkbox" id="showVisualToggle" checked>
 				<span class="slider"></span>
