@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Random Number Generator v15.5</title>
+<title>Random Number Generator v15.6</title>
 
 <style>
 :root {
@@ -383,6 +383,10 @@ body[data-theme="light"] .settings-group-card .settings-subsection {
 .settings-info-content,
 .settings-about-content {
     min-width:0;
+}
+
+.settings-info-accordion-button {
+    display:none;
 }
 
 .settings-rich-text {
@@ -1097,7 +1101,74 @@ body[data-theme="light"] #heatmapCard {
     }
 
     .settings-info-layout {
+        display:block;
         grid-template-columns:1fr;
+    }
+
+    .settings-info-nav {
+        display:none;
+    }
+
+    .settings-info-content {
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .settings-info-section {
+        display:block;
+    }
+
+    .settings-info-accordion-button {
+        display:block;
+        width:100%;
+        border:1px solid var(--panel-border-dark);
+        background:rgba(255,255,255,0.03);
+        color:inherit;
+        text-align:left;
+        border-radius:12px;
+        padding:12px 14px;
+        font:inherit;
+        font-weight:600;
+        line-height:1.3;
+        cursor:pointer;
+        position:relative;
+        padding-right:34px;
+    }
+
+    .settings-info-accordion-button::after {
+        content:">";
+        position:absolute;
+        right:14px;
+        top:50%;
+        transform:translateY(-50%);
+        opacity:0.7;
+        transition:transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    body[data-theme="light"] .settings-info-accordion-button {
+        border-color:var(--panel-border-light);
+        background:rgba(255,255,255,0.42);
+    }
+
+    .settings-info-section .settings-rich-text {
+        display:none;
+        margin-top:10px;
+    }
+
+    .settings-info-section.active .settings-rich-text {
+        display:block;
+    }
+
+    .settings-info-section.active .settings-info-accordion-button {
+        border-color:var(--accent-blue);
+        color:var(--accent-blue);
+        background:rgba(0,122,255,0.12);
+    }
+
+    .settings-info-section.active .settings-info-accordion-button::after {
+        transform:translateY(-50%) rotate(90deg);
+        opacity:1;
     }
 
     .settings-group-card,
@@ -1407,15 +1478,19 @@ body[data-theme="light"] #heatmapCard {
 
                     <div class="settings-info-content">
                         <section class="settings-info-section active" data-info-view="visual-indicator">
+                            <button class="settings-info-accordion-button" data-info-view="visual-indicator" type="button" aria-expanded="true">Visual Indicator Types</button>
                             <div class="settings-rich-text" id="settingsInfoVisualIndicator"></div>
                         </section>
                         <section class="settings-info-section" data-info-view="last-100">
+                            <button class="settings-info-accordion-button" data-info-view="last-100" type="button" aria-expanded="false">Last 100 Numbers Modes</button>
                             <div class="settings-rich-text" id="settingsInfoLast100"></div>
                         </section>
                         <section class="settings-info-section" data-info-view="dashboard-items">
+                            <button class="settings-info-accordion-button" data-info-view="dashboard-items" type="button" aria-expanded="false">Dashboard Items</button>
                             <div class="settings-rich-text" id="settingsInfoDashboardItems"></div>
                         </section>
                         <section class="settings-info-section" data-info-view="dashboard-mode">
+                            <button class="settings-info-accordion-button" data-info-view="dashboard-mode" type="button" aria-expanded="false">Dashboard Modes</button>
                             <div class="settings-rich-text" id="settingsInfoDashboardMode"></div>
                         </section>
                     </div>
@@ -1731,7 +1806,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.5</span>
+        <span id="versionLine">v15.6</span>
     </div>
 
     <div id="number">0</div>
@@ -1876,6 +1951,7 @@ document.getElementById("aboutClose").onclick = () => {
 const settingsViewButtons = document.querySelectorAll(".settings-nav-button");
 const settingsViews = document.querySelectorAll(".settings-view");
 const settingsInfoButtons = document.querySelectorAll(".settings-info-button");
+const settingsInfoAccordionButtons = document.querySelectorAll(".settings-info-accordion-button");
 const settingsInfoSections = document.querySelectorAll(".settings-info-section");
 
 function setSettingsView(viewName) {
@@ -1891,6 +1967,12 @@ function setSettingsView(viewName) {
 function setSettingsInfoView(viewName) {
     settingsInfoButtons.forEach(button => {
         button.classList.toggle("active", button.dataset.infoView === viewName);
+    });
+
+    settingsInfoAccordionButtons.forEach(button => {
+        const isActive = button.dataset.infoView === viewName;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-expanded", isActive ? "true" : "false");
     });
 
     settingsInfoSections.forEach(section => {
@@ -2036,6 +2118,12 @@ settingsViewButtons.forEach(button => {
 });
 
 settingsInfoButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        setSettingsInfoView(button.dataset.infoView);
+    });
+});
+
+settingsInfoAccordionButtons.forEach(button => {
     button.addEventListener("click", () => {
         setSettingsInfoView(button.dataset.infoView);
     });
