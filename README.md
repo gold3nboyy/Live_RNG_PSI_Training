@@ -12,15 +12,15 @@ This generator does not claim to demonstrate or prove any paranormal ability. In
 
 ## Generator
 
-![Startseite](screenshots/RNG1591.png)
+![Startseite](screenshots/RNG1591.jng)
 
 ## Settings
 
-![Startseite](screenshots/RNG1591_settings.png)
+![Startseite](screenshots/RNG1591_settings.jng)
 
 ## Local Consciousness Dot
 
-![Startseite](screenshots/RNG1591_dot.png)
+![Startseite](screenshots/RNG1591_dot.jng)
 
 If you're interested to check out the code or work with it feel free to use it.
 📦 Download Code: Go to Green „Code“-Button → „Download ZIP“ 
