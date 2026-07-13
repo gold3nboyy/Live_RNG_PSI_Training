@@ -33,7 +33,12 @@ body[data-theme="light"] {background:var(--bg-main-light);color:var(--text-main-
 body {
     margin:0;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    overflow-x:hidden;
     transition:background 0.3s ease,color 0.3s ease;
+}
+
+* {
+    box-sizing:border-box;
 }
 
 /* Focus mode */
@@ -632,6 +637,7 @@ body[data-theme="light"] #aboutContent {
     align-items:center;
     padding:40px 10px;
     max-width:1100px;
+    width:100%;
     margin:0 auto;
 }
 #title {
@@ -678,6 +684,35 @@ body[data-theme="light"] #aboutContent {
     margin:10px 0;
     width:100%;
     text-align:center;
+}
+
+#controlsBlock,
+#timerBlock {
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+#controlsBlock label,
+#timerBlock label {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    align-items:flex-start;
+}
+
+#buttonsBlock {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+#buttonsBlock button {
+    margin:0;
 }
 input {
     width:90px;
@@ -981,6 +1016,35 @@ body[data-theme="light"] #heatmapCard {
     body {
         font-size: 14px;
     }
+
+    #center {
+        padding:28px 10px;
+    }
+
+    #title {
+        margin-top:54px;
+    }
+
+    .title-line {
+        font-size:clamp(18px, 4.6vw, 24px);
+        line-height:1.15;
+    }
+
+    #versionLine {
+        font-size:12px;
+    }
+
+    #number {
+        font-size:clamp(88px, 24vw, 132px);
+        margin:14px 0;
+        line-height:0.95;
+    }
+
+    #lcdDot {
+        width:clamp(108px, 34vw, 150px);
+        height:clamp(108px, 34vw, 150px);
+        margin:14px 0;
+    }
     
     #settingsPanel {
         top:0;
@@ -1065,26 +1129,45 @@ body[data-theme="light"] #heatmapCard {
     
     #dashboard {
         width: 100%;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        margin:18px auto 30px;
+        padding:0 8px;
         gap: 10px;
+    }
+
+    .dashboard-layout {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        justify-content:stretch;
+        gap:10px;
+    }
+
+    #heatmapCard {
+        width:100%;
+        min-width:0;
     }
     
     .card {
-        padding: 10px;
+        padding: 9px 8px;
         font-size: 12px;
+        min-width:0;
     }
     
     .card h3 {
-        font-size: 11px;
-        margin: 3px 0;
+        font-size: 12px;
+        margin: 2px 0 5px;
+        line-height:1.2;
     }
     
     .card-value {
-        font-size: 18px;
+        font-size: 17px;
+        line-height:1.15;
+    }
+
+    .card-detect {
+        font-size:11px;
     }
     
     #history {
-        grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+        grid-template-columns: repeat(10, minmax(0, 1fr));
         gap: 4px;
     }
     
@@ -1094,28 +1177,57 @@ body[data-theme="light"] #heatmapCard {
     }
     
     #controlsBlock {
-        flex-direction: column;
+        display:grid;
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+        gap:8px;
+        width:100%;
+        max-width:520px;
     }
     
     #controlsBlock label {
-        width: 100%;
-        margin-bottom: 8px;
+        width:100%;
+        margin:0;
+        align-items:stretch;
+        text-align:left;
     }
     
     #controlsBlock input {
-        width: 60%;
+        width:100%;
     }
     
     #buttonsBlock {
-        display: flex;
+        display:grid;
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+        width:100%;
+        max-width:520px;
         gap: 8px;
         margin-top: 10px;
     }
     
     #buttonsBlock button {
-        flex: 1;
-        padding: 10px 5px;
-        font-size: 12px;
+        width:100%;
+        padding: 10px 6px;
+        font-size: 13px;
+        line-height:1.1;
+    }
+
+    #timerBlock {
+        width:100%;
+        max-width:420px;
+        justify-content:space-between;
+        align-items:center;
+        gap:10px;
+    }
+
+    #timerBlock label:first-child {
+        flex:1;
+        max-width:220px;
+        align-items:stretch;
+        text-align:left;
+    }
+
+    #timerBlock #timerMin {
+        width:100%;
     }
     
     .settings-row {
@@ -1134,6 +1246,7 @@ body[data-theme="light"] #heatmapCard {
     
     #chart {
         max-width: 100%;
+        height:210px;
     }
     
     .heatmap-container {
@@ -1151,7 +1264,7 @@ body[data-theme="light"] #heatmapCard {
     #infoContent {
         font-size: 13px;
         line-height: 1.4;
-        column-count: 2;
+        column-count: 1;
         column-gap: 20px;
         hyphens: auto;
     }
@@ -1171,23 +1284,54 @@ body[data-theme="light"] #heatmapCard {
     body {
         font-size: 12px;
     }
+
+    #title {
+        margin-top:48px;
+    }
+
+    #number {
+        font-size:clamp(72px, 26vw, 102px);
+        margin:10px 0;
+    }
+
+    #lcdDot {
+        width:92px;
+        height:92px;
+    }
     
     #settingsPanel {
         width:100vw;
     }
+
+    .dashboard-layout {
+        gap:8px;
+    }
     
     .card {
-        padding: 8px;
+        padding: 8px 6px;
         font-size: 11px;
+    }
+
+    .card h3 {
+        font-size:11px;
     }
     
     .card-value {
-        font-size: 16px;
+        font-size: 15px;
+    }
+
+    .card-detect {
+        font-size:10px;
     }
     
     #history {
-        grid-template-columns: repeat(auto-fill, minmax(25px, 1fr));
+        grid-template-columns: repeat(8, minmax(0, 1fr));
         gap: 3px;
+    }
+
+    #controlsBlock,
+    #buttonsBlock {
+        gap:6px;
     }
     
     .entry {
