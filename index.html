@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Random Number Generator v15.7</title>
+<title>Random Number Generator v15.8</title>
 
 <style>
 :root {
@@ -52,7 +52,7 @@ body.focus-mode #settingsPanel {display:none;}
 /* HAMBURGER */
 #hamburger {
     position:absolute;
-    top:14px;
+    top:calc(env(safe-area-inset-top, 0px) + 14px);
     left:14px;
     width:30px;
     height:22px;
@@ -1018,8 +1018,12 @@ body[data-theme="light"] #heatmapCard {
 
 /* Mobile responsive styles */
 @media (max-width: 768px) {
+    :root {
+        --mobile-header-offset:calc(env(safe-area-inset-top, 0px) + 52px);
+    }
+
     body {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     #center {
@@ -1052,10 +1056,10 @@ body[data-theme="light"] #heatmapCard {
     }
     
     #settingsPanel {
-        top:0;
+        top:var(--mobile-header-offset);
         left:0;
         width:100vw;
-        height:100%;
+        height:calc(100% - var(--mobile-header-offset));
         border-radius:0;
     }
 
@@ -1089,7 +1093,13 @@ body[data-theme="light"] #heatmapCard {
     }
 
     .settings-detail {
-        padding:18px;
+        padding:14px;
+    }
+
+    .settings-nav-button,
+    .settings-info-button {
+        padding:10px 12px;
+        font-size:14px;
     }
 
     .settings-header-bar {
@@ -1131,6 +1141,7 @@ body[data-theme="light"] #heatmapCard {
         padding:12px 14px;
         font:inherit;
         font-weight:600;
+        font-size:14px;
         line-height:1.3;
         cursor:pointer;
         position:relative;
@@ -1175,6 +1186,12 @@ body[data-theme="light"] #heatmapCard {
     .settings-group-card,
     .settings-rich-text {
         max-width:none;
+    }
+
+    .settings-rich-text {
+        font-size:13px;
+        line-height:1.55;
+        padding:16px 16px;
     }
 
     .settings-grid-two {
@@ -1791,7 +1808,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.7</span>
+        <span id="versionLine">v15.8</span>
     </div>
 
     <div id="number">0</div>
@@ -1951,17 +1968,17 @@ function setSettingsView(viewName) {
 
 function setSettingsInfoView(viewName) {
     settingsInfoButtons.forEach(button => {
-        button.classList.toggle("active", button.dataset.infoView === viewName);
+        button.classList.toggle("active", viewName && button.dataset.infoView === viewName);
     });
 
     settingsInfoAccordionButtons.forEach(button => {
-        const isActive = button.dataset.infoView === viewName;
+        const isActive = !!viewName && button.dataset.infoView === viewName;
         button.classList.toggle("active", isActive);
         button.setAttribute("aria-expanded", isActive ? "true" : "false");
     });
 
     settingsInfoSections.forEach(section => {
-        section.classList.toggle("active", section.dataset.infoView === viewName);
+        section.classList.toggle("active", !!viewName && section.dataset.infoView === viewName);
     });
 }
 
@@ -2110,6 +2127,11 @@ settingsInfoButtons.forEach(button => {
 
 settingsInfoAccordionButtons.forEach(button => {
     button.addEventListener("click", () => {
+        const section = button.closest(".settings-info-section");
+        if (section && section.classList.contains("active")) {
+            setSettingsInfoView(null);
+            return;
+        }
         setSettingsInfoView(button.dataset.infoView);
     });
 });
