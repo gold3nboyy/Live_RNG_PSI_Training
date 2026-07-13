@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Random Number Generator v15.4</title>
+<title>Random Number Generator v15.5</title>
 
 <style>
 :root {
@@ -66,36 +66,77 @@ body[data-theme="light"] #hamburger div {background:var(--text-main-light);}
 /* SETTINGS PANEL */
 #settingsPanel {
     position:fixed;
-    top:0;
-    left:-640px;
-    width:640px;
-    height:100%;
+    top:12px;
+    left:12px;
+    width:min(1120px, calc(100vw - 24px));
+    height:calc(100% - 24px);
     background:var(--panel-dark);
     border-right:1px solid var(--panel-border-dark);
-    transition:left 0.35s ease,box-shadow 0.3s ease;
+    transition:transform 0.35s ease,box-shadow 0.3s ease;
     z-index:3000;
-    padding:20px;
-    padding-top:60px;
+    padding:0;
     box-sizing:border-box;
-    box-shadow:8px 0 24px rgba(0,0,0,0.6);
+    box-shadow:0 18px 48px rgba(0,0,0,0.38);
     pointer-events: none;
     display:flex;
     flex-direction:column;
     overflow:hidden;
+    border-radius:24px;
+    transform:translateX(calc(-100% - 24px));
 }
 body[data-theme="light"] #settingsPanel {
     background:var(--panel-light);
     border-color:var(--panel-border-light);
 }
 #settingsPanel.open {
-    left:0;
+    transform:translateX(0);
     pointer-events:auto;
 }
 
 /* SETTINGS STRUCTURE */
+.settings-header {
+    padding:24px 26px;
+    border-bottom:1px solid var(--panel-border-dark);
+    flex-shrink:0;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+}
+.settings-header-bar {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+}
+body[data-theme="light"] .settings-header {
+    border-bottom-color:var(--panel-border-light);
+    background:linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0));
+}
 .settings-header h2 {
-    margin:0 0 16px 0;
-    font-size:20px;
+    margin:0;
+    font-size:21px;
+    letter-spacing:0.01em;
+}
+.settings-header-controls {
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:18px;
+    flex-wrap:wrap;
+}
+.settings-header-controls .settings-row {
+    width:auto;
+    min-width:0;
+    border-bottom:none;
+    padding:0;
+    gap:10px;
+}
+.settings-header-controls .settings-row span {
+    flex:none;
+    white-space:nowrap;
+    font-size:13px;
+    opacity:0.9;
+}
+.settings-header-controls .settings-row label.switch {
+    margin-left:0;
 }
 .settings-section {
     display:grid;
@@ -110,9 +151,10 @@ body[data-theme="light"] #settingsPanel {
     display:flex;
     justify-content:space-between;
     gap:12px;
-    padding:6px 0;
+    padding:12px 0;
     border-bottom:1px solid var(--panel-border-dark);
     width: 100%;
+    align-items:center;
 }
 body[data-theme="light"] .settings-row {
     border-bottom-color:var(--panel-border-light);
@@ -121,6 +163,7 @@ body[data-theme="light"] .settings-row {
 .settings-row span {
     text-align: left;
     flex: 1;
+    line-height:1.4;
 }
 
 .settings-row label.switch {
@@ -131,8 +174,9 @@ body[data-theme="light"] .settings-row {
     display:flex;
     flex-direction:column;
     align-items:flex-start;
-    padding:6px 0;
+    padding:12px 0;
     border-bottom:1px solid var(--panel-border-dark);
+    width:100%;
 }
 body[data-theme="light"] .settings-subsection {
     border-bottom-color:var(--panel-border-light);
@@ -141,12 +185,18 @@ body[data-theme="light"] .settings-subsection {
     display:flex;
     align-items:center;
     gap:6px;
-    font-size:14px;
+    font-size:15px;
     font-weight:500;
+    line-height:1.4;
 }
 .settings-subsection select,
 .settings-subsection input {
-    margin-top:6px;
+    margin-top:10px;
+    width:min(360px, 100%);
+}
+
+.settings-target-value {
+    margin-top:14px;
 }
 .settings-help {
     font-size:12px;
@@ -158,6 +208,241 @@ body[data-theme="light"] .settings-subsection {
 .settings-help {
     position:relative;
     cursor:pointer;
+}
+
+.settings-shell {
+    display:grid;
+    grid-template-columns:252px minmax(0,1fr);
+    min-height:0;
+    flex:1;
+}
+
+.settings-sidebar {
+    padding:18px 14px 22px;
+    border-right:1px solid var(--panel-border-dark);
+    overflow-y:auto;
+    background:rgba(255,255,255,0.025);
+}
+body[data-theme="light"] .settings-sidebar {
+    border-right-color:var(--panel-border-light);
+    background:rgba(255,255,255,0.28);
+}
+
+.settings-nav {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.settings-nav-button,
+.settings-info-button {
+    width:100%;
+    border:0;
+    background:transparent;
+    color:inherit;
+    text-align:left;
+    border-radius:14px;
+    padding:12px 14px;
+    cursor:pointer;
+    font:inherit;
+    transition:background 0.2s ease, color 0.2s ease;
+    line-height:1.35;
+}
+
+.settings-nav-button:hover,
+.settings-info-button:hover {
+    background:rgba(255,255,255,0.06);
+}
+body[data-theme="light"] .settings-nav-button:hover,
+body[data-theme="light"] .settings-info-button:hover {
+    background:rgba(0,0,0,0.05);
+}
+
+.settings-nav-button.active,
+.settings-info-button.active {
+    background:rgba(0,122,255,0.16);
+    color:var(--accent-blue);
+    font-weight:600;
+}
+
+.settings-detail {
+    min-width:0;
+    overflow-y:auto;
+    padding:30px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0));
+}
+
+.settings-view,
+.settings-info-section {
+    display:none;
+}
+
+.settings-view.active,
+.settings-info-section.active {
+    display:block;
+}
+
+.settings-view-section {
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.settings-group-card {
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--panel-border-dark);
+    border-radius:20px;
+    padding:18px 22px;
+    max-width:760px;
+}
+body[data-theme="light"] .settings-group-card {
+    background:rgba(255,255,255,0.42);
+    border-color:var(--panel-border-light);
+}
+
+.settings-group-card .settings-row,
+.settings-group-card .settings-subsection {
+    border-bottom-color:var(--panel-border-dark);
+}
+body[data-theme="light"] .settings-group-card .settings-row,
+body[data-theme="light"] .settings-group-card .settings-subsection {
+    border-bottom-color:var(--panel-border-light);
+}
+
+.settings-group-card .settings-row:last-child,
+.settings-group-card .settings-subsection:last-child {
+    border-bottom:none;
+}
+
+.settings-grid-two {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:0 28px;
+    align-items:start;
+}
+
+.settings-grid-two > .settings-row,
+.settings-grid-two > .settings-subsection {
+    min-width:0;
+}
+
+.settings-grid-two > .settings-subsection {
+    grid-column:span 1;
+}
+
+.settings-grid-two > .settings-span-two {
+    grid-column:1 / -1;
+}
+
+.settings-column-stack {
+    display:flex;
+    flex-direction:column;
+}
+
+.settings-column-stack > .settings-row,
+.settings-column-stack > .settings-subsection {
+    min-width:0;
+}
+
+.settings-dashboard-items-grid {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:0 28px;
+    width:100%;
+    margin-top:10px;
+}
+
+.settings-dashboard-items-grid .settings-column-stack > .settings-row,
+.settings-dashboard-items-grid .settings-column-stack > .settings-subsection {
+    width:100%;
+}
+
+.settings-grid-two .settings-subsection select,
+.settings-grid-two .settings-subsection input {
+    width:100%;
+}
+
+.settings-info-layout {
+    display:grid;
+    grid-template-columns:240px minmax(0,1fr);
+    gap:24px;
+    min-height:100%;
+}
+
+.settings-info-nav {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.settings-info-content,
+.settings-about-content {
+    min-width:0;
+}
+
+.settings-rich-text {
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--panel-border-dark);
+    border-radius:20px;
+    padding:22px 24px;
+    max-width:860px;
+    line-height:1.7;
+    font-size:14px;
+}
+body[data-theme="light"] .settings-rich-text {
+    background:rgba(255,255,255,0.42);
+    border-color:var(--panel-border-light);
+}
+
+.settings-rich-text h2,
+.settings-rich-text h3 {
+    margin-top:0;
+}
+
+.settings-rich-text h2 {
+    margin-bottom:14px;
+    font-size:22px;
+}
+
+.settings-rich-text h3 {
+    margin-bottom:10px;
+    margin-top:22px;
+    font-size:17px;
+}
+
+.settings-rich-text p {
+    margin:0 0 12px;
+}
+
+#settingsAboutContent .about-columns {
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:28px;
+}
+
+#settingsAboutContent .about-columns > div {
+    min-width:0;
+}
+
+.settings-about-actions {
+    margin-top:20px;
+    display:flex;
+    justify-content:flex-start;
+}
+
+.settings-about-actions button {
+    background:var(--accent-blue);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    padding:11px 16px;
+    cursor:pointer;
+}
+
+.settings-legacy-source,
+.settings-info-source,
+.settings-footer.settings-legacy-source {
+    display:none !important;
 }
 
 /* Info-Popup Overlay */
@@ -328,11 +613,17 @@ body[data-theme="light"] #aboutContent {
 /* UI-HIDE LAYER */
 #uiHideLayer {
     position:fixed;
-    inset:0;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    width:100vw;
+    height:100vh;
     z-index:2000;
     display:none;
+    pointer-events:none;
 }
-#uiHideLayer.active {display:block;cursor:pointer;}
+#uiHideLayer.active {display:block;cursor:pointer;pointer-events:auto;}
 
 /* MAIN UI */
 #center {
@@ -692,10 +983,75 @@ body[data-theme="light"] #heatmapCard {
     }
     
     #settingsPanel {
-        width: 90vw;
-        max-width: 100%;
-        max-height: 85vh;
-        padding: 15px;
+        top:0;
+        left:0;
+        width:100vw;
+        height:100%;
+        border-radius:0;
+    }
+
+    .settings-shell {
+        grid-template-columns:1fr;
+    }
+
+    .settings-sidebar {
+        border-right:none;
+        border-bottom:1px solid var(--panel-border-dark);
+        padding:12px;
+    }
+
+    body[data-theme="light"] .settings-sidebar {
+        border-bottom-color:var(--panel-border-light);
+    }
+
+    .settings-nav,
+    .settings-info-nav {
+        flex-direction:row;
+        overflow-x:auto;
+        gap:8px;
+        padding-bottom:4px;
+    }
+
+    .settings-nav-button,
+    .settings-info-button {
+        width:auto;
+        white-space:nowrap;
+        flex:0 0 auto;
+    }
+
+    .settings-detail {
+        padding:18px;
+    }
+
+    .settings-header-bar {
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .settings-header-controls {
+        justify-content:flex-start;
+    }
+
+    .settings-info-layout {
+        grid-template-columns:1fr;
+    }
+
+    .settings-group-card,
+    .settings-rich-text {
+        max-width:none;
+    }
+
+    .settings-grid-two {
+        grid-template-columns:1fr;
+    }
+
+    .settings-dashboard-items-grid {
+        grid-template-columns:1fr;
+    }
+
+    #settingsAboutContent .about-columns {
+        grid-template-columns:1fr;
+        gap:18px;
     }
     
     #mainContent {
@@ -817,8 +1173,7 @@ body[data-theme="light"] #heatmapCard {
     }
     
     #settingsPanel {
-        width: 95vw;
-        padding: 12px;
+        width:100vw;
     }
     
     .card {
@@ -867,9 +1222,68 @@ body[data-theme="light"] #heatmapCard {
 
 <div id="settingsPanel">
 
-    <div class="settings-header"><h2>Settings</h2></div>
+    <div class="settings-header">
+        <div class="settings-header-bar">
+            <h2>Settings</h2>
+            <div class="settings-header-controls" id="settingsHeaderControls"></div>
+        </div>
+    </div>
 
-    <div class="settings-section">
+    <div class="settings-shell">
+        <aside class="settings-sidebar">
+            <nav class="settings-nav" aria-label="Settings categories">
+                <button class="settings-nav-button active" data-settings-view="controls">Controls</button>
+                <button class="settings-nav-button" data-settings-view="dashboard">Dashboard</button>
+                <button class="settings-nav-button" data-settings-view="information">Information</button>
+                <button class="settings-nav-button" data-settings-view="about">About</button>
+            </nav>
+        </aside>
+
+        <div class="settings-detail">
+            <section class="settings-view active" data-settings-view="controls">
+                <div class="settings-view-section settings-group-card settings-grid-two" id="settingsControlsGroup"></div>
+            </section>
+
+            <section class="settings-view" data-settings-view="dashboard">
+                <div class="settings-view-section settings-group-card settings-grid-two" id="settingsDashboardGroup"></div>
+            </section>
+
+            <section class="settings-view" data-settings-view="information">
+                <div class="settings-info-layout">
+                    <nav class="settings-info-nav" aria-label="Information sections">
+                        <button class="settings-info-button active" data-info-view="visual-indicator">Visual Indicator Types</button>
+                        <button class="settings-info-button" data-info-view="last-100">Last 100 Numbers Modes</button>
+                        <button class="settings-info-button" data-info-view="dashboard-items">Dashboard Items</button>
+                        <button class="settings-info-button" data-info-view="dashboard-mode">Dashboard Modes</button>
+                    </nav>
+
+                    <div class="settings-info-content">
+                        <section class="settings-info-section active" data-info-view="visual-indicator">
+                            <div class="settings-rich-text" id="settingsInfoVisualIndicator"></div>
+                        </section>
+                        <section class="settings-info-section" data-info-view="last-100">
+                            <div class="settings-rich-text" id="settingsInfoLast100"></div>
+                        </section>
+                        <section class="settings-info-section" data-info-view="dashboard-items">
+                            <div class="settings-rich-text" id="settingsInfoDashboardItems"></div>
+                        </section>
+                        <section class="settings-info-section" data-info-view="dashboard-mode">
+                            <div class="settings-rich-text" id="settingsInfoDashboardMode"></div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings-view" data-settings-view="about">
+                <div class="settings-about-content">
+                    <div class="settings-rich-text" id="settingsAboutContent"></div>
+                </div>
+                <div class="settings-about-actions" id="settingsAboutActions"></div>
+            </section>
+        </div>
+    </div>
+
+    <div class="settings-section settings-legacy-source">
 
         <div class="settings-row">
             <span>Light Mode</span>
@@ -900,7 +1314,8 @@ body[data-theme="light"] #heatmapCard {
 		<div class="settings-subsection">
 			<label class="settings-label">
 			Visual Indicator Type
-			<span class="settings-help"
+            <span class="settings-help settings-info-source"
+                data-info-target="settingsInfoVisualIndicator"
 				data-title="Visual Indicator Type"
                 data-tip="<p><b>Number:</b> shows the raw generated value.</p><p><b>Dot (LCD):</b> shows a color state that updates continuously.</p><h3>How GCP Dot and LC Dot work (compact explanation)</h3><p><b>Original GCP Dot:</b> The Global Consciousness Project used a worldwide hardware RNG network (FieldREG devices). Their combined behavior was summarized as a global coherence signal, shown as a moving dot. In common GCP-style interpretations, dot height is mapped to a normalized index in the range <b>0 to 1</b> (or 0 percent to 100 percent). Lower values (near 0, often discussed around or below 0.05) represent stronger coherence/anomaly periods, while higher values represent more baseline behavior.</p><p><b>LC Dot in this app:</b> The &quot;Local Consciousness Dot&quot; does not read the global hardware network. It uses this local running session and maps live statistical state to the dot in real time. Internally, the dot chart also works on a <b>0 to 1</b> scale. In Dot mode, low values are drawn near the top (anomaly side) and high values near the bottom (stable side). This gives a direct local visual analog to the GCP-style idea, but based on the current session instead of global hardware data.</p><p>The goal is visual tracking of drift and stability over time, not proof of causation.</p><h3>Detailed color guide (top to bottom)</h3><p><b><span class=&quot;tip-dot tip-dot-red&quot; aria-hidden=&quot;true&quot;></span> Red (top, lowest range):</b> Strongest deviation state. The system marks this as the highest anomaly intensity, where short-term imbalance is most pronounced.</p><p><b><span class=&quot;tip-dot tip-dot-orange&quot; aria-hidden=&quot;true&quot;></span> Orange:</b> High deviation state. Structure is still elevated and less likely to look like neutral baseline behavior.</p><p><b><span class=&quot;tip-dot tip-dot-yellow&quot; aria-hidden=&quot;true&quot;></span> Yellow:</b> Early-to-moderate deviation. A shift is visible, but not yet at peak anomaly intensity.</p><p><b><span class=&quot;tip-dot tip-dot-green&quot; aria-hidden=&quot;true&quot;></span> Green:</b> Transitional normal state. Random behavior is active and healthy, with mild drift that can naturally appear in stochastic streams.</p><p><b><span class=&quot;tip-dot tip-dot-blue&quot; aria-hidden=&quot;true&quot;></span> Blue:</b> Stable baseline state. Variation remains normal and relatively balanced.</p><p><b><span class=&quot;tip-dot tip-dot-lightblue&quot; aria-hidden=&quot;true&quot;></span> Light Blue (bottom, highest range):</b> Calmest stability zone. Output appears closest to expected neutral distribution in this visual model.</p><h3>Important requirement</h3><p>To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>.</p>">
 			</span>
@@ -913,7 +1328,7 @@ body[data-theme="light"] #heatmapCard {
 		</div>
 
         <div class="settings-row">
-            <span>Show Controls</span>
+            <span>Show Control Buttons</span>
             <label class="switch">
                 <input type="checkbox" id="showControlsToggle" checked>
                 <span class="slider"></span>
@@ -939,7 +1354,8 @@ body[data-theme="light"] #heatmapCard {
         <div class="settings-subsection">
             <label class="settings-label">
                 Last 100 Numbers Mode
-                <span class="settings-help"
+                <span class="settings-help settings-info-source"
+                    data-info-target="settingsInfoLast100"
 					data-title="Last 100 Numbers Mode"
                     data-tip="<p><b>None:</b> No highlighting. You get a neutral history view with no directional color bias. This is the <b>default mode</b> for LCD / GCP Dot behavior in this app. Only in <b>None</b> mode are the dot values generated and interpreted in the intended way for the Dot chart/indicator.</p><p><b>High Numbers:</b> Highlights values above your threshold. Useful if your intention is aimed at upper-range outcomes.</p><p><b>Low Numbers:</b> Highlights values below your threshold. Useful if your intention is aimed at lower-range outcomes.</p><p><b>Target Number:</b> Highlights only one exact number that you define. Good for strict single-target focus sessions.</p><p><b>Street Mode:</b> Highlights immediate repeated neighbors (example: 77, 33, 99) so streak clusters are easy to spot.</p>">
                 </span>
@@ -953,7 +1369,7 @@ body[data-theme="light"] #heatmapCard {
                 <option value="street">Street Mode</option>
             </select>
 
-            <label>
+            <label class="settings-target-value">
                 Target Value
                 <input id="historyParam" placeholder="Target Value" disabled>
             </label>
@@ -970,7 +1386,8 @@ body[data-theme="light"] #heatmapCard {
         <div class="settings-subsection">
             <label class="settings-label">
                 Dashboard Items
-                <span class="settings-help"
+                <span class="settings-help settings-info-source"
+                    data-info-target="settingsInfoDashboardItems"
 					data-title="Dashboard Items"
                     data-tip="<h3>Frequency and streak cards</h3><p><b>Most Repeating:</b> This card shows the number that appears most often in the current analysis window. It helps you quickly see if one value is dominating more than expected. In short sessions, this value can change often, which is normal. In longer sessions, a stable winner can indicate persistent bias in the distribution. Compare it with Chi2 p and Deviation to judge whether the dominance is weak or strong.</p><p><b>Least Repeating:</b> This card shows the number that appears least often in the same window. It is useful for spotting values that are missing or underrepresented. In a random stream, some numbers will naturally lag behind for a while, so this is not automatically unusual. The meaning becomes clearer when low-frequency gaps persist over many draws. Use this card together with Heatmap to confirm whether the gap is local noise or a broader pattern.</p><p><b>Longest Streak:</b> This card tracks the longest run of identical values in a row. Streaks can look dramatic, but they also happen naturally in random systems. The card is useful because it gives one clear maximum value instead of making you scan the full history manually. If the longest streak grows quickly, it can help you mark a moment for deeper review. Check the chart at the same time to see when that streak happened and what the surrounding behavior looked like.</p><h3>Volume and distribution cards</h3><p><b>Total:</b> This card counts how many values are included in the active dashboard scope. A higher total usually makes all other metrics more stable and less jumpy. Early in a session, numbers can move sharply because sample size is small. Later, the same metrics become smoother and more reliable for comparison. Use Total as context before interpreting Entropy, Chi2 p, or Deviation.</p><p><b>Entropy:</b> Entropy describes how widely and evenly values are spreading across the available range. Higher entropy means the output is more mixed, while lower entropy means outcomes are clustering more tightly. This metric is useful because it summarizes complexity in one number. A temporary drop can be normal during short bursts, but long low periods may indicate sustained concentration in fewer values. Read Entropy together with Heatmap to see exactly where that concentration sits.</p><p><b>Chi2 p:</b> This card estimates how unusual the observed frequency distribution is compared with an expected even distribution. Higher p values usually suggest behavior closer to baseline balance, while lower p values suggest stronger deviation from that expectation. It is a probability-style indicator, so it is best used as a guide, not a final conclusion by itself. Short windows can produce quick swings, so context matters. Combine Chi2 p with Deviation and Total for a more grounded interpretation.</p><p><b>Deviation:</b> This card shows how far the current distribution is from ideal even spread, expressed as a percentage. It gives a direct sense of imbalance size that is easy to compare over time. Small deviations are common and expected, especially in shorter windows. Larger and persistent deviations can indicate stronger structure in the current run. Use this card with Chi2 p because both metrics describe related behavior from different angles.</p><h3>Visual cards</h3><p><b>Chart:</b> The chart displays the sequence over time so you can see rhythm, spikes, and direction changes visually. In Number view, it helps track movement across the selected numeric range. In Dot-oriented behavior, it helps visualize state transitions across the normalized scale. This is often the fastest way to spot whether a change was brief or sustained. Pair the chart with Dashboard Mode to compare short-window behavior versus full-session context.</p><p><b>Heatmap:</b> The heatmap ranks the most frequent values and shows their strength as bar lengths. It helps you detect clusters and missing regions much faster than reading raw numbers one by one. A balanced session tends to show less extreme separation between bars. Strong separation suggests that a few values are leading more clearly than others. Use it with Most Repeating and Least Repeating to validate whether those headline values reflect a narrow spike or a broader frequency structure.</p><h3>Practical workflow</h3><p>Start with fewer cards when you want a calm and focused training view. Add analytical cards after a run when you want to review what changed and when. Use Last 100 mode for immediate local behavior and Session mode for long-range context. Avoid reading one metric alone as proof, and always compare at least two or three cards together. This workflow helps separate momentary noise from persistent structure while keeping the interface readable.</p>">
                 </span>
@@ -1051,7 +1468,8 @@ body[data-theme="light"] #heatmapCard {
             <div class="settings-subsection">
                 <label class="settings-label">
                     Dashboard Mode
-                    <span class="settings-help"
+                    <span class="settings-help settings-info-source"
+                        data-info-target="settingsInfoDashboardMode"
 						data-title="Dashboard Mode"
                         data-tip="<h3>Last 100 mode</h3><p>All dashboard metrics use only the most recent 100 values. The chart also shows 100 points. This mode is best for immediate feedback, short-term shifts, and moment-to-moment focus sessions.</p><h3>Session mode</h3><p>Metrics use the full session history since start. The chart still limits the visible points for performance, but the statistical cards represent long-run behavior.</p><h3>Why both modes matter</h3><p>A strong short spike may look important in Last 100 mode but small in Session mode. The opposite can also happen when a long trend exists but the latest short window is calm.</p><p>Comparing both views helps you separate transient noise from persistent structure.</p>">
                     </span>
@@ -1065,7 +1483,7 @@ body[data-theme="light"] #heatmapCard {
 
     </div>
 
-    <div class="settings-footer">
+    <div class="settings-footer settings-legacy-source">
         <button id="resetDefaultsBtn">Reset To Default</button>
         <button id="aboutBtn">About</button>
     </div>
@@ -1167,7 +1585,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.4</span>
+        <span id="versionLine">v15.5</span>
     </div>
 
     <div id="number">0</div>
@@ -1309,6 +1727,183 @@ document.getElementById("aboutClose").onclick = () => {
     aboutOverlay.classList.remove("open");
 };
 
+const settingsViewButtons = document.querySelectorAll(".settings-nav-button");
+const settingsViews = document.querySelectorAll(".settings-view");
+const settingsInfoButtons = document.querySelectorAll(".settings-info-button");
+const settingsInfoSections = document.querySelectorAll(".settings-info-section");
+
+function setSettingsView(viewName) {
+    settingsViewButtons.forEach(button => {
+        button.classList.toggle("active", button.dataset.settingsView === viewName);
+    });
+
+    settingsViews.forEach(view => {
+        view.classList.toggle("active", view.dataset.settingsView === viewName);
+    });
+}
+
+function setSettingsInfoView(viewName) {
+    settingsInfoButtons.forEach(button => {
+        button.classList.toggle("active", button.dataset.infoView === viewName);
+    });
+
+    settingsInfoSections.forEach(section => {
+        section.classList.toggle("active", section.dataset.infoView === viewName);
+    });
+}
+
+function renderSettingsInfoBlock(title, html) {
+    return `<h2 style="margin-top:0; margin-bottom:16px; font-size:22px;">${title}</h2>${html}`;
+}
+
+function populateSettingsInfoSections() {
+    document.querySelectorAll(".settings-info-source[data-info-target]").forEach(source => {
+        const target = document.getElementById(source.dataset.infoTarget);
+        if (!target) return;
+        const title = source.getAttribute("data-title") || "Info";
+        const text = source.getAttribute("data-tip") || "";
+        target.innerHTML = renderSettingsInfoBlock(title, text);
+    });
+
+    const aboutSource = document.querySelector("#aboutContent .about-columns");
+    const aboutTarget = document.getElementById("settingsAboutContent");
+    if (aboutSource && aboutTarget) {
+        aboutTarget.innerHTML = aboutSource.innerHTML;
+    }
+}
+
+function organizeSettingsLayout() {
+    const headerControls = document.getElementById("settingsHeaderControls");
+    const controlsGroup = document.getElementById("settingsControlsGroup");
+    const dashboardGroup = document.getElementById("settingsDashboardGroup");
+    const aboutActions = document.getElementById("settingsAboutActions");
+
+    const themeRow = document.getElementById("themeSlider").closest(".settings-row");
+    const hideUiRow = document.getElementById("hideUiToggle").closest(".settings-row");
+    const showVisualRow = document.getElementById("showVisualToggle").closest(".settings-row");
+    const visualTypeSection = document.getElementById("visualType").closest(".settings-subsection");
+    const showControlsRow = document.getElementById("showControlsToggle").closest(".settings-row");
+    const showTimerRow = document.getElementById("showTimerToggle").closest(".settings-row");
+    const showHistoryRow = document.getElementById("showHistoryToggle").closest(".settings-row");
+    const historyModeSection = document.getElementById("historyMode").closest(".settings-subsection");
+    const dashboardRow = document.getElementById("dashboardToggle").closest(".settings-row");
+    const dashboardItemsSection = document.getElementById("showMostRepeatToggle").closest(".settings-subsection");
+    const showMostRepeatRow = document.getElementById("showMostRepeatToggle").closest(".settings-row");
+    const showLeastRepeatRow = document.getElementById("showLeastRepeatToggle").closest(".settings-row");
+    const showLongestStreakRow = document.getElementById("showLongestStreakToggle").closest(".settings-row");
+    const showTotalRow = document.getElementById("showTotalToggle").closest(".settings-row");
+    const showEntropyRow = document.getElementById("showEntropyToggle").closest(".settings-row");
+    const showChiRow = document.getElementById("showChiToggle").closest(".settings-row");
+    const showDevRow = document.getElementById("showDevToggle").closest(".settings-row");
+    const showChartRow = document.getElementById("showChartToggle").closest(".settings-row");
+    const showHeatmapRow = document.getElementById("showHeatmapToggle").closest(".settings-row");
+    const dashboardModeSection = document.getElementById("dashboardMode").closest(".settings-subsection");
+    const resetButton = document.getElementById("resetDefaultsBtn");
+
+    if (headerControls) {
+        headerControls.append(themeRow, hideUiRow);
+    }
+
+    if (controlsGroup) {
+        const controlsLeftColumn = document.createElement("div");
+        controlsLeftColumn.className = "settings-column-stack";
+
+        const controlsRightColumn = document.createElement("div");
+        controlsRightColumn.className = "settings-column-stack";
+
+        controlsLeftColumn.append(
+            showVisualRow,
+            showControlsRow,
+            showTimerRow,
+            showHistoryRow
+        );
+
+        controlsRightColumn.append(
+            visualTypeSection,
+            historyModeSection
+        );
+
+        controlsGroup.append(controlsLeftColumn, controlsRightColumn);
+    }
+
+    if (dashboardGroup) {
+        dashboardItemsSection.classList.add("settings-span-two");
+
+        const dashboardTopRow = document.createElement("div");
+        dashboardTopRow.className = "settings-dashboard-items-grid settings-span-two";
+
+        const dashboardLeftColumn = document.createElement("div");
+        dashboardLeftColumn.className = "settings-column-stack";
+
+        const dashboardRightColumn = document.createElement("div");
+        dashboardRightColumn.className = "settings-column-stack";
+
+        dashboardLeftColumn.append(
+            dashboardRow,
+        );
+
+        dashboardRightColumn.append(
+            dashboardModeSection
+        );
+
+        dashboardTopRow.append(dashboardLeftColumn, dashboardRightColumn);
+
+        const dashboardItemsLeftColumn = document.createElement("div");
+        dashboardItemsLeftColumn.className = "settings-column-stack";
+
+        const dashboardItemsRightColumn = document.createElement("div");
+        dashboardItemsRightColumn.className = "settings-column-stack";
+
+        dashboardItemsLeftColumn.append(
+            showMostRepeatRow,
+            showLeastRepeatRow,
+            showLongestStreakRow,
+            showTotalRow,
+            showEntropyRow,
+            showChiRow,
+            showDevRow,
+            showChartRow,
+            showHeatmapRow
+        );
+
+        const dashboardItemsGrid = document.createElement("div");
+        dashboardItemsGrid.className = "settings-dashboard-items-grid";
+        dashboardItemsGrid.append(dashboardItemsLeftColumn, dashboardItemsRightColumn);
+
+        dashboardItemsSection.append(dashboardItemsGrid);
+        dashboardGroup.append(dashboardTopRow, dashboardItemsSection);
+    }
+
+    if (aboutActions && resetButton) {
+        aboutActions.append(resetButton);
+    }
+
+    document.querySelectorAll("#settingsControlsGroup .settings-info-source, #settingsDashboardGroup .settings-info-source").forEach(el => {
+        el.remove();
+    });
+}
+
+settingsViewButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        setSettingsView(button.dataset.settingsView);
+    });
+});
+
+settingsInfoButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        setSettingsInfoView(button.dataset.infoView);
+    });
+});
+
+populateSettingsInfoSections();
+organizeSettingsLayout();
+setSettingsView("controls");
+setSettingsInfoView("visual-indicator");
+window.addEventListener("load", () => {
+    setSettingsView("controls");
+    setSettingsInfoView("visual-indicator");
+});
+
 // Theme toggle
 const themeSlider = document.getElementById("themeSlider");
 themeSlider.addEventListener("change", () => {
@@ -1328,22 +1923,31 @@ const chartUiState = { savedMin: null, savedMax: null };
 const hideUiToggle = document.getElementById("hideUiToggle");
 const uiHideLayer = document.getElementById("uiHideLayer");
 
+function exitFocusMode() {
+    hideUiToggle.checked = false;
+    uiHideLayer.classList.remove("active");
+    document.body.classList.remove("focus-mode");
+}
+
 hideUiToggle.addEventListener("change", () => {
     if (hideUiToggle.checked) {
         uiHideLayer.classList.add("active");
         document.body.classList.add("focus-mode");
     } else {
-        uiHideLayer.classList.remove("active");
-        document.body.classList.remove("focus-mode");
+        exitFocusMode();
     }
 });
 
 uiHideLayer.addEventListener("click", () => {
     if (!hideUiToggle.checked) return;
-    hideUiToggle.checked = false;
-    uiHideLayer.classList.remove("active");
-    document.body.classList.remove("focus-mode");
+    exitFocusMode();
 });
+
+document.addEventListener("click", (e) => {
+    if (!hideUiToggle.checked || !document.body.classList.contains("focus-mode")) return;
+    if (e.target === hideUiToggle) return;
+    exitFocusMode();
+}, true);
 
 function updateVisualIndicator(p) {
     // If visual indicator is disabled â†’ hide both
