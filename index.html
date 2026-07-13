@@ -378,6 +378,7 @@ body[data-theme="light"] #aboutContent {
     border-radius:50%;
     margin:20px 0;
     display:none;
+    cursor:pointer;
     background:radial-gradient(circle at 30% 30%, #ff7b7b, #b00000);
     transition:background 0.3s ease, box-shadow 0.3s ease;
     box-shadow:0 0 22px rgba(255, 0, 0, 0.35);
@@ -2244,6 +2245,8 @@ function drawChart() {
         smoothedPoints = smoothPass(smoothedPoints);
     }
 
+    if (!smoothedPoints.length) return;
+
     // No need to reverse points for dot chart - data is already in correct order
     // pHistory points are now: [oldest (left), ..., newest (right)]
 
@@ -2444,11 +2447,22 @@ window.addEventListener("keydown", e => {
 
 numberEl.addEventListener("click", toggleRunning);
 
+lcdDot.addEventListener("click", toggleRunning);
+
 numberEl.addEventListener("touchstart", (e) => {
     e.preventDefault();
 });
 
 numberEl.addEventListener("touchend", (e) => {
+    e.preventDefault();
+    toggleRunning();
+});
+
+lcdDot.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+});
+
+lcdDot.addEventListener("touchend", (e) => {
     e.preventDefault();
     toggleRunning();
 });
