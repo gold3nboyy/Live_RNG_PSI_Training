@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Random Number Generator v15.8</title>
+<title>Random Number Generator v15.9</title>
 
 <style>
 :root {
@@ -1016,6 +1016,10 @@ body[data-theme="light"] #heatmapCard {
     overflow:hidden !important;
 }
 
+.is-hidden {
+    display:none !important;
+}
+
 /* Mobile responsive styles */
 @media (max-width: 768px) {
     :root {
@@ -1227,6 +1231,11 @@ body[data-theme="light"] #heatmapCard {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         justify-content:stretch;
         gap:10px;
+    }
+
+    #cardChart.chart-only {
+        grid-column:1 / -1;
+        width:100%;
     }
 
     #heatmapCard {
@@ -1808,7 +1817,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.8</span>
+        <span id="versionLine">v15.9</span>
     </div>
 
     <div id="number">0</div>
@@ -2220,7 +2229,7 @@ const showHistoryToggle = document.getElementById("showHistoryToggle");
 const historyEl = document.getElementById("history");
 
 showHistoryToggle.addEventListener("change", () => {
-    historyEl.style.display = showHistoryToggle.checked ? "grid" : "none";
+    historyEl.classList.toggle("is-hidden", !showHistoryToggle.checked);
 });
 
 showVisualToggle.addEventListener("change", () => {
@@ -2262,13 +2271,13 @@ const timerBlock = document.getElementById("timerBlock");
 
 showControlsToggle.addEventListener("change", () => {
     const visible = showControlsToggle.checked;
-    controlsBlock.style.display = visible ? "block" : "none";
-    buttonsBlock.style.display = visible ? "block" : "none";
+    controlsBlock.classList.toggle("is-hidden", !visible);
+    buttonsBlock.classList.toggle("is-hidden", !visible);
 });
 
 showTimerToggle.addEventListener("change", () => {
     const visible = showTimerToggle.checked;
-    timerBlock.style.display = visible ? "block" : "none";
+    timerBlock.classList.toggle("is-hidden", !visible);
 });
 
 // Dashboard visibility
@@ -2316,7 +2325,7 @@ function getEnabledDashboardItemsCount() {
 
 function applyDashboardItemVisibility(shouldRedrawChart = true) {
     dashboardItemPairs.forEach(pair => {
-        pair.card.style.display = pair.toggle.checked ? "block" : "none";
+        pair.card.classList.toggle("is-hidden", !pair.toggle.checked);
     });
     updateChartExclusiveLayout();
     if (shouldRedrawChart) {
@@ -2471,15 +2480,15 @@ resetDefaultsBtn.addEventListener("click", () => {
 
     // Controls and timer
     showControlsToggle.checked = true;
-    controlsBlock.style.display = "block";
-    buttonsBlock.style.display = "block";
+    controlsBlock.classList.remove("is-hidden");
+    buttonsBlock.classList.remove("is-hidden");
 
     showTimerToggle.checked = true;
-    timerBlock.style.display = "block";
+    timerBlock.classList.remove("is-hidden");
 
     // History
     showHistoryToggle.checked = true;
-    historyEl.style.display = "grid";
+    historyEl.classList.remove("is-hidden");
     historyMode.value = "none";
     historyParam.disabled = true;
     historyParam.value = "";
