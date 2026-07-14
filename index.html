@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v15.9.5</title>
+<title>Random Number Generator v15.9.6</title>
 
 <style>
 :root {
@@ -2014,7 +2014,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.9.5</span>
+        <span id="versionLine">v15.9.6</span>
     </div>
 
     <div id="number">0</div>
@@ -2199,7 +2199,7 @@ function updateSettingsHeaderTitle() {
     const mobileStack = settingsPanelEl ? settingsPanelEl.getAttribute("data-mobile-stack") : "categories";
 
     if (isMobileLayout() && mobileStack !== "categories" && activeViewName && settingsViewLabels[activeViewName]) {
-        title = `Settings: ${settingsViewLabels[activeViewName]}`;
+        title = settingsViewLabels[activeViewName];
     }
 
     settingsTitleEl.textContent = title;
