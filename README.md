@@ -17,7 +17,7 @@ This generator does not claim to demonstrate or prove any paranormal ability. In
 <img src="screenshots/RNG1591_settings.jpg" alt="App Settings" width="400">
 
 ## Local Consciousness Dot
-<img src="screenshots/RNG1591_dot" alt="App Settings" width="400">
+<img src="screenshots/RNG1591_dot.jpg" alt="App Settings" width="400">
 
 If you're interested to check out the code or work with it feel free to use it.
 📦 Download Code: Go to Green „Code“-Button → „Download ZIP“ 
