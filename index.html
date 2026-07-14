@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v15.9.4</title>
+<title>Random Number Generator v15.9.5</title>
 
 <style>
 :root {
@@ -1648,7 +1648,7 @@ body[data-theme="light"] #heatmapCard {
     <div class="settings-header">
         <div class="settings-header-bar">
             <button class="settings-back-button is-hidden" id="settingsBackButton" type="button">Back</button>
-            <h2>Settings</h2>
+            <h2 id="settingsTitle">Settings</h2>
             <div class="settings-header-controls" id="settingsHeaderControls"></div>
         </div>
     </div>
@@ -1673,7 +1673,6 @@ body[data-theme="light"] #heatmapCard {
 
         <div class="settings-detail">
             <div class="mobile-info-subcategory-view" id="mobileInfoSubcategoryView" aria-label="Information subcategories">
-                <h3 class="mobile-info-subcategory-title">Information</h3>
                 <div class="mobile-info-subcategory-list">
                     <button class="mobile-info-subnav-button" data-info-view="instructions">Instructions</button>
                     <button class="mobile-info-subnav-button" data-info-view="visual-indicator">Visual Indicator Types</button>
@@ -2015,7 +2014,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.9.4</span>
+        <span id="versionLine">v15.9.5</span>
     </div>
 
     <div id="number">0</div>
@@ -2177,10 +2176,34 @@ const settingsInfoSections = document.querySelectorAll(".settings-info-section")
 const mobileInfoSubnavButtons = document.querySelectorAll(".mobile-info-subnav-button");
 const settingsBackButton = document.getElementById("settingsBackButton");
 const settingsPanelEl = document.getElementById("settingsPanel");
+const settingsTitleEl = document.getElementById("settingsTitle");
 const informationNavButton = document.querySelector('.settings-nav-button[data-settings-view="information"]');
 
 let informationNavExpanded = false;
 let currentMobileCategory = null;
+
+const settingsViewLabels = {
+    controls: "Controls",
+    dashboard: "Dashboard",
+    information: "Information",
+    special: "Special",
+    about: "About"
+};
+
+function updateSettingsHeaderTitle() {
+    if (!settingsTitleEl) return;
+
+    let title = "Settings";
+    const activeView = document.querySelector(".settings-view.active");
+    const activeViewName = activeView ? activeView.dataset.settingsView : null;
+    const mobileStack = settingsPanelEl ? settingsPanelEl.getAttribute("data-mobile-stack") : "categories";
+
+    if (isMobileLayout() && mobileStack !== "categories" && activeViewName && settingsViewLabels[activeViewName]) {
+        title = `Settings: ${settingsViewLabels[activeViewName]}`;
+    }
+
+    settingsTitleEl.textContent = title;
+}
 
 function setSettingsView(viewName) {
     settingsViewButtons.forEach(button => {
@@ -2190,6 +2213,8 @@ function setSettingsView(viewName) {
     settingsViews.forEach(view => {
         view.classList.toggle("active", view.dataset.settingsView === viewName);
     });
+
+    updateSettingsHeaderTitle();
 }
 
 function setSettingsInfoView(viewName) {
@@ -2227,6 +2252,7 @@ function isDesktopLayout() {
 function setMobileStack(level) {
     if (!settingsPanelEl) return;
     settingsPanelEl.setAttribute("data-mobile-stack", level);
+    updateSettingsHeaderTitle();
 
     if (!settingsBackButton || !isMobileLayout()) return;
     const showBack = level !== "categories";
