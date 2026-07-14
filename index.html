@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v15.9.3</title>
+<title>Random Number Generator v15.9.4</title>
 
 <style>
 :root {
@@ -453,6 +453,25 @@ body[data-theme="light"] .settings-group-card .settings-subsection {
 }
 
 .settings-info-accordion-button {
+    display:none;
+}
+
+.settings-back-button {
+    display:none;
+    border:1px solid var(--panel-border-dark);
+    background:transparent;
+    color:inherit;
+    border-radius:10px;
+    padding:7px 12px;
+    margin:0;
+    font-size:14px;
+    line-height:1.2;
+}
+body[data-theme="light"] .settings-back-button {
+    border-color:var(--panel-border-light);
+}
+
+.mobile-info-subcategory-view {
     display:none;
 }
 
@@ -1139,18 +1158,50 @@ body[data-theme="light"] #heatmapCard {
         border-radius:0;
     }
 
+    .settings-header {
+        padding:14px 14px;
+    }
+
+    .settings-header-bar {
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+    }
+
+    .settings-header h2 {
+        font-size:18px;
+    }
+
+    .settings-back-button {
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .settings-back-button.is-hidden {
+        display:none;
+    }
+
+    .settings-header-controls {
+        display:none;
+    }
+
     .settings-shell {
-        grid-template-columns:1fr;
+        display:block;
+        height:100%;
     }
 
     .settings-sidebar {
         border-right:none;
-        border-bottom:1px solid var(--panel-border-dark);
+        border-bottom:none;
         padding:12px;
+        height:100%;
+        overflow-y:auto;
     }
 
     body[data-theme="light"] .settings-sidebar {
-        border-bottom-color:var(--panel-border-light);
+        border-bottom-color:transparent;
     }
 
     .settings-nav {
@@ -1184,6 +1235,8 @@ body[data-theme="light"] #heatmapCard {
 
     .settings-detail {
         padding:14px;
+        height:100%;
+        overflow-y:auto;
     }
 
     .settings-nav-button,
@@ -1211,6 +1264,52 @@ body[data-theme="light"] #heatmapCard {
         display:none;
     }
 
+    .mobile-info-subcategory-view {
+        display:none;
+    }
+
+    .mobile-info-subcategory-title {
+        margin:0 0 10px;
+        font-size:16px;
+        opacity:0.92;
+    }
+
+    .mobile-info-subcategory-list {
+        display:flex;
+        flex-direction:column;
+        gap:8px;
+    }
+
+    .mobile-info-subnav-button {
+        width:100%;
+        border:0;
+        background:rgba(255,255,255,0.04);
+        color:inherit;
+        text-align:left;
+        border-radius:12px;
+        padding:12px 14px;
+        cursor:pointer;
+        font:inherit;
+        font-size:14px;
+        line-height:1.3;
+        transition:background 0.2s ease, color 0.2s ease;
+    }
+
+    .mobile-info-subnav-button:hover,
+    .mobile-info-subnav-button.active {
+        background:rgba(255,255,255,0.12);
+        font-weight:600;
+    }
+
+    body[data-theme="light"] .mobile-info-subnav-button {
+        background:rgba(0,0,0,0.04);
+    }
+
+    body[data-theme="light"] .mobile-info-subnav-button:hover,
+    body[data-theme="light"] .mobile-info-subnav-button.active {
+        background:rgba(0,0,0,0.1);
+    }
+
     .settings-info-accordion-button {
         display:none;
     }
@@ -1231,6 +1330,36 @@ body[data-theme="light"] #heatmapCard {
     }
 
     .settings-info-section:not(.active) {
+        display:none;
+    }
+
+    #settingsPanel[data-mobile-stack="categories"] .settings-sidebar {
+        display:block;
+    }
+
+    #settingsPanel[data-mobile-stack="categories"] .settings-detail {
+        display:none;
+    }
+
+    #settingsPanel[data-mobile-stack="subcategories"] .settings-sidebar,
+    #settingsPanel[data-mobile-stack="content"] .settings-sidebar {
+        display:none;
+    }
+
+    #settingsPanel[data-mobile-stack="subcategories"] .settings-detail,
+    #settingsPanel[data-mobile-stack="content"] .settings-detail {
+        display:block;
+    }
+
+    #settingsPanel[data-mobile-stack="subcategories"] .settings-view {
+        display:none !important;
+    }
+
+    #settingsPanel[data-mobile-stack="subcategories"] .mobile-info-subcategory-view {
+        display:block;
+    }
+
+    #settingsPanel[data-mobile-stack="content"] .mobile-info-subcategory-view {
         display:none;
     }
 
@@ -1518,6 +1647,7 @@ body[data-theme="light"] #heatmapCard {
 
     <div class="settings-header">
         <div class="settings-header-bar">
+            <button class="settings-back-button is-hidden" id="settingsBackButton" type="button">Back</button>
             <h2>Settings</h2>
             <div class="settings-header-controls" id="settingsHeaderControls"></div>
         </div>
@@ -1542,6 +1672,17 @@ body[data-theme="light"] #heatmapCard {
         </aside>
 
         <div class="settings-detail">
+            <div class="mobile-info-subcategory-view" id="mobileInfoSubcategoryView" aria-label="Information subcategories">
+                <h3 class="mobile-info-subcategory-title">Information</h3>
+                <div class="mobile-info-subcategory-list">
+                    <button class="mobile-info-subnav-button" data-info-view="instructions">Instructions</button>
+                    <button class="mobile-info-subnav-button" data-info-view="visual-indicator">Visual Indicator Types</button>
+                    <button class="mobile-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
+                    <button class="mobile-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
+                    <button class="mobile-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
+                </div>
+            </div>
+
             <section class="settings-view active" data-settings-view="controls">
                 <div class="settings-view-section settings-group-card settings-grid-two" id="settingsControlsGroup"></div>
             </section>
@@ -1874,7 +2015,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.9.3</span>
+        <span id="versionLine">v15.9.4</span>
     </div>
 
     <div id="number">0</div>
@@ -1991,6 +2132,13 @@ body[data-theme="light"] #heatmapCard {
 function toggleSettings() {
     const panel = document.getElementById("settingsPanel");
     panel.classList.toggle("open");
+    if (isMobileLayout()) {
+        if (panel.classList.contains("open")) {
+            resetMobileStack();
+        } else {
+            resetMobileStack();
+        }
+    }
 }
 // Close settings panel when clicking outside
 document.addEventListener("click", (e) => {
@@ -2005,6 +2153,9 @@ document.addEventListener("click", (e) => {
 
     // Otherwise close panel
     panel.classList.remove("open");
+    if (isMobileLayout()) {
+        resetMobileStack();
+    }
 });
 
 // About overlay
@@ -2023,9 +2174,13 @@ const settingsInfoSubnav = document.getElementById("settingsInfoSubnav");
 const settingsInfoSubnavButtons = document.querySelectorAll(".settings-info-subnav-button");
 const settingsInfoAccordionButtons = document.querySelectorAll(".settings-info-accordion-button");
 const settingsInfoSections = document.querySelectorAll(".settings-info-section");
+const mobileInfoSubnavButtons = document.querySelectorAll(".mobile-info-subnav-button");
+const settingsBackButton = document.getElementById("settingsBackButton");
+const settingsPanelEl = document.getElementById("settingsPanel");
 const informationNavButton = document.querySelector('.settings-nav-button[data-settings-view="information"]');
 
 let informationNavExpanded = false;
+let currentMobileCategory = null;
 
 function setSettingsView(viewName) {
     settingsViewButtons.forEach(button => {
@@ -2046,6 +2201,10 @@ function setSettingsInfoView(viewName) {
         button.classList.toggle("active", viewName && button.dataset.infoView === viewName);
     });
 
+    mobileInfoSubnavButtons.forEach(button => {
+        button.classList.toggle("active", viewName && button.dataset.infoView === viewName);
+    });
+
     settingsInfoAccordionButtons.forEach(button => {
         const isActive = !!viewName && button.dataset.infoView === viewName;
         button.classList.toggle("active", isActive);
@@ -2063,6 +2222,20 @@ function isMobileLayout() {
 
 function isDesktopLayout() {
     return !isMobileLayout();
+}
+
+function setMobileStack(level) {
+    if (!settingsPanelEl) return;
+    settingsPanelEl.setAttribute("data-mobile-stack", level);
+
+    if (!settingsBackButton || !isMobileLayout()) return;
+    const showBack = level !== "categories";
+    settingsBackButton.classList.toggle("is-hidden", !showBack);
+}
+
+function resetMobileStack() {
+    currentMobileCategory = null;
+    setMobileStack("categories");
 }
 
 function setInformationNavExpanded(expanded) {
@@ -2210,6 +2383,24 @@ settingsViewButtons.forEach(button => {
     button.addEventListener("click", () => {
         const targetView = button.dataset.settingsView;
 
+        if (isMobileLayout()) {
+            if (targetView === "information") {
+                currentMobileCategory = "information";
+                setSettingsView("information");
+                setSettingsInfoView(null);
+                setInformationNavExpanded(false);
+                setMobileStack("subcategories");
+                return;
+            }
+
+            currentMobileCategory = targetView;
+            setSettingsView(targetView);
+            setSettingsInfoView(null);
+            setInformationNavExpanded(false);
+            setMobileStack("content");
+            return;
+        }
+
         if (targetView === "information") {
             const isAlreadyActive = button.classList.contains("active");
 
@@ -2239,9 +2430,26 @@ settingsViewButtons.forEach(button => {
 
 settingsInfoSubnavButtons.forEach(button => {
     button.addEventListener("click", () => {
+        if (isMobileLayout()) {
+            currentMobileCategory = "information";
+            setSettingsView("information");
+            setSettingsInfoView(button.dataset.infoView);
+            setMobileStack("content");
+            return;
+        }
+
         setSettingsView("information");
         setInformationNavExpanded(true);
         setSettingsInfoView(button.dataset.infoView);
+    });
+});
+
+mobileInfoSubnavButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        currentMobileCategory = "information";
+        setSettingsView("information");
+        setSettingsInfoView(button.dataset.infoView);
+        setMobileStack("content");
     });
 });
 
@@ -2262,20 +2470,56 @@ settingsInfoAccordionButtons.forEach(button => {
     });
 });
 
+if (settingsBackButton) {
+    settingsBackButton.addEventListener("click", () => {
+        if (!isMobileLayout()) return;
+        const level = settingsPanelEl ? settingsPanelEl.getAttribute("data-mobile-stack") : "categories";
+
+        if (level === "content") {
+            if (currentMobileCategory === "information") {
+                setSettingsInfoView(null);
+                setMobileStack("subcategories");
+                return;
+            }
+
+            setMobileStack("categories");
+            return;
+        }
+
+        if (level === "subcategories") {
+            setSettingsInfoView(null);
+            setMobileStack("categories");
+            return;
+        }
+
+        const panel = document.getElementById("settingsPanel");
+        if (panel) panel.classList.remove("open");
+    });
+}
+
 populateSettingsInfoSections();
 organizeSettingsLayout();
 setSettingsView("controls");
 setInformationNavExpanded(false);
 setSettingsInfoView(null);
+resetMobileStack();
 window.addEventListener("load", () => {
     setSettingsView("controls");
     setInformationNavExpanded(false);
     setSettingsInfoView(null);
+    resetMobileStack();
 });
 
 window.addEventListener("resize", () => {
-    if (isMobileLayout() && document.querySelector('.settings-nav-button[data-settings-view="information"].active')) {
-        setInformationNavExpanded(true);
+    if (isMobileLayout()) {
+        if (!settingsPanelEl || settingsPanelEl.getAttribute("data-mobile-stack") == null) {
+            resetMobileStack();
+        }
+        return;
+    }
+
+    if (document.querySelector('.settings-nav-button[data-settings-view="information"].active')) {
+        setInformationNavExpanded(informationNavExpanded);
     } else {
         setInformationNavExpanded(false);
     }
@@ -3443,28 +3687,6 @@ window.addEventListener("keydown", e => {
 numberEl.addEventListener("click", toggleRunning);
 
 lcdDot.addEventListener("click", toggleRunning);
-
-numberEl.addEventListener("touchstart", (e) => {
-    if (e.touches.length === 1) {
-        e.preventDefault();
-    }
-}, { passive: false });
-
-numberEl.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    toggleRunning();
-});
-
-lcdDot.addEventListener("touchstart", (e) => {
-    if (e.touches.length === 1) {
-        e.preventDefault();
-    }
-}, { passive: false });
-
-lcdDot.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    toggleRunning();
-});
 
 // Info-Popup
 const infoOverlay = document.getElementById("infoOverlay");
