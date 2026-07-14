@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v15.9.6</title>
+<title>Random Number Generator v15.9.7</title>
 
 <style>
 :root {
@@ -1472,10 +1472,12 @@ body[data-theme="light"] #heatmapCard {
     }
     
     #buttonsBlock {
-        display:grid;
-        grid-template-columns:repeat(3, minmax(0, 1fr));
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-wrap:wrap;
         width:100%;
-        max-width:520px;
+        max-width:none;
         gap: 8px;
         margin-top: 10px;
         margin-left:auto;
@@ -1483,8 +1485,9 @@ body[data-theme="light"] #heatmapCard {
     }
     
     #buttonsBlock button {
-        width:100%;
-        padding: 10px 6px;
+        width:auto;
+        min-width:110px;
+        padding: 10px 18px;
         font-size: 13px;
         line-height:1.1;
     }
@@ -2014,7 +2017,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.9.6</span>
+        <span id="versionLine">v15.9.7</span>
     </div>
 
     <div id="number">0</div>
