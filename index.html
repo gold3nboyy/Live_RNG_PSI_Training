@@ -1472,12 +1472,10 @@ body[data-theme="light"] #heatmapCard {
     }
     
     #buttonsBlock {
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-wrap:wrap;
+        display:grid;
+        grid-template-columns:repeat(3, minmax(0, 1fr));
         width:100%;
-        max-width:none;
+        max-width:520px;
         gap: 8px;
         margin-top: 10px;
         margin-left:auto;
@@ -1485,9 +1483,8 @@ body[data-theme="light"] #heatmapCard {
     }
     
     #buttonsBlock button {
-        width:auto;
-        min-width:110px;
-        padding: 10px 18px;
+        width:100%;
+        padding: 10px 6px;
         font-size: 13px;
         line-height:1.1;
     }
