@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Random Number Generator v15.9.2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>Random Number Generator v15.9.3</title>
 
 <style>
 :root {
@@ -1099,6 +1099,7 @@ body[data-theme="light"] #heatmapCard {
 
     body {
         font-size: 13px;
+        touch-action:pan-x pan-y pinch-zoom;
     }
 
     #center {
@@ -1152,23 +1153,33 @@ body[data-theme="light"] #heatmapCard {
         border-bottom-color:var(--panel-border-light);
     }
 
-    .settings-nav,
-    .settings-info-nav {
-        flex-direction:row;
-        overflow-x:auto;
+    .settings-nav {
+        flex-direction:column;
+        overflow-x:visible;
+        overflow-y:visible;
         gap:8px;
-        padding-bottom:4px;
     }
 
-    .settings-nav-button,
-    .settings-info-button {
-        width:auto;
-        white-space:nowrap;
-        flex:0 0 auto;
+    .settings-nav-button {
+        width:100%;
+        white-space:normal;
+        flex:1 1 auto;
+        text-align:left;
     }
 
     .settings-info-subnav {
-        display:none !important;
+        display:none;
+        gap:4px;
+        padding:2px 0 2px 10px;
+    }
+
+    .settings-info-subnav.open {
+        display:flex;
+    }
+
+    .settings-info-subnav-button {
+        padding:10px 12px;
+        font-size:13px;
     }
 
     .settings-detail {
@@ -1176,7 +1187,8 @@ body[data-theme="light"] #heatmapCard {
     }
 
     .settings-nav-button,
-    .settings-info-button {
+    .settings-info-button,
+    .settings-info-subnav-button {
         padding:10px 12px;
         font-size:14px;
     }
@@ -1199,74 +1211,8 @@ body[data-theme="light"] #heatmapCard {
         display:none;
     }
 
-    .settings-info-content {
-        display:flex;
-        flex-direction:column;
-        gap:10px;
-    }
-
-    .settings-info-section {
-        display:block;
-    }
-
     .settings-info-accordion-button {
-        display:block;
-        width:100%;
-        border:1px solid var(--panel-border-dark);
-        background:rgba(255,255,255,0.03);
-        color:inherit;
-        text-align:left;
-        border-radius:12px;
-        padding:12px 14px;
-        font:inherit;
-        font-weight:600;
-        font-size:14px;
-        line-height:1.3;
-        cursor:pointer;
-        position:relative;
-        padding-right:34px;
-    }
-
-    .settings-info-accordion-button::after {
-        content:">";
-        position:absolute;
-        right:14px;
-        top:50%;
-        transform:translateY(-50%);
-        opacity:0.7;
-        transition:transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    body[data-theme="light"] .settings-info-accordion-button {
-        border-color:var(--panel-border-light);
-        background:rgba(255,255,255,0.42);
-    }
-
-    .settings-info-section .settings-rich-text {
         display:none;
-        margin-top:10px;
-    }
-
-    .settings-info-section.active .settings-rich-text {
-        display:block;
-    }
-
-    .settings-info-section.active .settings-info-accordion-button {
-        border-color:rgba(255,255,255,0.32);
-        color:inherit;
-        background:rgba(255,255,255,0.1);
-        box-shadow:inset 0 0 0 1px rgba(255,255,255,0.16);
-    }
-
-    body[data-theme="light"] .settings-info-section.active .settings-info-accordion-button {
-        border-color:rgba(0,0,0,0.22);
-        background:rgba(0,0,0,0.07);
-        box-shadow:inset 0 0 0 1px rgba(0,0,0,0.12);
-    }
-
-    .settings-info-section.active .settings-info-accordion-button::after {
-        transform:translateY(-50%) rotate(90deg);
-        opacity:1;
     }
 
     .settings-group-card,
@@ -1274,10 +1220,25 @@ body[data-theme="light"] #heatmapCard {
         max-width:none;
     }
 
+    .settings-info-content,
+    .settings-info-section,
+    .settings-info-section.active {
+        display:block;
+    }
+
+    .settings-info-section {
+        margin:0;
+    }
+
+    .settings-info-section:not(.active) {
+        display:none;
+    }
+
     .settings-rich-text {
         font-size:13px;
         line-height:1.55;
         padding:16px 16px;
+        width:100%;
     }
 
     .settings-grid-two {
@@ -1913,7 +1874,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.9.2</span>
+        <span id="versionLine">v15.9.3</span>
     </div>
 
     <div id="number">0</div>
@@ -2064,7 +2025,7 @@ const settingsInfoAccordionButtons = document.querySelectorAll(".settings-info-a
 const settingsInfoSections = document.querySelectorAll(".settings-info-section");
 const informationNavButton = document.querySelector('.settings-nav-button[data-settings-view="information"]');
 
-let informationDesktopExpanded = false;
+let informationNavExpanded = false;
 
 function setSettingsView(viewName) {
     settingsViewButtons.forEach(button => {
@@ -2104,13 +2065,13 @@ function isDesktopLayout() {
     return !isMobileLayout();
 }
 
-function setInformationDesktopExpanded(expanded) {
-    informationDesktopExpanded = !!expanded;
+function setInformationNavExpanded(expanded) {
+    informationNavExpanded = !!expanded;
     if (settingsInfoSubnav) {
-        settingsInfoSubnav.classList.toggle("open", informationDesktopExpanded && isDesktopLayout());
+        settingsInfoSubnav.classList.toggle("open", informationNavExpanded);
     }
     if (informationNavButton) {
-        informationNavButton.setAttribute("aria-expanded", informationDesktopExpanded ? "true" : "false");
+        informationNavButton.setAttribute("aria-expanded", informationNavExpanded ? "true" : "false");
     }
 }
 
@@ -2249,25 +2210,28 @@ settingsViewButtons.forEach(button => {
     button.addEventListener("click", () => {
         const targetView = button.dataset.settingsView;
 
-        if (targetView === "information" && isDesktopLayout()) {
+        if (targetView === "information") {
             const isAlreadyActive = button.classList.contains("active");
 
             setSettingsView("information");
 
-            if (isAlreadyActive && informationDesktopExpanded) {
-                setInformationDesktopExpanded(false);
+            if (isAlreadyActive && informationNavExpanded) {
+                setInformationNavExpanded(false);
                 setSettingsInfoView(null);
             } else {
-                setInformationDesktopExpanded(true);
-                setSettingsInfoView(null);
+                setInformationNavExpanded(true);
+                const hasActiveSection = Array.from(settingsInfoSections).some(section => section.classList.contains("active"));
+                if (!hasActiveSection) {
+                    setSettingsInfoView("instructions");
+                }
             }
             return;
         }
 
         setSettingsView(targetView);
 
-        if (isDesktopLayout() && targetView !== "information") {
-            setInformationDesktopExpanded(false);
+        if (targetView !== "information") {
+            setInformationNavExpanded(false);
             setSettingsInfoView(null);
         }
     });
@@ -2275,10 +2239,8 @@ settingsViewButtons.forEach(button => {
 
 settingsInfoSubnavButtons.forEach(button => {
     button.addEventListener("click", () => {
-        if (isDesktopLayout()) {
-            setSettingsView("information");
-            setInformationDesktopExpanded(true);
-        }
+        setSettingsView("information");
+        setInformationNavExpanded(true);
         setSettingsInfoView(button.dataset.infoView);
     });
 });
@@ -2303,20 +2265,20 @@ settingsInfoAccordionButtons.forEach(button => {
 populateSettingsInfoSections();
 organizeSettingsLayout();
 setSettingsView("controls");
-setInformationDesktopExpanded(false);
+setInformationNavExpanded(false);
 setSettingsInfoView(null);
 window.addEventListener("load", () => {
     setSettingsView("controls");
-    setInformationDesktopExpanded(false);
+    setInformationNavExpanded(false);
     setSettingsInfoView(null);
 });
 
 window.addEventListener("resize", () => {
-    if (isDesktopLayout()) {
-        setInformationDesktopExpanded(informationDesktopExpanded);
-        return;
+    if (isMobileLayout() && document.querySelector('.settings-nav-button[data-settings-view="information"].active')) {
+        setInformationNavExpanded(true);
+    } else {
+        setInformationNavExpanded(false);
     }
-    setInformationDesktopExpanded(false);
 });
 
 // Theme toggle
@@ -3483,8 +3445,10 @@ numberEl.addEventListener("click", toggleRunning);
 lcdDot.addEventListener("click", toggleRunning);
 
 numberEl.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-});
+    if (e.touches.length === 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
 
 numberEl.addEventListener("touchend", (e) => {
     e.preventDefault();
@@ -3492,8 +3456,10 @@ numberEl.addEventListener("touchend", (e) => {
 });
 
 lcdDot.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-});
+    if (e.touches.length === 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
 
 lcdDot.addEventListener("touchend", (e) => {
     e.preventDefault();
