@@ -11,16 +11,13 @@ This project is inspired by decades of research into mind–matter interaction a
 This generator does not claim to demonstrate or prove any paranormal ability. Instead, it offers a simple, transparent way for you to explore these ideas yourself: by watching how the number flow behaves during periods of focused attention, intention, or PSI training, and deciding what—if anything—you make of the patterns you see. I'm just some guy vibe coding. This is a work in progress. It's not really optimized for mobile use, that part is giving me a hard time. So my focus right now is regular use on pc.
 
 ## Generator
-
-![Startseite](screenshots/RNG1591.jpg)
+<img src="screenshots/RNG1591.jpg" alt="App Start" width="400">
 
 ## Settings
-
-![Startseite](screenshots/RNG1591_settings.jpg)
+<img src="screenshots/RNG1591_settings.jpg" alt="App Settings" width="400">
 
 ## Local Consciousness Dot
-
-![Startseite](screenshots/RNG1591_dot.jpg)
+<img src="screenshots/RNG1591_dot" alt="App Settings" width="400">
 
 If you're interested to check out the code or work with it feel free to use it.
 📦 Download Code: Go to Green „Code“-Button → „Download ZIP“ 
