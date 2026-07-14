@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v15.9.7</title>
+<title>Random Number Generator v16</title>
 
 <style>
 :root {
@@ -1658,6 +1658,7 @@ body[data-theme="light"] #heatmapCard {
             <nav class="settings-nav" aria-label="Settings categories">
                 <button class="settings-nav-button active" data-settings-view="controls">Controls</button>
                 <button class="settings-nav-button" data-settings-view="dashboard">Dashboard</button>
+                <button class="settings-nav-button" data-settings-view="special">Special</button>
                 <button class="settings-nav-button" data-settings-view="information">Information</button>
                 <div class="settings-info-subnav" id="settingsInfoSubnav" aria-label="Information subcategories">
                     <button class="settings-info-subnav-button" data-info-view="instructions">Instructions</button>
@@ -1665,8 +1666,8 @@ body[data-theme="light"] #heatmapCard {
                     <button class="settings-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                     <button class="settings-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
                     <button class="settings-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
+                    <button class="settings-info-subnav-button" data-info-view="terry-mode">Terry Mode</button>
                 </div>
-                <button class="settings-nav-button" data-settings-view="special">Special</button>
                 <button class="settings-nav-button" data-settings-view="about">About</button>
             </nav>
         </aside>
@@ -1679,6 +1680,7 @@ body[data-theme="light"] #heatmapCard {
                     <button class="mobile-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                     <button class="mobile-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
                     <button class="mobile-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
+                    <button class="mobile-info-subnav-button" data-info-view="terry-mode">Terry Mode</button>
                 </div>
             </div>
 
@@ -1698,6 +1700,7 @@ body[data-theme="light"] #heatmapCard {
                         <button class="settings-info-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                         <button class="settings-info-button" data-info-view="dashboard-items">Dashboard Items</button>
                         <button class="settings-info-button" data-info-view="dashboard-mode">Dashboard Modes</button>
+                        <button class="settings-info-button" data-info-view="terry-mode">Terry Mode</button>
                     </nav>
 
                     <div class="settings-info-content">
@@ -1720,6 +1723,10 @@ body[data-theme="light"] #heatmapCard {
                         <section class="settings-info-section" data-info-view="dashboard-mode">
                             <button class="settings-info-accordion-button" data-info-view="dashboard-mode" type="button" aria-expanded="false">Dashboard Modes</button>
                             <div class="settings-rich-text" id="settingsInfoDashboardMode"></div>
+                        </section>
+                        <section class="settings-info-section" data-info-view="terry-mode">
+                            <button class="settings-info-accordion-button" data-info-view="terry-mode" type="button" aria-expanded="false">Terry Mode</button>
+                            <div class="settings-rich-text" id="settingsInfoTerryMode"></div>
                         </section>
                     </div>
                 </div>
@@ -1852,6 +1859,12 @@ body[data-theme="light"] #heatmapCard {
             data-info-target="settingsInfoInstructions"
             data-title="Instructions"
             data-tip="<h3>How to use for PSI training</h3><p>Modern studies on attention, meditation, and altered states suggest that mindset strongly influences how people perceive randomness. Before starting, take a moment to settle your breathing and adopt a calm, receptive mental state, similar to mindfulness practices used in contemporary research. Many experiments recommend entering a lightly altered state characterized by relaxed focus, reduced internal chatter, and heightened sensory awareness. As the generator begins producing numbers and you observe them, maintain a soft, non forceful intention - this mirrors protocols used in modern psi and consciousness studies. You are not generating the numbers yourself; instead, you are exploring whether your inner state correlates with how the random output behaves. Observe the stream without trying to force control; let your attention rest gently on the numbers. Over time, you may notice patterns, streaks, or shifts in distribution that feel meaningful or interesting. Whether these arise from cognitive bias, emotional resonance, or genuine statistical fluctuation, the process can be introspective and grounding. Use the dashboard metrics to track changes during different mental states, such as deep relaxation, focused intention, or creative flow. The goal is not to prove anything but to explore how your inner state interacts with your perception of randomness.</p><h3>Range</h3><p>Range means the minimum and maximum values the generator is allowed to produce, for example 0 to 99 or 1 to 10. This choice has a strong effect on how your session feels and how stable your statistics look. A wider range gives more possible numbers, which is great for broad exploration, but it usually needs more time before patterns and dashboard values settle. A smaller range gives fewer possible numbers, so repeats happen more often and short sessions can look more active, even when the system is still behaving randomly. For beginners, a balanced starting point is often 0 to 99 because it is easy to understand, widely used, and gives enough spread for meaningful long runs. You can also choose smaller ranges for specific training goals, like focus drills, fast feedback, or pattern observation in short sessions. In simple terms, a small range gives fast and intense local movement, while a large range gives slower but broader statistical structure over time.</p>">
+        </span>
+
+        <span class="settings-info-source"
+            data-info-target="settingsInfoTerryMode"
+            data-title="Terry Mode"
+            data-tip="<h3>Terry's Method</h3><p>Terry Davis used a pseudo-random approach based on a Linear Congruential Generator (LCG) in TempleOS. In this model, each new random state is computed from the previous state with fixed constants, and the sequence evolves continuously over time. The specific constants used in TempleOS come from classic literature references around LCG design and are also documented by Terry in his own credits notes. This means the method is deterministic at its core when the same seed and same conditions are used, but it can still look highly irregular in practice. TempleOS also mixed timing information from the CPU timestamp counter, which adds a live timing-dependent component to reduce repeatability in normal interactive use.</p><h3>Terry's Method in this App</h3><p>When Terry Mode is enabled, this app switches from its default RNG kernel to a TempleOS-style LCG flow so the random stream is generated by Terry's methodology. The rest of the app continues to function exactly as before: number output, history rendering, dashboard metrics, charting, and indicator logic all consume the currently active random stream. When Terry Mode is disabled, the app returns to the default RNG kernel immediately without changing your interface workflow. This implementation mirrors the original concept by using the same LCG constants and a timing-based noise mix, while running fully in the browser. The result is a practical, historically inspired mode that can be compared against your default behavior in the same session structure.</p><h3>Motivation</h3><p>Terry's motivation was not just technical speed; he tied randomness to his broader TempleOS oracle concept and considered randomness a channel for meaning. He favored methods that were simple, transparent, and easy to keep inside his fully self-contained operating system. In that sense, his RNG choice reflects both engineering pragmatism and his spiritual framework. Terry Mode is interesting because it lets users experience that historical design philosophy directly, while still viewing modern statistical feedback in a familiar interface. It is also important to note that this is not a hardware quantum RNG; it is a fast software PRNG with timing influence, inspired by TempleOS behavior.</p>">
         </span>
 
         <div class="settings-subsection">
@@ -2014,7 +2027,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.9.7</span>
+        <span id="versionLine">v16</span>
     </div>
 
     <div id="number">0</div>
@@ -2190,6 +2203,15 @@ const settingsViewLabels = {
     about: "About"
 };
 
+const settingsInfoViewLabels = {
+    instructions: "Instructions",
+    "visual-indicator": "Visual Indicator Types",
+    "last-100": "Last 100 Numbers Modes",
+    "dashboard-items": "Dashboard Items",
+    "dashboard-mode": "Dashboard Modes",
+    "terry-mode": "Terry Mode"
+};
+
 function updateSettingsHeaderTitle() {
     if (!settingsTitleEl) return;
 
@@ -2200,6 +2222,14 @@ function updateSettingsHeaderTitle() {
 
     if (isMobileLayout() && mobileStack !== "categories" && activeViewName && settingsViewLabels[activeViewName]) {
         title = settingsViewLabels[activeViewName];
+
+        if (activeViewName === "information" && mobileStack === "content") {
+            const activeInfoSection = document.querySelector(".settings-info-section.active");
+            const activeInfoView = activeInfoSection ? activeInfoSection.dataset.infoView : null;
+            if (activeInfoView && settingsInfoViewLabels[activeInfoView]) {
+                title = settingsInfoViewLabels[activeInfoView];
+            }
+        }
     }
 
     settingsTitleEl.textContent = title;
@@ -2564,6 +2594,7 @@ themeSlider.addEventListener("change", () => {
 const showVisualToggle = document.getElementById("showVisualToggle");
 const visualType = document.getElementById("visualType");
 const lcdDot = document.getElementById("lcdDot");
+const terryModeToggle = document.getElementById("terryModeToggle");
 const chartUiState = { savedMin: null, savedMax: null };
 
 // Hide UI / focus mode
@@ -2908,11 +2939,59 @@ function add(n) {
     history.unshift(n);
 }
 
-function rand(min, max) {
-    min = Math.floor(Number(min) || 0);
-    max = Math.floor(Number(max) || 0);
-    if (min > max) [min, max] = [max, min];
+const TERRY_A = 6364136223846793005n;
+const TERRY_C = 1442695040888963407n;
+const TERRY_MASK_64 = 0xFFFFFFFFFFFFFFFFn;
+let terrySeed = 0n;
+let terryUseTimerNoise = true;
 
+function terryTscLike() {
+    const perfUs = (typeof performance !== "undefined")
+        ? BigInt(Math.floor(performance.now() * 1000))
+        : 0n;
+    return ((BigInt(Date.now()) << 20n) ^ perfUs) & TERRY_MASK_64;
+}
+
+function terrySeedFromClock() {
+    terrySeed = terryTscLike();
+    if (terrySeed === 0n) {
+        terrySeed = 1n;
+    }
+}
+
+function terryRandU64() {
+    if (terrySeed === 0n) {
+        terrySeedFromClock();
+    }
+
+    let res = terrySeed;
+    res = (TERRY_A * res) ^ (((res & 0xFFFFFFFF0000n) >> 16n) + TERRY_C);
+
+    if (terryUseTimerNoise) {
+        res ^= terryTscLike();
+    }
+
+    terrySeed = res & TERRY_MASK_64;
+    return terrySeed;
+}
+
+function terryRand(min, max) {
+    const range = max - min + 1;
+    if (range <= 0) return min;
+
+    const rangeBig = BigInt(range);
+    const maxU64 = (1n << 64n);
+    const limit = (maxU64 / rangeBig) * rangeBig;
+    let r;
+
+    do {
+        r = terryRandU64();
+    } while (r >= limit);
+
+    return min + Number(r % rangeBig);
+}
+
+function defaultRand(min, max) {
     const range = max - min + 1;
     if (range <= 0) return min;
 
@@ -2933,6 +3012,18 @@ function rand(min, max) {
     } while (r >= limit);
 
     return min + (r % range);
+}
+
+function rand(min, max) {
+    min = Math.floor(Number(min) || 0);
+    max = Math.floor(Number(max) || 0);
+    if (min > max) [min, max] = [max, min];
+
+    if (terryModeToggle && terryModeToggle.checked) {
+        return terryRand(min, max);
+    }
+
+    return defaultRand(min, max);
 }
 
 // ----------------------------
@@ -3311,26 +3402,38 @@ function updateLongestStreak() {
         ? history.slice(0, 100)
         : history;
 
-    if (data.length < 2) {
-        longestStreakEl.innerText = "0";
+    if (!data.length) {
+        longestStreakEl.innerText = "0 (-)";
+        return;
+    }
+
+    if (data.length === 1) {
+        longestStreakEl.innerText = `1 (${data[0]})`;
         return;
     }
 
     let longest = 1;
     let current = 1;
+    let streakValue = data[0];
 
     for (let i = 1; i < data.length; i++) {
         if (data[i] === data[i - 1]) {
             current++;
         } else {
-            if (current > longest) longest = current;
+            if (current > longest) {
+                longest = current;
+                streakValue = data[i - 1];
+            }
             current = 1;
         }
     }
 
-    if (current > longest) longest = current;
+    if (current > longest) {
+        longest = current;
+        streakValue = data[data.length - 1];
+    }
 
-    longestStreakEl.innerText = longest;
+    longestStreakEl.innerText = `${longest} (${streakValue})`;
 }
 
 function applyDefaultMode() {
@@ -3358,6 +3461,12 @@ function applyDefaultMode() {
     visualType.value = "number";
     applyChartModeUI();
     updateVisualIndicator(chiObj.p);
+
+    if (terryModeToggle) {
+        terryModeToggle.checked = false;
+    }
+    terryUseTimerNoise = true;
+    terrySeed = 0n;
 
     dashboardSyncGuard = true;
     dashboardToggle.checked = true;
@@ -3474,10 +3583,14 @@ function drawChart() {
 
     if (!data.length) return;
 
-    // Add padding to prevent points from being cut off at edges
+    // Keep extra space so the end marker circle and glow stay inside the chart bounds.
     const padding = 6;
-    const drawWidth = c.width - 2 * padding;
-    const drawHeight = c.height - 2 * padding;
+    const endpointInset = 12;
+    const rightPadding = padding + endpointInset;
+    const topPadding = padding + endpointInset;
+    const bottomPadding = padding + endpointInset;
+    const drawWidth = c.width - padding - rightPadding;
+    const drawHeight = c.height - topPadding - bottomPadding;
 
     const points = data.map((value, index) => {
         const x = padding + (index / Math.max(1, data.length - 1)) * drawWidth;
@@ -3485,9 +3598,9 @@ function drawChart() {
         // For dot chart: low p-values (anomalies) go UP, high p-values (stable) go DOWN
         // For number chart: use standard bottom-up layout
         const isInvertedYAxis = isDotChartActive;
-        const y = isInvertedYAxis 
-            ? padding + norm * drawHeight  // Inverted: 0 = top (red anomalies), 1 = bottom (blue stable)
-            : c.height - padding - norm * drawHeight;  // Standard: 0 = bottom, 1 = top
+        const y = isInvertedYAxis
+            ? topPadding + norm * drawHeight  // Inverted: 0 = top (red anomalies), 1 = bottom (blue stable)
+            : c.height - bottomPadding - norm * drawHeight;  // Standard: 0 = bottom, 1 = top
         return { x, y, value, norm };
     });
 
@@ -3680,7 +3793,7 @@ function reset() {
     chiEl.innerText = "0.000";
     devEl.innerText = "0%";
     longestStreak = 0;
-    longestStreakEl.innerText = "0";
+    longestStreakEl.innerText = "0 (-)";
 
     renderHistory();
     drawHeatmap();
@@ -3776,8 +3889,3 @@ function formatInfoText(title, text) {
 
 </body>
 </html>
-
-
-
-
-
