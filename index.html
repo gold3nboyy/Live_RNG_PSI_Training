@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Random Number Generator v15.9.1</title>
+<title>Random Number Generator v15.9.2</title>
 
 <style>
 :root {
@@ -240,6 +240,52 @@ body[data-theme="light"] .settings-sidebar {
     gap:6px;
 }
 
+.settings-info-subnav {
+    display:none;
+    flex-direction:column;
+    gap:6px;
+    padding-left:10px;
+}
+
+.settings-info-subnav.open {
+    display:flex;
+}
+
+.settings-info-subnav-button {
+    width:100%;
+    border:0;
+    background:transparent;
+    color:inherit;
+    text-align:left;
+    border-radius:12px;
+    padding:10px 12px;
+    cursor:pointer;
+    font:inherit;
+    font-size:13px;
+    line-height:1.3;
+    opacity:0.9;
+    transition:background 0.2s ease, color 0.2s ease;
+}
+
+.settings-info-subnav-button:hover {
+    background:rgba(255,255,255,0.06);
+}
+
+body[data-theme="light"] .settings-info-subnav-button:hover {
+    background:rgba(0,0,0,0.05);
+}
+
+.settings-info-subnav-button.active {
+    background:rgba(255,255,255,0.12);
+    font-weight:600;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.2);
+}
+
+body[data-theme="light"] .settings-info-subnav-button.active {
+    background:rgba(0,0,0,0.08);
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.18);
+}
+
 .settings-nav-button,
 .settings-info-button {
     width:100%;
@@ -387,6 +433,20 @@ body[data-theme="light"] .settings-group-card .settings-subsection {
     gap:8px;
 }
 
+@media (min-width: 769px) {
+    .settings-info-layout {
+        display:block;
+    }
+
+    .settings-info-layout .settings-info-nav {
+        display:none;
+    }
+
+    .settings-info-layout .settings-rich-text {
+        max-width:none;
+    }
+}
+
 .settings-info-content,
 .settings-about-content {
     min-width:0;
@@ -490,7 +550,7 @@ body[data-theme="light"] .info-popup {
     border-color:var(--panel-border-light);
 }
 
-/* SchlieÃŸen-Button */
+/* SchlieÃƒÅ¸en-Button */
 .info-close {
     margin-top:20px;
     background:#007aff;
@@ -603,7 +663,7 @@ body[data-theme="light"] #aboutContent {
 /* ABOUT COLUMNS */
 .about-columns {
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(2,minmax(0,1fr));
     gap:20px;
 }
 .about-columns h2,h3 {
@@ -1107,6 +1167,10 @@ body[data-theme="light"] #heatmapCard {
         flex:0 0 auto;
     }
 
+    .settings-info-subnav {
+        display:none !important;
+    }
+
     .settings-detail {
         padding:14px;
     }
@@ -1504,6 +1568,14 @@ body[data-theme="light"] #heatmapCard {
                 <button class="settings-nav-button active" data-settings-view="controls">Controls</button>
                 <button class="settings-nav-button" data-settings-view="dashboard">Dashboard</button>
                 <button class="settings-nav-button" data-settings-view="information">Information</button>
+                <div class="settings-info-subnav" id="settingsInfoSubnav" aria-label="Information subcategories">
+                    <button class="settings-info-subnav-button" data-info-view="instructions">Instructions</button>
+                    <button class="settings-info-subnav-button" data-info-view="visual-indicator">Visual Indicator Types</button>
+                    <button class="settings-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
+                    <button class="settings-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
+                    <button class="settings-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
+                </div>
+                <button class="settings-nav-button" data-settings-view="special">Special</button>
                 <button class="settings-nav-button" data-settings-view="about">About</button>
             </nav>
         </aside>
@@ -1520,6 +1592,7 @@ body[data-theme="light"] #heatmapCard {
             <section class="settings-view" data-settings-view="information">
                 <div class="settings-info-layout">
                     <nav class="settings-info-nav" aria-label="Information sections">
+                        <button class="settings-info-button" data-info-view="instructions">Instructions</button>
                         <button class="settings-info-button active" data-info-view="visual-indicator">Visual Indicator Types</button>
                         <button class="settings-info-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                         <button class="settings-info-button" data-info-view="dashboard-items">Dashboard Items</button>
@@ -1527,6 +1600,10 @@ body[data-theme="light"] #heatmapCard {
                     </nav>
 
                     <div class="settings-info-content">
+                        <section class="settings-info-section" data-info-view="instructions">
+                            <button class="settings-info-accordion-button" data-info-view="instructions" type="button" aria-expanded="false">Instructions</button>
+                            <div class="settings-rich-text" id="settingsInfoInstructions"></div>
+                        </section>
                         <section class="settings-info-section active" data-info-view="visual-indicator">
                             <button class="settings-info-accordion-button" data-info-view="visual-indicator" type="button" aria-expanded="true">Visual Indicator Types</button>
                             <div class="settings-rich-text" id="settingsInfoVisualIndicator"></div>
@@ -1545,6 +1622,22 @@ body[data-theme="light"] #heatmapCard {
                         </section>
                     </div>
                 </div>
+            </section>
+
+            <section class="settings-view" data-settings-view="special">
+                <div class="settings-view-section settings-group-card settings-grid-two" id="settingsSpecialGroup">
+                    <div class="settings-column-stack">
+                        <div class="settings-row">
+                            <span>Terry Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="terryModeToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="settings-column-stack"></div>
+                </div>
+                <div class="settings-about-actions" id="settingsSpecialActions"></div>
             </section>
 
             <section class="settings-view" data-settings-view="about">
@@ -1588,7 +1681,7 @@ body[data-theme="light"] #heatmapCard {
             <span class="settings-help settings-info-source"
                 data-info-target="settingsInfoVisualIndicator"
 				data-title="Visual Indicator Type"
-                data-tip="<p><b>Number:</b> shows the raw generated value.</p><p><b>Dot (LCD):</b> shows a color state that updates continuously.</p><h3>How GCP Dot and LC Dot work (compact explanation)</h3><p><b>Original GCP Dot:</b> The Global Consciousness Project used a worldwide hardware RNG network (FieldREG devices). Their combined behavior was summarized as a global coherence signal, shown as a moving dot. In common GCP-style interpretations, dot height is mapped to a normalized index in the range <b>0 to 1</b> (or 0 percent to 100 percent). Lower values (near 0, often discussed around or below 0.05) represent stronger coherence/anomaly periods, while higher values represent more baseline behavior.</p><p><b>LC Dot in this app:</b> The &quot;Local Consciousness Dot&quot; does not read the global hardware network. It uses this local running session and maps live statistical state to the dot in real time. Internally, the dot chart also works on a <b>0 to 1</b> scale. In Dot mode, low values are drawn near the top (anomaly side) and high values near the bottom (stable side). This gives a direct local visual analog to the GCP-style idea, but based on the current session instead of global hardware data.</p><p>The goal is visual tracking of drift and stability over time, not proof of causation.</p><h3>Detailed color guide (top to bottom)</h3><p><b><span class=&quot;tip-dot tip-dot-red&quot; aria-hidden=&quot;true&quot;></span> Red (top, lowest range):</b> Strongest deviation state. The system marks this as the highest anomaly intensity, where short-term imbalance is most pronounced.</p><p><b><span class=&quot;tip-dot tip-dot-orange&quot; aria-hidden=&quot;true&quot;></span> Orange:</b> High deviation state. Structure is still elevated and less likely to look like neutral baseline behavior.</p><p><b><span class=&quot;tip-dot tip-dot-yellow&quot; aria-hidden=&quot;true&quot;></span> Yellow:</b> Early-to-moderate deviation. A shift is visible, but not yet at peak anomaly intensity.</p><p><b><span class=&quot;tip-dot tip-dot-green&quot; aria-hidden=&quot;true&quot;></span> Green:</b> Transitional normal state. Random behavior is active and healthy, with mild drift that can naturally appear in stochastic streams.</p><p><b><span class=&quot;tip-dot tip-dot-blue&quot; aria-hidden=&quot;true&quot;></span> Blue:</b> Stable baseline state. Variation remains normal and relatively balanced.</p><p><b><span class=&quot;tip-dot tip-dot-lightblue&quot; aria-hidden=&quot;true&quot;></span> Light Blue (bottom, highest range):</b> Calmest stability zone. Output appears closest to expected neutral distribution in this visual model.</p><h3>Important requirement</h3><p>To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>.</p>">
+                data-tip="<p><b>Number:</b> shows the raw generated value.</p><p><b>Dot (LCD):</b> shows a color state that updates continuously.</p><h3>How GCP Dot and LC Dot work (compact explanation)</h3><p><b>Original GCP Dot:</b> The Global Consciousness Project used a worldwide hardware RNG network (FieldREG devices). Their combined behavior was summarized as a global coherence signal, shown as a moving dot. In common GCP-style interpretations, dot height is mapped to a normalized index in the range <b>0 to 1</b> (or 0 percent to 100 percent). Lower values (near 0, often discussed around or below 0.05) represent stronger coherence/anomaly periods, while higher values represent more baseline behavior.</p><p><b>LC Dot in this app:</b> The &quot;Local Consciousness Dot&quot; does not read the global hardware network. It uses this local running session and maps live statistical state to the dot in real time. Internally, the dot chart also works on a <b>0 to 1</b> scale. In Dot mode, low values are drawn near the top (anomaly side) and high values near the bottom (stable side). This gives a direct local visual analog to the GCP-style idea, but based on the current session instead of global hardware data.</p><p>The goal is visual tracking of drift and stability over time, not proof of causation.</p><h3>Detailed color guide (top to bottom)</h3><p><b><span class=&quot;tip-dot tip-dot-red&quot; aria-hidden=&quot;true&quot;></span> Red (top, lowest range):</b> In the old GCP Dot, red was the strongest end and was used when the index dropped below about 5 percent. This was described as a very unusual state with strongly increased network variance. In this app, red also means the strongest deviation side, so this part is very close to the old style. You can read it as a high-intensity signal, but it is still not proof by itself. Always watch it over time, not as one single moment.</p><p><b><span class=&quot;tip-dot tip-dot-orange&quot; aria-hidden=&quot;true&quot;></span> Orange:</b> In the old GCP Dot, orange sat just above red, around the 5 to 10 percent area. That zone was described as strongly increased variance and possibly chance fluctuation. In this app, orange is still a strong deviation color, but not as extreme as red. It usually means the system is still in a tense or active state. The best way to use it is to compare it with nearby colors before and after.</p><p><b><span class=&quot;tip-dot tip-dot-yellow&quot; aria-hidden=&quot;true&quot;></span> Yellow:</b> In the old GCP Dot, yellow was a middle-low band, about 10 to 40 percent. It was described as slightly increased variance and often still possible by chance. In this app, yellow is an early warning zone between calm and stronger deviation. It can appear during normal movement, so it should not be overread. Think of yellow as a transition state that asks for context.</p><p><b><span class=&quot;tip-dot tip-dot-green&quot; aria-hidden=&quot;true&quot;></span> Green:</b> In the old GCP Dot, green was the broad normal band, roughly 40 to 90 percent. That was called average or expected random behavior. In this app, green is also the central transition area where behavior often looks healthy and balanced. So green is one of the closest matches between old GCP meaning and this local model. It is usually a good sign of baseline flow, unless longer patterns say otherwise.</p><p><b><span class=&quot;tip-dot tip-dot-blue&quot; aria-hidden=&quot;true&quot;></span> Blue:</b> In the old GCP Dot view, blue tones were at the high end, around and above 90 percent. Those high values were also treated as special, but in a different direction than the red end. In this app, blue is interpreted more simply as stable baseline behavior. That is a small interpretation difference from the old wording, but the high-range position is still similar. You can read blue here as calm and organized output.</p><p><b><span class=&quot;tip-dot tip-dot-lightblue&quot; aria-hidden=&quot;true&quot;></span> Light Blue (bottom, highest range):</b> In the original legend, the very top high range used a lighter blue-cyan look around 90 to 95 percent and above. Colors could also blend smoothly between neighbors, so mixed tones were normal. In this app, light blue marks the calmest and most stable side of the scale. That keeps the visual idea of a high-range color, even if the interpretation is simplified for training use. It is best read as a quiet, low-noise phase in your local session.</p><h3>Important requirement</h3><p>To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>.</p>">
 			</span>
 		</label>
 
@@ -1609,7 +1702,7 @@ body[data-theme="light"] #heatmapCard {
         <div class="settings-row">
             <span>Show Timer</span>
             <label class="switch">
-                <input type="checkbox" id="showTimerToggle" checked>
+                <input type="checkbox" id="showTimerToggle">
                 <span class="slider"></span>
             </label>
         </div>
@@ -1617,7 +1710,7 @@ body[data-theme="light"] #heatmapCard {
         <div class="settings-row">
             <span>Show Last 100 Numbers</span>
             <label class="switch">
-                <input type="checkbox" id="showHistoryToggle" checked>
+                <input type="checkbox" id="showHistoryToggle">
                 <span class="slider"></span>
             </label>
         </div>
@@ -1654,6 +1747,12 @@ body[data-theme="light"] #heatmapCard {
             </label>
         </div>
 
+        <span class="settings-info-source"
+            data-info-target="settingsInfoInstructions"
+            data-title="Instructions"
+            data-tip="<h3>How to use for PSI training</h3><p>Modern studies on attention, meditation, and altered states suggest that mindset strongly influences how people perceive randomness. Before starting, take a moment to settle your breathing and adopt a calm, receptive mental state, similar to mindfulness practices used in contemporary research. Many experiments recommend entering a lightly altered state characterized by relaxed focus, reduced internal chatter, and heightened sensory awareness. As the generator begins producing numbers and you observe them, maintain a soft, non forceful intention - this mirrors protocols used in modern psi and consciousness studies. You are not generating the numbers yourself; instead, you are exploring whether your inner state correlates with how the random output behaves. Observe the stream without trying to force control; let your attention rest gently on the numbers. Over time, you may notice patterns, streaks, or shifts in distribution that feel meaningful or interesting. Whether these arise from cognitive bias, emotional resonance, or genuine statistical fluctuation, the process can be introspective and grounding. Use the dashboard metrics to track changes during different mental states, such as deep relaxation, focused intention, or creative flow. The goal is not to prove anything but to explore how your inner state interacts with your perception of randomness.</p><h3>Range</h3><p>Range means the minimum and maximum values the generator is allowed to produce, for example 0 to 99 or 1 to 10. This choice has a strong effect on how your session feels and how stable your statistics look. A wider range gives more possible numbers, which is great for broad exploration, but it usually needs more time before patterns and dashboard values settle. A smaller range gives fewer possible numbers, so repeats happen more often and short sessions can look more active, even when the system is still behaving randomly. For beginners, a balanced starting point is often 0 to 99 because it is easy to understand, widely used, and gives enough spread for meaningful long runs. You can also choose smaller ranges for specific training goals, like focus drills, fast feedback, or pattern observation in short sessions. In simple terms, a small range gives fast and intense local movement, while a large range gives slower but broader statistical structure over time.</p>">
+        </span>
+
         <div class="settings-subsection">
             <label class="settings-label">
                 Dashboard Items
@@ -1667,7 +1766,7 @@ body[data-theme="light"] #heatmapCard {
             <div class="settings-row">
                 <span>Show Most Repeating</span>
                 <label class="switch">
-                    <input type="checkbox" id="showMostRepeatToggle" checked>
+                    <input type="checkbox" id="showMostRepeatToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -1675,7 +1774,7 @@ body[data-theme="light"] #heatmapCard {
             <div class="settings-row">
                 <span>Show Least Repeating</span>
                 <label class="switch">
-                    <input type="checkbox" id="showLeastRepeatToggle" checked>
+                    <input type="checkbox" id="showLeastRepeatToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -1683,7 +1782,7 @@ body[data-theme="light"] #heatmapCard {
             <div class="settings-row">
                 <span>Show Longest Streak</span>
                 <label class="switch">
-                    <input type="checkbox" id="showLongestStreakToggle" checked>
+                    <input type="checkbox" id="showLongestStreakToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -1691,7 +1790,7 @@ body[data-theme="light"] #heatmapCard {
             <div class="settings-row">
                 <span>Show Total</span>
                 <label class="switch">
-                    <input type="checkbox" id="showTotalToggle" checked>
+                    <input type="checkbox" id="showTotalToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -1699,15 +1798,15 @@ body[data-theme="light"] #heatmapCard {
             <div class="settings-row">
                 <span>Show Entropy</span>
                 <label class="switch">
-                    <input type="checkbox" id="showEntropyToggle" checked>
+                    <input type="checkbox" id="showEntropyToggle">
                     <span class="slider"></span>
                 </label>
             </div>
 
             <div class="settings-row">
-                <span>Show Chi² p</span>
+                <span>Show ChiÂ² p</span>
                 <label class="switch">
-                    <input type="checkbox" id="showChiToggle" checked>
+                    <input type="checkbox" id="showChiToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -1715,7 +1814,7 @@ body[data-theme="light"] #heatmapCard {
             <div class="settings-row">
                 <span>Show Deviation</span>
                 <label class="switch">
-                    <input type="checkbox" id="showDevToggle" checked>
+                    <input type="checkbox" id="showDevToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -1731,7 +1830,7 @@ body[data-theme="light"] #heatmapCard {
             <div class="settings-row">
                 <span>Show Heatmap (Top 10)</span>
                 <label class="switch">
-                    <input type="checkbox" id="showHeatmapToggle" checked>
+                    <input type="checkbox" id="showHeatmapToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -1776,46 +1875,20 @@ body[data-theme="light"] #heatmapCard {
             <div>
                 <h2>About this generator</h2>
 
-                <h3>How it works</h3>
-                <p>
-                    This generator produces a continuous stream of hardwareâ€‘based random numbers, similar to the noise sources used in scientific random event generators. Each number is independent and unpredictable, allowing you to observe natural fluctuations without algorithmic bias. The system is intentionally minimalistic to reduce cognitive load and support meditative or experimental use. By watching the live stream, you can explore how randomness behaves under different mental states.
-                </p>
+                <h3>How it works</h3><p>This generator produces a continuous stream of hardware-based random numbers, similar to the noise sources used in scientific random event generators. Each number is independent and unpredictable, allowing you to observe natural fluctuations without algorithmic bias. The system is intentionally minimalistic to reduce cognitive load and support meditative or experimental use. By watching the live stream, you can explore how randomness behaves under different mental states.</p>
 
                 <h3>Background and research</h3>
                 <p>
-                    The concept is inspired by decades of mindâ€“matter research at institutions such as the PEAR Lab and SRI International. These studies explored whether focused intention, emotional coherence, or meditative states could correlate with subtle statistical shifts in random systems. Results are debated, but modern work continues to investigate how mindset and physiological states influence perception of randomness. This generator provides a transparent way to explore similar ideas personally.
+                    The concept is inspired by decades of mindÃ¢â‚¬â€œmatter research at institutions such as the PEAR Lab and SRI International. These studies explored whether focused intention, emotional coherence, or meditative states could correlate with subtle statistical shifts in random systems. Results are debated, but modern work continues to investigate how mindset and physiological states influence perception of randomness. This generator provides a transparent way to explore similar ideas personally.
                 </p>
 
                 <h3>Disclaimer</h3>
                 <p>
-                    This tool does not claim to demonstrate or validate any paranormal ability. All deviations you observe can be explained through normal statistical variation, cognitive bias, or psychological factors such as expectation and pattern seeking. The generator is intended for personal exploration, mindfulness practice, and curiosityâ€‘driven experimentation. Use it as a reflective tool rather than a diagnostic instrument. This tool is resourceâ€‘efficient and runs entirely in your browser. It places only a moderate load on your system, even during extended sessions. It's a work in progress, so please forgive any bugs or problems, I'm still testing and exploring, new to vibecoding.
+                    This tool does not claim to demonstrate or validate any paranormal ability. All deviations you observe can be explained through normal statistical variation, cognitive bias, or psychological factors such as expectation and pattern seeking. The generator is intended for personal exploration, mindfulness practice, and curiosityÃ¢â‚¬â€˜driven experimentation. Use it as a reflective tool rather than a diagnostic instrument. This tool is resourceÃ¢â‚¬â€˜efficient and runs entirely in your browser. It places only a moderate load on your system, even during extended sessions. It's a work in progress, so please forgive any bugs or problems, I'm still testing and exploring, new to vibecoding.
                 </p>
             </div>
 
             <div>
-                <h3>Dashboard (Detailed explanation)</h3>
-
-                <p><b>Entropy:</b> Entropy describes how unpredictable the generated numbers are. A high entropy value means the results vary widely and no single number dominates the distribution. A low entropy value indicates that certain numbers appear more frequently, reducing randomness. This metric helps you understand whether the generator is producing a broad or narrow range of outcomes.</p>
-
-                <p><b>Chi² p‑value:</b> The Chi-square p-value shows how closely the distribution of generated numbers matches a perfectly even random distribution. A high p-value means the numbers appear balanced and statistically uniform. A low p-value suggests that some numbers occur more often than expected, revealing patterns or irregularities. This value is useful for judging the statistical quality of the randomness.</p>
-
-                <p><b>Deviation:</b> Deviation measures how far the actual distribution of numbers differs from an ideal uniform distribution. A high percentage means the frequencies of individual numbers vary significantly. A low percentage indicates that the numbers appear evenly and consistently. This metric complements the Chi-square p-value by giving you an intuitive sense of distribution balance.</p>
-
-                <p><b>Totals:</b> Counts how many numbers have been generated in the session. A higher total increases statistical reliability and shows how long youâ€™ve been running the generator.</p>
-
-                <p><b>Repeating & Streaks:</b> Tracks how often identical numbers appear consecutively or dominate the dataset. Streaks are normal in randomness but often feel meaningful.</p>
-
-                <p><b>Heatmap:</b> Displays the most frequent numbers as colored bars. Longer bars indicate dominance and help identify recurring values or potential biases.</p>
-
-                <p><b>Chart:</b> Plots either the last 100 numbers (in Last 100 mode) or the last 500 numbers of the entire session (in Session mode). This provides a clear visual of shortâ€‘term fluctuations or longâ€‘term trends depending on the selected Dashboard Mode.</p>
-            </div>
-
-            <div>
-                <h3>How to use for PSI training</h3>
-                <p>
-                    Modern studies on attention, meditation, and altered states suggest that mindset strongly influences how people perceive randomness. Before starting, take a moment to settle your breathing and adopt a calm, receptive mental state, similar to mindfulness practices used in contemporary research. Many experiments recommend entering a lightly altered state characterized by relaxed focus, reduced internal chatter, and heightened sensory awareness. As the generator begins producing numbers and you observe them, maintain a soft, non forceful intentionâ€”this mirrors protocols used in modern psi and consciousness studies. You are not generating the numbers yourself; instead, you are exploring whether your inner state correlates with how the random output behaves. Observe the stream without trying to force control; let your attention rest gently on the numbers. Over time, you may notice patterns, streaks, or shifts in distribution that feel meaningful or interesting. Whether these arise from cognitive bias, emotional resonance, or genuine statistical fluctuation, the process can be introspective and grounding. Use the dashboard metrics to track changes during different mental states, such as deep relaxation, focused intention, or creative flow. The goal is not to prove anything but to explore how your inner state interacts with your perception of randomness.
-                </p>
-
                 <h3>Tip</h3>
                 <p>
                     You can use spacebar or click/tap the number, to start and stop the generator.
@@ -1840,7 +1913,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v15.9.1</span>
+        <span id="versionLine">v15.9.2</span>
     </div>
 
     <div id="number">0</div>
@@ -1923,7 +1996,7 @@ body[data-theme="light"] #heatmapCard {
                 </div>
 
                 <div class="card" id="cardChi">
-                    <h3>Chi² p</h3>
+                    <h3>ChiÂ² p</h3>
                     <div class="card-value" id="chi">1.000</div>
                     <div class="card-detect red" id="chiDetect">No effect</div>
                 </div>
@@ -1985,8 +2058,13 @@ document.getElementById("aboutClose").onclick = () => {
 const settingsViewButtons = document.querySelectorAll(".settings-nav-button");
 const settingsViews = document.querySelectorAll(".settings-view");
 const settingsInfoButtons = document.querySelectorAll(".settings-info-button");
+const settingsInfoSubnav = document.getElementById("settingsInfoSubnav");
+const settingsInfoSubnavButtons = document.querySelectorAll(".settings-info-subnav-button");
 const settingsInfoAccordionButtons = document.querySelectorAll(".settings-info-accordion-button");
 const settingsInfoSections = document.querySelectorAll(".settings-info-section");
+const informationNavButton = document.querySelector('.settings-nav-button[data-settings-view="information"]');
+
+let informationDesktopExpanded = false;
 
 function setSettingsView(viewName) {
     settingsViewButtons.forEach(button => {
@@ -2003,6 +2081,10 @@ function setSettingsInfoView(viewName) {
         button.classList.toggle("active", viewName && button.dataset.infoView === viewName);
     });
 
+    settingsInfoSubnavButtons.forEach(button => {
+        button.classList.toggle("active", viewName && button.dataset.infoView === viewName);
+    });
+
     settingsInfoAccordionButtons.forEach(button => {
         const isActive = !!viewName && button.dataset.infoView === viewName;
         button.classList.toggle("active", isActive);
@@ -2016,6 +2098,20 @@ function setSettingsInfoView(viewName) {
 
 function isMobileLayout() {
     return window.matchMedia("(max-width: 768px)").matches;
+}
+
+function isDesktopLayout() {
+    return !isMobileLayout();
+}
+
+function setInformationDesktopExpanded(expanded) {
+    informationDesktopExpanded = !!expanded;
+    if (settingsInfoSubnav) {
+        settingsInfoSubnav.classList.toggle("open", informationDesktopExpanded && isDesktopLayout());
+    }
+    if (informationNavButton) {
+        informationNavButton.setAttribute("aria-expanded", informationDesktopExpanded ? "true" : "false");
+    }
 }
 
 function renderSettingsInfoBlock(title, html) {
@@ -2042,7 +2138,7 @@ function organizeSettingsLayout() {
     const headerControls = document.getElementById("settingsHeaderControls");
     const controlsGroup = document.getElementById("settingsControlsGroup");
     const dashboardGroup = document.getElementById("settingsDashboardGroup");
-    const aboutActions = document.getElementById("settingsAboutActions");
+    const specialActions = document.getElementById("settingsSpecialActions");
 
     const themeRow = document.getElementById("themeSlider").closest(".settings-row");
     const hideUiRow = document.getElementById("hideUiToggle").closest(".settings-row");
@@ -2140,8 +2236,8 @@ function organizeSettingsLayout() {
         dashboardGroup.append(dashboardTopRow, dashboardItemsSection);
     }
 
-    if (aboutActions && resetButton) {
-        aboutActions.append(resetButton);
+    if (specialActions && resetButton) {
+        specialActions.append(resetButton);
     }
 
     document.querySelectorAll("#settingsControlsGroup .settings-info-source, #settingsDashboardGroup .settings-info-source").forEach(el => {
@@ -2151,7 +2247,39 @@ function organizeSettingsLayout() {
 
 settingsViewButtons.forEach(button => {
     button.addEventListener("click", () => {
-        setSettingsView(button.dataset.settingsView);
+        const targetView = button.dataset.settingsView;
+
+        if (targetView === "information" && isDesktopLayout()) {
+            const isAlreadyActive = button.classList.contains("active");
+
+            setSettingsView("information");
+
+            if (isAlreadyActive && informationDesktopExpanded) {
+                setInformationDesktopExpanded(false);
+                setSettingsInfoView(null);
+            } else {
+                setInformationDesktopExpanded(true);
+                setSettingsInfoView(null);
+            }
+            return;
+        }
+
+        setSettingsView(targetView);
+
+        if (isDesktopLayout() && targetView !== "information") {
+            setInformationDesktopExpanded(false);
+            setSettingsInfoView(null);
+        }
+    });
+});
+
+settingsInfoSubnavButtons.forEach(button => {
+    button.addEventListener("click", () => {
+        if (isDesktopLayout()) {
+            setSettingsView("information");
+            setInformationDesktopExpanded(true);
+        }
+        setSettingsInfoView(button.dataset.infoView);
     });
 });
 
@@ -2175,10 +2303,20 @@ settingsInfoAccordionButtons.forEach(button => {
 populateSettingsInfoSections();
 organizeSettingsLayout();
 setSettingsView("controls");
-setSettingsInfoView(isMobileLayout() ? null : "visual-indicator");
+setInformationDesktopExpanded(false);
+setSettingsInfoView(null);
 window.addEventListener("load", () => {
     setSettingsView("controls");
-    setSettingsInfoView(isMobileLayout() ? null : "visual-indicator");
+    setInformationDesktopExpanded(false);
+    setSettingsInfoView(null);
+});
+
+window.addEventListener("resize", () => {
+    if (isDesktopLayout()) {
+        setInformationDesktopExpanded(informationDesktopExpanded);
+        return;
+    }
+    setInformationDesktopExpanded(false);
 });
 
 // Theme toggle
@@ -2227,21 +2365,21 @@ document.addEventListener("click", (e) => {
 }, true);
 
 function updateVisualIndicator(p) {
-    // If visual indicator is disabled â†’ hide both
+    // If visual indicator is disabled Ã¢â€ â€™ hide both
     if (!showVisualToggle.checked) {
         numberEl.style.display = "none";
         lcdDot.style.display = "none";
         return;
     }
 
-    // If Number mode â†’ show number, hide dot
+    // If Number mode Ã¢â€ â€™ show number, hide dot
     if (visualType.value === "number") {
         numberEl.style.display = "block";
         lcdDot.style.display = "none";
         return;
     }
 
-    // If Dot mode â†’ hide number, show dot
+    // If Dot mode Ã¢â€ â€™ hide number, show dot
     numberEl.style.display = "none";
     lcdDot.style.display = "block";
 
@@ -2496,42 +2634,8 @@ historyMode.addEventListener("change", () => {
 // Reset to default configuration
 const resetDefaultsBtn = document.getElementById("resetDefaultsBtn");
 resetDefaultsBtn.addEventListener("click", () => {
-    // Theme
-    themeSlider.checked = false;
-    document.body.setAttribute("data-theme", "dark");
-
-    // Hide UI
-    hideUiToggle.checked = false;
-    uiHideLayer.classList.remove("active");
-    document.body.classList.remove("focus-mode");
-
-    // Controls and timer
-    showControlsToggle.checked = true;
-    controlsBlock.classList.remove("is-hidden");
-    buttonsBlock.classList.remove("is-hidden");
-
-    showTimerToggle.checked = true;
-    timerBlock.classList.remove("is-hidden");
-
-    // History
-    showHistoryToggle.checked = true;
-    historyEl.classList.remove("is-hidden");
-    historyMode.value = "none";
-    historyParam.disabled = true;
-    historyParam.value = "";
-    visualType.value = "number";
-    applyChartModeUI();
-    updateVisualIndicator(chiObj.p);
+    applyDefaultMode();
     drawChart();
-
-    // Dashboard
-    dashboardSyncGuard = true;
-    dashboardToggle.checked = true;
-    setAllDashboardItems(true);
-    syncDashboardContainerAndMasterToggle();
-    dashboardSyncGuard = false;
-
-    dashboardMode.value = "recent";
 });
 
 // ----------------------------
@@ -2734,11 +2838,11 @@ function getGradientColor(p) {
         // Red gradient (stable at 0.05)
         return "#b00000";
     } else if (normalized <= 0.15) {
-        // Red â†’ Orange transition
+        // Red Ã¢â€ â€™ Orange transition
         const t = (normalized - 0.05) / 0.10;
         return interpolateColor("#b00000", "#c76a00", t);
     } else if (normalized <= 0.45) {
-        // Orange â†’ Yellow â†’ Green transition
+        // Orange Ã¢â€ â€™ Yellow Ã¢â€ â€™ Green transition
         const t = (normalized - 0.15) / 0.30;
         const mid = interpolateColor("#c76a00", "#c7a000", t * 0.5);
         if (t < 0.5) {
@@ -2747,11 +2851,11 @@ function getGradientColor(p) {
             return interpolateColor("#c7a000", "#2fbf71", (t - 0.5) * 2);
         }
     } else if (normalized <= 0.80) {
-        // Green â†’ Blue transition
+        // Green Ã¢â€ â€™ Blue transition
         const t = (normalized - 0.45) / 0.35;
         return interpolateColor("#2fbf71", "#007aff", t);
     } else if (normalized <= 0.95) {
-        // Blue â†’ Light Blue transition
+        // Blue Ã¢â€ â€™ Light Blue transition
         const t = (normalized - 0.80) / 0.15;
         return interpolateColor("#007aff", "#0044aa", t);
     } else {
@@ -2806,7 +2910,7 @@ function calcChi() {
     // Expected value
     let exp = n / keys.length;
 
-    // Chi²
+    // ChiÂ²
     let chi = 0;
     for (let k in freq) {
         chi += (freq[k] - exp) ** 2 / exp;
@@ -2997,6 +3101,50 @@ function updateLongestStreak() {
     longestStreakEl.innerText = longest;
 }
 
+function applyDefaultMode() {
+    themeSlider.checked = false;
+    document.body.setAttribute("data-theme", "dark");
+
+    hideUiToggle.checked = false;
+    uiHideLayer.classList.remove("active");
+    document.body.classList.remove("focus-mode");
+
+    showControlsToggle.checked = true;
+    controlsBlock.classList.remove("is-hidden");
+    buttonsBlock.classList.remove("is-hidden");
+
+    showTimerToggle.checked = false;
+    timerBlock.classList.add("is-hidden");
+
+    showHistoryToggle.checked = false;
+    historyEl.classList.add("is-hidden");
+    historyMode.value = "none";
+    historyParam.disabled = true;
+    historyParam.value = "";
+
+    showVisualToggle.checked = true;
+    visualType.value = "number";
+    applyChartModeUI();
+    updateVisualIndicator(chiObj.p);
+
+    dashboardSyncGuard = true;
+    dashboardToggle.checked = true;
+    showMostRepeatToggle.checked = false;
+    showLeastRepeatToggle.checked = false;
+    showLongestStreakToggle.checked = false;
+    showTotalToggle.checked = false;
+    showEntropyToggle.checked = false;
+    showChiToggle.checked = false;
+    showDevToggle.checked = false;
+    showHeatmapToggle.checked = false;
+    showChartToggle.checked = true;
+    applyDashboardItemVisibility(false);
+    syncDashboardContainerAndMasterToggle();
+    dashboardSyncGuard = false;
+
+    dashboardMode.value = "recent";
+}
+
 // ----------------------------
 // Heatmap
 // ----------------------------
@@ -3179,9 +3327,9 @@ function drawChart() {
 
         // Add a subtle end-point marker for Number mode (theme-aware color).
         const lastPoint = smoothedPoints[smoothedPoints.length - 1];
-        const glow = theme === "light" ? "rgba(0,122,255,0.28)" : "rgba(52,199,89,0.28)";
+        const glow = theme === "light" ? "rgba(0,122,255,0.14)" : "rgba(52,199,89,0.14)";
         ctx.save();
-        ctx.shadowBlur = 6;
+        ctx.shadowBlur = 3;
         ctx.shadowColor = glow;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
@@ -3255,7 +3403,7 @@ function drawChart() {
 
         // Subtle glow around dot
         ctx.save();
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 4;
         ctx.shadowColor = palette.glow;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
@@ -3407,12 +3555,14 @@ function formatInfoText(title, text) {
 // Init
 // ----------------------------
 (function init() {
+    applyDefaultMode();
     update();
 })();
 </script>
 
 </body>
 </html>
+
 
 
 
