@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v16.1</title>
+<title>Random Number Generator v16.2</title>
 
 <style>
 :root {
@@ -38,6 +38,13 @@ body {
     transition:background 0.3s ease,color 0.3s ease;
 }
 
+body.settings-open {
+    overflow:hidden;
+    position:fixed;
+    width:100%;
+    overscroll-behavior:none;
+}
+
 * {
     box-sizing:border-box;
 }
@@ -48,6 +55,19 @@ body.focus-mode .block,
 body.focus-mode #history,
 body.focus-mode #dashboard,
 body.focus-mode #settingsPanel {display:none;}
+
+body.local-dot-mode #title,
+body.local-dot-mode .block,
+body.local-dot-mode #controlsBlock,
+body.local-dot-mode #buttonsBlock,
+body.local-dot-mode #timerBlock,
+body.local-dot-mode #history,
+body.local-dot-mode .grid-3,
+body.local-dot-mode .grid-4,
+body.local-dot-mode #heatmapCard {display:none;}
+
+body.local-dot-mode #dashboard {display:block;}
+body.local-dot-mode #cardChart {display:block !important;}
 
 /* HAMBURGER */
 #hamburger {
@@ -97,6 +117,12 @@ body[data-theme="light"] #settingsPanel {
 #settingsPanel.open {
     transform:translateX(0);
     pointer-events:auto;
+}
+
+#settingsPanel,
+.settings-sidebar,
+.settings-detail {
+    overscroll-behavior:contain;
 }
 
 /* SETTINGS STRUCTURE */
@@ -781,7 +807,7 @@ body[data-theme="light"] #aboutContent {
     display:flex;
     justify-content:center;
     align-items:flex-end;
-    gap:12px;
+    gap:8px;
     flex-wrap:wrap;
 }
 
@@ -793,12 +819,33 @@ body[data-theme="light"] #aboutContent {
     align-items:flex-start;
 }
 
+#controlsBlock label:nth-child(1) {
+    width:74px;
+}
+
+#controlsBlock label:nth-child(2) {
+    width:73px;
+}
+
+#controlsBlock label:nth-child(3) {
+    width:82px;
+}
+
+#controlsBlock input {
+    width:100%;
+}
+
+#controlsBlock {
+    margin-bottom:8px;
+}
+
 #buttonsBlock {
     display:flex;
     justify-content:center;
     align-items:center;
     gap:8px;
     flex-wrap:wrap;
+    margin-top:0;
 }
 
 #buttonsBlock button {
@@ -1171,12 +1218,16 @@ body[data-theme="light"] #heatmapCard {
 
     .settings-header h2 {
         font-size:18px;
+        order:1;
+        margin-right:auto;
     }
 
     .settings-back-button {
         display:inline-flex;
         align-items:center;
         justify-content:center;
+        order:3;
+        margin-left:auto;
     }
 
     .settings-back-button.is-hidden {
@@ -1185,6 +1236,15 @@ body[data-theme="light"] #heatmapCard {
 
     .settings-header-controls {
         display:none;
+        align-items:center;
+        justify-content:flex-end;
+        gap:8px;
+        margin-left:auto;
+        order:2;
+    }
+
+    #settingsPanel[data-mobile-stack="categories"] .settings-header-controls {
+        display:flex;
     }
 
     .settings-shell {
@@ -1247,12 +1307,47 @@ body[data-theme="light"] #heatmapCard {
     }
 
     .settings-header-bar {
-        flex-direction:column;
-        align-items:stretch;
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
     }
 
     .settings-header-controls {
-        justify-content:flex-start;
+        justify-content:flex-end;
+    }
+
+    .settings-header-controls #themeRow,
+    .settings-header-controls #hideUiRow {
+        width:auto;
+        min-width:0;
+        padding:0;
+        gap:6px;
+        border-bottom:none;
+    }
+
+    .settings-header-controls #themeRow > span,
+    .settings-header-controls #hideUiRow > span {
+        font-size:0;
+        margin:0;
+        line-height:1;
+    }
+
+    .settings-header-controls #themeRow > span::before {
+        content:"☀";
+        font-size:18px;
+        line-height:1;
+    }
+
+    .settings-header-controls #hideUiRow > span::before {
+        content:"⊘";
+        font-size:18px;
+        line-height:1;
+    }
+
+    .settings-header-controls #themeRow .switch,
+    .settings-header-controls #hideUiRow .switch {
+        transform:scale(0.92);
+        transform-origin:right center;
     }
 
     .settings-info-layout {
@@ -1453,30 +1548,44 @@ body[data-theme="light"] #heatmapCard {
     
     #controlsBlock {
         display:grid;
-        grid-template-columns:repeat(3, minmax(0, 1fr));
+        grid-template-columns:74px 73px 82px;
         gap:8px;
         width:100%;
-        max-width:520px;
+        max-width:calc(74px + 73px + 82px + 8px * 2);
+        justify-content:center;
         margin:0 auto;
     }
     
     #controlsBlock label {
-        width:100%;
         margin:0;
-        align-items:center;
-        text-align:center;
+        align-items:flex-start;
+        text-align:left;
+    }
+
+    #controlsBlock label:nth-child(1) {
+        width:74px;
+    }
+
+    #controlsBlock label:nth-child(2) {
+        width:73px;
+    }
+
+    #controlsBlock label:nth-child(3) {
+        width:82px;
     }
     
     #controlsBlock input {
         width:100%;
+        height:42px;
     }
     
     #buttonsBlock {
         display:grid;
-        grid-template-columns:repeat(3, minmax(0, 1fr));
+        grid-template-columns:74px 73px 82px;
         width:100%;
-        max-width:520px;
+        max-width:calc(74px + 73px + 82px + 8px * 2);
         gap: 8px;
+        justify-content:center;
         margin-top: 10px;
         margin-left:auto;
         margin-right:auto;
@@ -1484,6 +1593,7 @@ body[data-theme="light"] #heatmapCard {
     
     #buttonsBlock button {
         width:100%;
+        height:42px;
         padding: 10px 6px;
         font-size: 13px;
         line-height:1.1;
@@ -1611,6 +1721,33 @@ body[data-theme="light"] #heatmapCard {
     #controlsBlock,
     #buttonsBlock {
         gap:6px;
+        max-width:calc(68px + 67px + 76px + 6px * 2);
+    }
+
+    #controlsBlock,
+    #buttonsBlock {
+        grid-template-columns:68px 67px 76px;
+        justify-content:center;
+    }
+
+    #controlsBlock label:nth-child(1) {
+        width:68px;
+    }
+
+    #controlsBlock label:nth-child(2) {
+        width:67px;
+    }
+
+    #controlsBlock label:nth-child(3) {
+        width:76px;
+    }
+
+    #controlsBlock input {
+        height:40px;
+    }
+
+    #buttonsBlock button {
+        height:40px;
     }
     
     .entry {
@@ -1666,7 +1803,7 @@ body[data-theme="light"] #heatmapCard {
                     <button class="settings-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                     <button class="settings-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
                     <button class="settings-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
-                    <button class="settings-info-subnav-button" data-info-view="terry-mode">Terry Mode</button>
+                    <button class="settings-info-subnav-button" data-info-view="terry-mode">Special</button>
                 </div>
                 <button class="settings-nav-button" data-settings-view="about">About</button>
             </nav>
@@ -1680,7 +1817,7 @@ body[data-theme="light"] #heatmapCard {
                     <button class="mobile-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                     <button class="mobile-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
                     <button class="mobile-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
-                    <button class="mobile-info-subnav-button" data-info-view="terry-mode">Terry Mode</button>
+                    <button class="mobile-info-subnav-button" data-info-view="terry-mode">Special</button>
                 </div>
             </div>
 
@@ -1700,7 +1837,7 @@ body[data-theme="light"] #heatmapCard {
                         <button class="settings-info-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                         <button class="settings-info-button" data-info-view="dashboard-items">Dashboard Items</button>
                         <button class="settings-info-button" data-info-view="dashboard-mode">Dashboard Modes</button>
-                        <button class="settings-info-button" data-info-view="terry-mode">Terry Mode</button>
+                        <button class="settings-info-button" data-info-view="terry-mode">Special</button>
                     </nav>
 
                     <div class="settings-info-content">
@@ -1725,7 +1862,7 @@ body[data-theme="light"] #heatmapCard {
                             <div class="settings-rich-text" id="settingsInfoDashboardMode"></div>
                         </section>
                         <section class="settings-info-section" data-info-view="terry-mode">
-                            <button class="settings-info-accordion-button" data-info-view="terry-mode" type="button" aria-expanded="false">Terry Mode</button>
+                            <button class="settings-info-accordion-button" data-info-view="terry-mode" type="button" aria-expanded="false">Special</button>
                             <div class="settings-rich-text" id="settingsInfoTerryMode"></div>
                         </section>
                     </div>
@@ -1735,6 +1872,13 @@ body[data-theme="light"] #heatmapCard {
             <section class="settings-view" data-settings-view="special">
                 <div class="settings-view-section settings-group-card settings-grid-two" id="settingsSpecialGroup">
                     <div class="settings-column-stack">
+                        <div class="settings-row">
+                            <span>Local Consciousness Dot</span>
+                            <label class="switch">
+                                <input type="checkbox" id="localConsciousnessDotToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                         <div class="settings-row">
                             <span>Terry Mode</span>
                             <label class="switch">
@@ -1759,7 +1903,7 @@ body[data-theme="light"] #heatmapCard {
 
     <div class="settings-section settings-legacy-source">
 
-        <div class="settings-row">
+        <div class="settings-row" id="themeRow">
             <span>Light Mode</span>
             <label class="switch">
                 <input type="checkbox" id="themeSlider">
@@ -1767,7 +1911,7 @@ body[data-theme="light"] #heatmapCard {
             </label>
         </div>
 
-        <div class="settings-row">
+        <div class="settings-row" id="hideUiRow">
             <span>Hide UI (tap background)</span>
             <label class="switch">
                 <input type="checkbox" id="hideUiToggle">
@@ -1863,7 +2007,7 @@ body[data-theme="light"] #heatmapCard {
 
         <span class="settings-info-source"
             data-info-target="settingsInfoTerryMode"
-            data-title="Terry Mode"
+            data-title="Special"
             data-tip="<h3>Terry's Method</h3><p>Terry Davis used a pseudo-random approach based on a Linear Congruential Generator (LCG) in TempleOS. In this model, each new random state is computed from the previous state with fixed constants, and the sequence evolves continuously over time. The specific constants used in TempleOS come from classic literature references around LCG design and are also documented by Terry in his own credits notes. This means the method is deterministic at its core when the same seed and same conditions are used, but it can still look highly irregular in practice. TempleOS also mixed timing information from the CPU timestamp counter, which adds a live timing-dependent component to reduce repeatability in normal interactive use.</p><h3>Terry's Method in this App</h3><p>When Terry Mode is enabled, this app replaces its default RNG kernel with a TempleOS-inspired Linear Congruential Generator using the same well-known Knuth constants that Terry Davis documented in TempleOS. The generator runs with 64-bit state arithmetic and explicit overflow behavior modulo 2^64, so the internal state evolves in the same mathematical style as the original design. It also uses a timing-based noise mix to imitate TempleOS's live timestamp influence, which keeps the stream from feeling purely fixed or replayable in normal interactive use. Random numbers for the selected min/max range are then derived from that 64-bit state with a bounded range conversion, so the rest of the app continues to work normally while the underlying random stream follows Terry's method. In practice, this means the dashboard, history, chart, and indicator system all react to a Terry-style pseudo-random source running fully inside the browser. The result is not a hardware or quantum RNG, but a historically grounded software implementation that reflects the core logic Terry used in TempleOS.</p><h3>Motivation</h3><p>Terry's motivation was not just technical speed; he tied randomness to his broader TempleOS oracle concept and considered randomness a channel for meaning. He favored methods that were simple, transparent, and easy to keep inside his fully self-contained operating system. In that sense, his RNG choice reflects both engineering pragmatism and his spiritual framework. Terry Mode is interesting because it lets users experience that historical design philosophy directly, while still viewing modern statistical feedback in a familiar interface. It is also important to note that this is not a hardware quantum RNG; it is a fast software PRNG with timing influence, inspired by TempleOS behavior.</p>">
         </span>
 
@@ -2027,7 +2171,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v16.1</span>
+        <span id="versionLine">v16.2</span>
     </div>
 
     <div id="number">0</div>
@@ -2045,7 +2189,7 @@ body[data-theme="light"] #heatmapCard {
         </label>
 
         <label>
-            Speed
+            Speed (ms)
             <input id="speed" value="100">
         </label>
     </div>
@@ -2140,10 +2284,32 @@ body[data-theme="light"] #heatmapCard {
 </div>
 
 <script>
+let settingsScrollLockY = 0;
+
+function setSettingsPanelOpen(isOpen) {
+    const panel = document.getElementById("settingsPanel");
+    if (!panel) return;
+
+    if (isOpen) {
+        if (!panel.classList.contains("open")) {
+            settingsScrollLockY = window.scrollY || window.pageYOffset || 0;
+        }
+        panel.classList.add("open");
+        document.body.classList.add("settings-open");
+        document.body.style.top = `-${settingsScrollLockY}px`;
+    } else {
+        const lockedOffset = settingsScrollLockY;
+        panel.classList.remove("open");
+        document.body.classList.remove("settings-open");
+        document.body.style.top = "";
+        window.scrollTo(0, lockedOffset);
+    }
+}
+
 // Toggle settings panel
 function toggleSettings() {
     const panel = document.getElementById("settingsPanel");
-    panel.classList.toggle("open");
+    setSettingsPanelOpen(!panel.classList.contains("open"));
     if (isMobileLayout()) {
         if (panel.classList.contains("open")) {
             resetMobileStack();
@@ -2164,7 +2330,7 @@ document.addEventListener("click", (e) => {
     if (panel.contains(e.target) || hamburger.contains(e.target)) return;
 
     // Otherwise close panel
-    panel.classList.remove("open");
+    setSettingsPanelOpen(false);
     if (isMobileLayout()) {
         resetMobileStack();
     }
@@ -2209,7 +2375,7 @@ const settingsInfoViewLabels = {
     "last-100": "Last 100 Numbers Modes",
     "dashboard-items": "Dashboard Items",
     "dashboard-mode": "Dashboard Modes",
-    "terry-mode": "Terry Mode"
+    "terry-mode": "Special"
 };
 
 function updateSettingsHeaderTitle() {
@@ -2335,6 +2501,12 @@ function populateSettingsInfoSections() {
                 "To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>.",
                 "To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>. After switching from Type &quot;Number&quot; to Type &quot;Dot (LCD)&quot; the chart is still reading out the last 100 numbers history, hence spiking in the chart graph. Give it a bit to resolve itself or to instant fix: hit the Reset button next to the Stop button, this will reset the generated numbers instantly in the history."
             );
+        }
+
+        if (source.dataset.infoTarget === "settingsInfoTerryMode"
+            && !text.includes("<h3>Local Consciousness Dot</h3>")) {
+            const localDotText = "<h3>Local Consciousness Dot</h3><p>This is a quick access to the LCD Mode. It combines the Dot Indicator + None Mode (last 100 Numbers) + Session Mode + clean UI.</p><h3>Terry Mode</h3>";
+            text = localDotText + text;
         }
 
         target.innerHTML = renderSettingsInfoBlock(title, text);
@@ -2572,8 +2744,7 @@ if (settingsBackButton) {
             return;
         }
 
-        const panel = document.getElementById("settingsPanel");
-        if (panel) panel.classList.remove("open");
+        setSettingsPanelOpen(false);
     });
 }
 
@@ -2618,8 +2789,10 @@ themeSlider.addEventListener("change", () => {
 const showVisualToggle = document.getElementById("showVisualToggle");
 const visualType = document.getElementById("visualType");
 const lcdDot = document.getElementById("lcdDot");
+const localConsciousnessDotToggle = document.getElementById("localConsciousnessDotToggle");
 const terryModeToggle = document.getElementById("terryModeToggle");
 const chartUiState = { savedMin: null, savedMax: null };
+let localDotModeState = null;
 
 // Hide UI / focus mode
 const hideUiToggle = document.getElementById("hideUiToggle");
@@ -2629,6 +2802,88 @@ function exitFocusMode() {
     hideUiToggle.checked = false;
     uiHideLayer.classList.remove("active");
     document.body.classList.remove("focus-mode");
+}
+
+function setLocalDotModePresentation(active) {
+    document.body.classList.toggle("local-dot-mode", active);
+}
+
+function captureLocalDotModeState() {
+    return {
+        showVisual: showVisualToggle.checked,
+        visualType: visualType.value,
+        historyMode: historyMode.value,
+        historyParamValue: historyParam.value,
+        showHistory: showHistoryToggle.checked,
+        dashboardMode: dashboardMode.value,
+        dashboardItems: dashboardItemPairs.map(pair => ({
+            id: pair.toggle.id,
+            checked: pair.toggle.checked
+        }))
+    };
+}
+
+function restoreLocalDotModeState() {
+    if (!localDotModeState) {
+        setLocalDotModePresentation(false);
+        return;
+    }
+
+    showVisualToggle.checked = localDotModeState.showVisual;
+    visualType.value = localDotModeState.visualType;
+    historyMode.value = localDotModeState.historyMode;
+    historyParam.value = localDotModeState.historyParamValue;
+    historyParam.disabled = !["target", "high", "low"].includes(historyMode.value);
+    showHistoryToggle.checked = localDotModeState.showHistory;
+    historyEl.classList.toggle("is-hidden", !showHistoryToggle.checked);
+    dashboardMode.value = localDotModeState.dashboardMode;
+
+    localDotModeState.dashboardItems.forEach(itemState => {
+        const toggle = document.getElementById(itemState.id);
+        if (toggle) {
+            toggle.checked = itemState.checked;
+        }
+    });
+
+    applyChartModeUI();
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    renderHistory();
+    drawHeatmap();
+    drawChart();
+    updateVisualIndicator(chiObj.p);
+    setLocalDotModePresentation(false);
+    localDotModeState = null;
+}
+
+function activateLocalDotMode() {
+    if (!localDotModeState) {
+        localDotModeState = captureLocalDotModeState();
+    }
+
+    exitFocusMode();
+    setLocalDotModePresentation(true);
+
+    showVisualToggle.checked = true;
+    visualType.value = "dot";
+    historyMode.value = "none";
+    historyParam.value = "";
+    historyParam.disabled = true;
+    showHistoryToggle.checked = false;
+    historyEl.classList.add("is-hidden");
+    dashboardMode.value = "all";
+
+    dashboardItemPairs.forEach(pair => {
+        pair.toggle.checked = pair.toggle === showChartToggle;
+    });
+
+    applyChartModeUI();
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    renderHistory();
+    drawHeatmap();
+    drawChart();
+    updateVisualIndicator(chiObj.p);
 }
 
 hideUiToggle.addEventListener("change", () => {
@@ -2687,6 +2942,16 @@ showHistoryToggle.addEventListener("change", () => {
 showVisualToggle.addEventListener("change", () => {
     updateVisualIndicator(chiObj.p);
 });
+
+if (localConsciousnessDotToggle) {
+    localConsciousnessDotToggle.addEventListener("change", () => {
+        if (localConsciousnessDotToggle.checked) {
+            activateLocalDotMode();
+        } else {
+            restoreLocalDotModeState();
+        }
+    });
+}
 
 function applyChartModeUI() {
     const dotLockActive = visualType.value === "dot" && historyMode.value === "none";
@@ -3572,6 +3837,12 @@ function applyDefaultMode() {
     themeSlider.checked = false;
     document.body.setAttribute("data-theme", "dark");
 
+    if (localConsciousnessDotToggle) {
+        localConsciousnessDotToggle.checked = false;
+    }
+    localDotModeState = null;
+    setLocalDotModePresentation(false);
+
     hideUiToggle.checked = false;
     uiHideLayer.classList.remove("active");
     document.body.classList.remove("focus-mode");
@@ -3820,7 +4091,9 @@ function drawChart() {
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         
-        if (smoothedPoints.length === 2) {
+        if (smoothedPoints.length === 1) {
+            // No line segment yet; draw only the final point until a second sample exists.
+        } else if (smoothedPoints.length === 2) {
             const pVal = getPointP(1);
             const palette = getGradientColor(pVal);
 
