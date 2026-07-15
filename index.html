@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v16</title>
+<title>Random Number Generator v16.1</title>
 
 <style>
 :root {
@@ -2027,7 +2027,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v16</span>
+        <span id="versionLine">v16.1</span>
     </div>
 
     <div id="number">0</div>
@@ -2104,14 +2104,14 @@ body[data-theme="light"] #heatmapCard {
                 </div>
 
                 <div class="card" id="cardEntropy">
-                    <h3>Entropy</h3>
-                    <div class="card-value" id="entropy">0.00</div>
+                    <h3>Entropy (bit)</h3>
+                    <div class="card-value" id="entropy">0.00 bit</div>
                     <div class="card-detect red" id="entropyDetect">No effect</div>
                 </div>
 
                 <div class="card" id="cardChi">
-                    <h3>Chi² p</h3>
-                    <div class="card-value" id="chi">1.000</div>
+                    <h3>Chi² p-value</h3>
+                    <div class="card-value" id="chi">1.000 p</div>
                     <div class="card-detect red" id="chiDetect">No effect</div>
                 </div>
 
@@ -2313,8 +2313,32 @@ function populateSettingsInfoSections() {
         const target = document.getElementById(source.dataset.infoTarget);
         if (!target) return;
         const title = source.getAttribute("data-title") || "Info";
-        const text = source.getAttribute("data-tip") || "";
+        let text = source.getAttribute("data-tip") || "";
+
+        if (source.dataset.infoTarget === "settingsInfoDashboardItems"
+            && text.includes("<h3>Visual cards</h3>")
+            && !text.includes("<h3>Detection labels and meaning</h3>")) {
+            const labelGuide = "<h3>Detection labels and meaning</h3>"
+                + "<p><b>No effect:</b> The metric is within its expected random range. Short local fluctuations may still occur, but there is no stable statistical evidence of directional structure in the active window.</p>"
+                + "<p><b>Weak shift:</b> A small deviation from baseline is present. This is often transient and can appear naturally in random streams, especially in shorter windows. Treat it as an observation cue, not as confirmation.</p>"
+                + "<p><b>Noticeable shift:</b> The deviation is clear enough to stand out from ordinary micro-noise. It deserves continued monitoring across both Last 100 and Session views to see whether the pattern persists or fades.</p>"
+                + "<p><b>Strong shift:</b> The metric is materially displaced from baseline behavior. At this level, cross-checking with the chart, heatmap, and neighboring metrics is recommended to distinguish sustained structure from short-term clustering.</p>"
+                + "<p><b>Extreme shift:</b> The deviation is highly pronounced for the current analysis window. This does not automatically prove causation, but it is a high-signal state that merits careful contextual review and longer-run confirmation.</p>";
+
+            text = text.replace("<h3>Visual cards</h3>", labelGuide + "<h3>Visual cards</h3>");
+        }
+
+        if (source.dataset.infoTarget === "settingsInfoVisualIndicator"
+            && text.includes("To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>.")
+            && !text.includes("After switching from Type &quot;Number&quot; to Type &quot;Dot (LCD)&quot;")) {
+            text = text.replace(
+                "To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>.",
+                "To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>. After switching from Type &quot;Number&quot; to Type &quot;Dot (LCD)&quot; the chart is still reading out the last 100 numbers history, hence spiking in the chart graph. Give it a bit to resolve itself or to instant fix: hit the Reset button next to the Stop button, this will reset the generated numbers instantly in the history."
+            );
+        }
+
         target.innerHTML = renderSettingsInfoBlock(title, text);
+
     });
 
     const aboutSource = document.querySelector("#aboutContent .about-columns");
@@ -3055,17 +3079,17 @@ function update() {
 	let freq = {};
 	data.forEach(n => freq[n] = (freq[n] || 0) + 1);
 
-    totalEl.innerText = data.length;
+    totalEl.innerText = history.length;
 
     const entropyVal = calcEntropy(freq);
-    entropyEl.innerText = entropyVal.toFixed(2);
+    entropyEl.innerText = entropyVal.toFixed(2) + " bit";
     applyEntropyDetection(entropyVal, freq);
 
     chiObj = calcChi();
     const normalizedP = normalizePValue(chiObj.p);
     pHistory.unshift(normalizedP);
     pHistory = pHistory.slice(0, 500);
-    chiEl.innerText = chiObj.p.toFixed(3);
+    chiEl.innerText = formatPValueForDisplay(chiObj.p);
     applyChiDetection(chiObj.p);
 
     devEl.innerText = chiObj.dev + "%";
@@ -3084,7 +3108,7 @@ function update() {
 // Entropy
 // ----------------------------
 function calcEntropy(freq) {
-    let total = history.length;
+    let total = Object.values(freq).reduce((sum, count) => sum + count, 0);
     if (!total) return 0;
     let e = 0;
     for (let k in freq) {
@@ -3107,14 +3131,17 @@ function applyEntropyDetection(entropyVal, freq) {
     if (ratio >= 0.8) {
         entropyDetectEl.innerText = "No effect";
         entropyDetectEl.className = "card-detect red";
-    } else if (ratio >= 0.5) {
-        entropyDetectEl.innerText = "Slight";
+    } else if (ratio >= 0.65) {
+        entropyDetectEl.innerText = "Weak shift";
         entropyDetectEl.className = "card-detect yellow";
-    } else if (ratio >= 0.2) {
-        entropyDetectEl.innerText = "Significant";
+    } else if (ratio >= 0.45) {
+        entropyDetectEl.innerText = "Noticeable shift";
         entropyDetectEl.className = "card-detect orange";
+    } else if (ratio >= 0.25) {
+        entropyDetectEl.innerText = "Strong shift";
+        entropyDetectEl.className = "card-detect green";
     } else {
-        entropyDetectEl.innerText = "Strong";
+        entropyDetectEl.innerText = "Extreme shift";
         entropyDetectEl.className = "card-detect green";
     }
 }
@@ -3125,6 +3152,15 @@ function normalizePValue(value) {
     if (p <= 0) return 0;
     if (p > 1) return 1;
     return p;
+}
+
+function formatPValueForDisplay(value) {
+    const p = normalizePValue(value);
+    const rounded = p.toFixed(3);
+    if (p > 0 && rounded === "0.000") {
+        return "< 0.000 p";
+    }
+    return rounded + " p";
 }
 
 // Color interpolation for gradient transitions
@@ -3210,6 +3246,85 @@ function getDotColor(p) {
     return `radial-gradient(circle at 30% 30%, ${palette.light}, ${palette.dark})`;
 }
 
+function logGamma(z) {
+    const coeff = [
+        676.5203681218851,
+        -1259.1392167224028,
+        771.32342877765313,
+        -176.61502916214059,
+        12.507343278686905,
+        -0.13857109526572012,
+        9.9843695780195716e-6,
+        1.5056327351493116e-7
+    ];
+
+    if (z < 0.5) {
+        return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * z)) - logGamma(1 - z);
+    }
+
+    z -= 1;
+    let x = 0.99999999999980993;
+    for (let i = 0; i < coeff.length; i++) {
+        x += coeff[i] / (z + i + 1);
+    }
+
+    const t = z + coeff.length - 0.5;
+    return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+function regularizedGammaQ(a, x) {
+    if (!Number.isFinite(a) || !Number.isFinite(x) || a <= 0) return 1;
+    if (x <= 0) return 1;
+
+    const EPS = 1e-12;
+    const FPMIN = 1e-300;
+    const ITMAX = 200;
+    const gln = logGamma(a);
+
+    if (x < a + 1) {
+        let ap = a;
+        let sum = 1 / a;
+        let del = sum;
+
+        for (let n = 1; n <= ITMAX; n++) {
+            ap += 1;
+            del *= x / ap;
+            sum += del;
+            if (Math.abs(del) < Math.abs(sum) * EPS) break;
+        }
+
+        const gammaP = sum * Math.exp(-x + a * Math.log(x) - gln);
+        return Math.max(0, Math.min(1, 1 - gammaP));
+    }
+
+    let b = x + 1 - a;
+    let c = 1 / FPMIN;
+    let d = 1 / b;
+    let h = d;
+
+    for (let i = 1; i <= ITMAX; i++) {
+        const an = -i * (i - a);
+        b += 2;
+        d = an * d + b;
+        if (Math.abs(d) < FPMIN) d = FPMIN;
+        c = b + an / c;
+        if (Math.abs(c) < FPMIN) c = FPMIN;
+        d = 1 / d;
+        const del = d * c;
+        h *= del;
+        if (Math.abs(del - 1) < EPS) break;
+    }
+
+    const gammaQ = Math.exp(-x + a * Math.log(x) - gln) * h;
+    return Math.max(0, Math.min(1, gammaQ));
+}
+
+function chiSquarePValue(chi, dof) {
+    if (!Number.isFinite(chi) || !Number.isFinite(dof) || dof <= 0) return 1;
+    if (chi <= 0) return 1;
+    return regularizedGammaQ(dof / 2, chi / 2);
+}
+
 // ----------------------------
 // Chi-square
 // ----------------------------
@@ -3227,23 +3342,30 @@ function calcChi() {
     let freq = {};
     data.forEach(v => freq[v] = (freq[v] || 0) + 1);
 
-    let keys = Object.keys(freq);
-    if (!keys.length) return { p: 1, dev: 0 };
+    let minVal = Number(minInput.value);
+    let maxVal = Number(maxInput.value);
+    if (!Number.isFinite(minVal)) minVal = 0;
+    if (!Number.isFinite(maxVal)) maxVal = 99;
+    if (maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
 
-    // Expected value
-    let exp = n / keys.length;
+    const binCount = Math.max(1, Math.floor(maxVal - minVal + 1));
+    // Expected value per bin under uniform distribution on configured range
+    const exp = n / binCount;
 
     // Chi²
     let chi = 0;
-    for (let k in freq) {
-        chi += (freq[k] - exp) ** 2 / exp;
+    for (let value = minVal; value <= maxVal; value++) {
+        const observed = freq[value] || 0;
+        chi += (observed - exp) ** 2 / exp;
     }
 
-    // Stable p-value
-    let p = Math.exp(-chi / keys.length);
+    // Statistically stricter p-value (upper tail of chi-square distribution)
+    const dof = Math.max(1, binCount - 1);
+    const p = chiSquarePValue(chi, dof);
 
-    // Deviation
-    let dev = Math.min(100, Math.round((chi / n) * 100));
+    // Deviation as distance from expected chi-square level (dof), scaled by sample size.
+    // This avoids artificial 100% saturation in short windows like Last 100.
+    let dev = Math.min(100, Math.round((Math.abs(chi - dof) / Math.max(1, n)) * 100));
 
     return { p, dev };
 }
@@ -3254,13 +3376,16 @@ function applyChiDetection(p) {
         chiDetectEl.innerText = "No effect";
         chiDetectEl.className = "card-detect red";
     } else if (p >= 0.05) {
-        chiDetectEl.innerText = "Slight";
+        chiDetectEl.innerText = "Weak shift";
         chiDetectEl.className = "card-detect yellow";
     } else if (p >= 0.01) {
-        chiDetectEl.innerText = "Significant";
+        chiDetectEl.innerText = "Noticeable shift";
         chiDetectEl.className = "card-detect orange";
+    } else if (p >= 0.001) {
+        chiDetectEl.innerText = "Strong shift";
+        chiDetectEl.className = "card-detect green";
     } else {
-        chiDetectEl.innerText = "Strong";
+        chiDetectEl.innerText = "Extreme shift";
         chiDetectEl.className = "card-detect green";
     }
 }
@@ -3274,14 +3399,17 @@ function applyDevDetection(dev) {
     if (dev < 5) {
         devDetectEl.innerText = "No effect";
         devDetectEl.className = "card-detect red";
-    } else if (dev < 15) {
-        devDetectEl.innerText = "Slight";
+    } else if (dev < 12) {
+        devDetectEl.innerText = "Weak shift";
         devDetectEl.className = "card-detect yellow";
-    } else if (dev < 35) {
-        devDetectEl.innerText = "Significant";
+    } else if (dev < 25) {
+        devDetectEl.innerText = "Noticeable shift";
         devDetectEl.className = "card-detect orange";
+    } else if (dev < 45) {
+        devDetectEl.innerText = "Strong shift";
+        devDetectEl.className = "card-detect green";
     } else {
-        devDetectEl.innerText = "Strong";
+        devDetectEl.innerText = "Extreme shift";
         devDetectEl.className = "card-detect green";
     }
 }
@@ -3305,9 +3433,13 @@ function updateRepeating() {
     data.forEach(n => freq[n] = (freq[n] || 0) + 1);
 
     let entries = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+    const mostValue = entries[0][0];
+    const mostCount = entries[0][1];
+    const leastValue = entries[entries.length - 1][0];
+    const leastCount = entries[entries.length - 1][1];
 
-    mostRepeatEl.innerText = entries[0][0];
-	leastRepeatEl.innerText = entries[entries.length - 1][0];
+    mostRepeatEl.innerText = `${mostValue} (${mostCount})`;
+	leastRepeatEl.innerText = `${leastValue} (${leastCount})`;
 
 }
 
@@ -3789,8 +3921,8 @@ function stop() {
 function reset() {
     history = [];
     totalEl.innerText = "0";
-    entropyEl.innerText = "0.00";
-    chiEl.innerText = "0.000";
+    entropyEl.innerText = "0.00 bit";
+    chiEl.innerText = "0.000 p";
     devEl.innerText = "0%";
     longestStreak = 0;
     longestStreakEl.innerText = "0 (-)";
