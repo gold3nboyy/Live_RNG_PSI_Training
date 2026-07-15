@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v16.4</title>
+<title>Random Number Generator v16.5</title>
 
 <style>
 :root {
@@ -50,11 +50,9 @@ body.settings-open {
 }
 
 /* Focus mode */
-body.focus-mode #title,
-body.focus-mode .block,
-body.focus-mode #history,
+body.focus-mode #center > :not(#number):not(#lcdDot),
 body.focus-mode #dashboard,
-body.focus-mode #settingsPanel {display:none;}
+body.focus-mode #settingsPanel {display:none !important;}
 
 body.local-dot-mode #title,
 body.local-dot-mode .block,
@@ -2188,7 +2186,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v16.4</span>
+        <span id="versionLine">v16.5</span>
     </div>
 
     <div id="number">0</div>
@@ -2806,6 +2804,14 @@ let previousVisualType = visualType.value;
 // Hide UI / focus mode
 const hideUiToggle = document.getElementById("hideUiToggle");
 const uiHideLayer = document.getElementById("uiHideLayer");
+let suppressGeneratorToggle = false;
+
+function suppressCurrentGeneratorToggle() {
+    suppressGeneratorToggle = true;
+    queueMicrotask(() => {
+        suppressGeneratorToggle = false;
+    });
+}
 
 function exitFocusMode() {
     hideUiToggle.checked = false;
@@ -2906,12 +2912,14 @@ hideUiToggle.addEventListener("change", () => {
 
 uiHideLayer.addEventListener("click", () => {
     if (!hideUiToggle.checked) return;
+    suppressCurrentGeneratorToggle();
     exitFocusMode();
 });
 
 document.addEventListener("click", (e) => {
     if (!hideUiToggle.checked || !document.body.classList.contains("focus-mode")) return;
     if (e.target === hideUiToggle) return;
+    suppressCurrentGeneratorToggle();
     exitFocusMode();
 }, true);
 
@@ -4246,6 +4254,7 @@ function reset() {
 // Spacebar + click toggle
 // ----------------------------
 function toggleRunning() {
+    if (suppressGeneratorToggle) return;
     if (timer) stop();
     else start();
 }
