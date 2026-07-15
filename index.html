@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v16.3</title>
+<title>Random Number Generator v16.4</title>
 
 <style>
 :root {
@@ -751,7 +751,7 @@ body[data-theme="light"] #aboutContent {
     display:flex;
     flex-direction:column;
     align-items:center;
-    padding:40px 10px;
+    padding:10px 10px;
     max-width:1100px;
     width:100%;
     margin:0 auto;
@@ -807,7 +807,7 @@ body[data-theme="light"] #aboutContent {
     display:flex;
     justify-content:center;
     align-items:flex-end;
-    gap:8px;
+    gap:10px;
     flex-wrap:wrap;
 }
 
@@ -817,6 +817,18 @@ body[data-theme="light"] #aboutContent {
     flex-direction:column;
     gap:6px;
     align-items:flex-start;
+    font-size:15px;
+    font-weight:700;
+    line-height:1.2;
+}
+
+#timerBlock label {
+    white-space:nowrap;
+}
+
+#timerBlock label span {
+    display:block;
+    white-space:nowrap;
 }
 
 #controlsBlock label:nth-child(1) {
@@ -836,14 +848,14 @@ body[data-theme="light"] #aboutContent {
 }
 
 #controlsBlock {
-    margin-bottom:8px;
+    margin-bottom:10px;
 }
 
 #buttonsBlock {
     display:flex;
     justify-content:center;
     align-items:center;
-    gap:8px;
+    gap:10px;
     flex-wrap:wrap;
     margin-top:0;
 }
@@ -930,7 +942,7 @@ input:checked + .slider:before {transform:translateX(22px);}
 
 /* HISTORY */
 #history {
-    margin-top:20px;
+    margin-top:10px;
     display:grid;
     grid-template-columns:repeat(20,1fr);
     grid-auto-rows:auto;
@@ -971,7 +983,7 @@ body[data-theme="light"] .num-white { color:var(--text-main-light) !important; }
 
 /* DASHBOARD */
 #dashboard {
-    margin:30px auto;
+    margin:10px auto 30px;
     width:min(1200px,100%);
     padding:0 12px;
     box-sizing:border-box;
@@ -1169,7 +1181,7 @@ body[data-theme="light"] #heatmapCard {
     }
 
     #center {
-        padding:28px 10px;
+        padding:10px 10px;
     }
 
     #title {
@@ -1187,14 +1199,14 @@ body[data-theme="light"] #heatmapCard {
 
     #number {
         font-size:clamp(88px, 24vw, 132px);
-        margin:14px 0;
+        margin:20px 0;
         line-height:0.95;
     }
 
     #lcdDot {
         width:clamp(108px, 34vw, 150px);
         height:clamp(108px, 34vw, 150px);
-        margin:14px 0;
+        margin:30px 0;
     }
     
     #settingsPanel {
@@ -1489,7 +1501,7 @@ body[data-theme="light"] #heatmapCard {
     
     #dashboard {
         width: 100%;
-        margin:18px auto 30px;
+        margin:10px auto 28px;
         padding:0 8px;
         gap: 10px;
     }
@@ -1549,9 +1561,9 @@ body[data-theme="light"] #heatmapCard {
     #controlsBlock {
         display:grid;
         grid-template-columns:74px 73px 82px;
-        gap:8px;
+        gap:10px;
         width:100%;
-        max-width:calc(74px + 73px + 82px + 8px * 2);
+        max-width:calc(74px + 73px + 82px + 10px * 2);
         justify-content:center;
         margin:0 auto;
     }
@@ -1560,6 +1572,7 @@ body[data-theme="light"] #heatmapCard {
         margin:0;
         align-items:flex-start;
         text-align:left;
+        font-size:13px;
     }
 
     #controlsBlock label:nth-child(1) {
@@ -1583,8 +1596,8 @@ body[data-theme="light"] #heatmapCard {
         display:grid;
         grid-template-columns:74px 73px 82px;
         width:100%;
-        max-width:calc(74px + 73px + 82px + 8px * 2);
-        gap: 8px;
+        max-width:calc(74px + 73px + 82px + 10px * 2);
+        gap: 10px;
         justify-content:center;
         margin-top: 10px;
         margin-left:auto;
@@ -1680,7 +1693,7 @@ body[data-theme="light"] #heatmapCard {
 
     #number {
         font-size:clamp(72px, 26vw, 102px);
-        margin:10px 0;
+        margin:20px 0;
     }
 
     #lcdDot {
@@ -1720,8 +1733,8 @@ body[data-theme="light"] #heatmapCard {
 
     #controlsBlock,
     #buttonsBlock {
-        gap:6px;
-        max-width:calc(68px + 67px + 76px + 6px * 2);
+        gap:10px;
+        max-width:calc(68px + 67px + 76px + 10px * 2);
     }
 
     #controlsBlock,
@@ -1758,6 +1771,10 @@ body[data-theme="light"] #heatmapCard {
     #buttonsBlock button {
         padding: 8px 3px;
         font-size: 11px;
+    }
+
+    #controlsBlock label {
+        font-size:11px;
     }
     
     #infoContent {
@@ -2171,7 +2188,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v16.3</span>
+        <span id="versionLine">v16.4</span>
     </div>
 
     <div id="number">0</div>
@@ -2189,7 +2206,7 @@ body[data-theme="light"] #heatmapCard {
         </label>
 
         <label>
-            Speed (ms)
+            <span>Speed (ms)</span>
             <input id="speed" value="100">
         </label>
     </div>
@@ -3837,7 +3854,7 @@ function updateLongestStreak() {
             if (current > longest) {
                 longest = current;
                 streakValue = data[i - 1];
-            }
+             }
             current = 1;
         }
     }
