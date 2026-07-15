@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v16.2</title>
+<title>Random Number Generator v16.3</title>
 
 <style>
 :root {
@@ -2171,7 +2171,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v16.2</span>
+        <span id="versionLine">v16.3</span>
     </div>
 
     <div id="number">0</div>
@@ -2936,6 +2936,7 @@ const showHistoryToggle = document.getElementById("showHistoryToggle");
 const historyEl = document.getElementById("history");
 
 showHistoryToggle.addEventListener("change", () => {
+    disableLocalDotModeForDashboardChange();
     historyEl.classList.toggle("is-hidden", !showHistoryToggle.checked);
 });
 
@@ -2987,12 +2988,14 @@ const buttonsBlock = document.getElementById("buttonsBlock");
 const timerBlock = document.getElementById("timerBlock");
 
 showControlsToggle.addEventListener("change", () => {
+    disableLocalDotModeForDashboardChange();
     const visible = showControlsToggle.checked;
     controlsBlock.classList.toggle("is-hidden", !visible);
     buttonsBlock.classList.toggle("is-hidden", !visible);
 });
 
 showTimerToggle.addEventListener("change", () => {
+    disableLocalDotModeForDashboardChange();
     const visible = showTimerToggle.checked;
     timerBlock.classList.toggle("is-hidden", !visible);
 });
@@ -3088,8 +3091,15 @@ function updateChartExclusiveLayout() {
     cardChart.classList.toggle("chart-only", onlyChartVisible);
 }
 
+function disableLocalDotModeForDashboardChange() {
+    if (!localConsciousnessDotToggle || !localConsciousnessDotToggle.checked) return;
+    localConsciousnessDotToggle.checked = false;
+    restoreLocalDotModeState();
+}
+
 dashboardToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
 
     // Master OFF => all OFF, Master ON => all ON.
@@ -3101,6 +3111,7 @@ dashboardToggle.addEventListener("change", () => {
 
 showMostRepeatToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
@@ -3108,6 +3119,7 @@ showMostRepeatToggle.addEventListener("change", () => {
 });
 showLeastRepeatToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
@@ -3115,6 +3127,7 @@ showLeastRepeatToggle.addEventListener("change", () => {
 });
 showLongestStreakToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
@@ -3122,6 +3135,7 @@ showLongestStreakToggle.addEventListener("change", () => {
 });
 showTotalToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
@@ -3129,6 +3143,7 @@ showTotalToggle.addEventListener("change", () => {
 });
 showEntropyToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
@@ -3136,6 +3151,7 @@ showEntropyToggle.addEventListener("change", () => {
 });
 showChiToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
@@ -3143,6 +3159,7 @@ showChiToggle.addEventListener("change", () => {
 });
 showDevToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
@@ -3150,6 +3167,7 @@ showDevToggle.addEventListener("change", () => {
 });
 showChartToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
@@ -3157,6 +3175,7 @@ showChartToggle.addEventListener("change", () => {
 });
 showHeatmapToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
     dashboardSyncGuard = true;
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
