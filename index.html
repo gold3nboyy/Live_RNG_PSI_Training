@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v16.5</title>
+<title>Random Number Generator v17</title>
 
 <style>
 :root {
@@ -50,7 +50,7 @@ body.settings-open {
 }
 
 /* Focus mode */
-body.focus-mode #center > :not(#number):not(#lcdDot),
+body.focus-mode #center > :not(#number):not(#lcdDot):not(#gaugeWrap),
 body.focus-mode #dashboard,
 body.focus-mode #settingsPanel {display:none !important;}
 
@@ -794,6 +794,165 @@ body[data-theme="light"] #aboutContent {
     transition:background 0.3s ease, box-shadow 0.3s ease;
     box-shadow:0 0 22px rgba(255, 0, 0, 0.35);
 }
+
+/* GAUGE (no SVG) */
+#gaugeWrap {
+    width:360px;
+    max-width:100%;
+    margin:26px 0 20px;
+    display:none;
+    user-select:none;
+}
+
+.gauge-viewport {
+    position:relative;
+    width:100%;
+    height:205px;
+    overflow:hidden;
+}
+
+.gauge-ring,
+.gauge-inner,
+.gauge-needle,
+.gauge-hub {
+    position:absolute;
+}
+
+.gauge-ring {
+    --ring-size:320px;
+    --ring-thickness:24px;
+    --ring-gradient:conic-gradient(from 180deg,
+        #2b3038 0deg,
+        #2b3038 90deg,
+        #3e4550 90deg,
+        #3e4550 126deg,
+        #555e6d 126deg,
+        #555e6d 162deg,
+        #738094 162deg,
+        #738094 198deg,
+        #98a6b8 198deg,
+        #98a6b8 234deg,
+        #c0cad8 234deg,
+        #c0cad8 270deg,
+        #dbe3ec 270deg,
+        #dbe3ec 360deg);
+    width:var(--ring-size);
+    height:var(--ring-size);
+    left:50%;
+    top:22px;
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:var(--ring-gradient);
+}
+
+.gauge-inner {
+    --ring-size:320px;
+    --ring-thickness:24px;
+    width:calc(var(--ring-size) - (var(--ring-thickness) * 2));
+    height:calc(var(--ring-size) - (var(--ring-thickness) * 2));
+    left:50%;
+    top:calc(22px + var(--ring-thickness));
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:var(--bg-main-dark);
+    box-shadow:inset 0 0 26px rgba(0,0,0,0.22);
+}
+
+body[data-theme="light"] .gauge-inner {
+    background:var(--bg-main-light);
+    box-shadow:inset 0 0 20px rgba(0,0,0,0.08);
+}
+
+.gauge-needle {
+    width:4px;
+    height:118px;
+    left:50%;
+    top:182px;
+    transform:translate(-50%, -100%) rotate(-90deg);
+    transform-origin:50% 100%;
+    border-radius:99px;
+    background:linear-gradient(to top, #ff50d8, #ffd9f7);
+    box-shadow:0 0 12px rgba(255,80,216,0.6);
+    transition:transform 0.12s linear;
+    z-index:2;
+}
+
+.gauge-hub {
+    width:18px;
+    height:18px;
+    left:50%;
+    top:182px;
+    transform:translate(-50%, -50%);
+    border-radius:50%;
+    background:#f0f1f5;
+    box-shadow:0 0 8px rgba(255,255,255,0.5);
+    z-index:3;
+}
+
+.gauge-readout {
+    margin-top:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+}
+
+#gaugeValue {
+    font-size:18px;
+    line-height:1;
+    font-weight:700;
+    color:var(--accent-blue);
+}
+
+#gaugeZoneLabel {
+    font-size:11px;
+    letter-spacing:0.04em;
+    opacity:0.92;
+    font-weight:600;
+    min-height:14px;
+}
+
+.gauge-scale {
+    margin-top:8px;
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    padding:0 8px;
+    font-size:12px;
+    opacity:0.78;
+}
+
+.gauge-scale span {
+    flex:1;
+    text-align:center;
+    white-space:nowrap;
+}
+
+#gaugeWrap.mode-gcp .gauge-ring {
+    --ring-gradient:conic-gradient(from 180deg,
+        #0044aa 0deg,
+        #0044aa 108deg,
+        #007aff 138deg,
+        #2fbf71 180deg,
+        #c7a000 216deg,
+        #c76a00 243deg,
+        #b00000 270deg,
+        #b00000 360deg);
+}
+
+#gaugeWrap.mode-context .gauge-ring {
+    --ring-gradient:conic-gradient(from 180deg,
+        #2fbf71 0deg,
+        #2fbf71 156deg,
+        #c7a000 210deg,
+        #c76a00 246deg,
+        #af1f00 270deg,
+        #af1f00 360deg);
+}
+
+#gaugeWrap.mode-gcp #gaugeValue {
+    color:#e8ecff;
+}
 .block {
     margin:10px 0;
     width:100%;
@@ -1205,6 +1364,48 @@ body[data-theme="light"] #heatmapCard {
         width:clamp(108px, 34vw, 150px);
         height:clamp(108px, 34vw, 150px);
         margin:30px 0;
+    }
+
+    #gaugeWrap {
+        width:min(360px, 96vw);
+        margin:16px 0 10px;
+    }
+
+    .gauge-viewport {
+        height:170px;
+    }
+
+    .gauge-ring {
+        --ring-size:280px;
+        --ring-thickness:20px;
+        top:18px;
+    }
+
+    .gauge-inner {
+        --ring-size:280px;
+        --ring-thickness:20px;
+        top:38px;
+    }
+
+    .gauge-needle {
+        height:103px;
+        top:158px;
+    }
+
+    .gauge-hub {
+        top:158px;
+    }
+
+    #gaugeValue {
+        font-size:15px;
+    }
+
+    #gaugeZoneLabel {
+        font-size:10px;
+    }
+
+    .gauge-scale {
+        font-size:11px;
     }
     
     #settingsPanel {
@@ -1698,6 +1899,51 @@ body[data-theme="light"] #heatmapCard {
         width:92px;
         height:92px;
     }
+
+    #gaugeWrap {
+        width:100%;
+    }
+
+    .gauge-viewport {
+        height:150px;
+    }
+
+    .gauge-ring {
+        --ring-size:246px;
+        --ring-thickness:18px;
+    }
+
+    .gauge-inner {
+        --ring-size:246px;
+        --ring-thickness:18px;
+        top:40px;
+    }
+
+    .gauge-needle {
+        height:90px;
+        top:142px;
+    }
+
+    .gauge-hub {
+        width:14px;
+        height:14px;
+        top:142px;
+    }
+
+    #gaugeValue {
+        font-size:13px;
+    }
+
+    #gaugeZoneLabel {
+        font-size:9px;
+    }
+
+    .gauge-scale {
+        margin-top:4px;
+        font-size:10px;
+        gap:4px;
+        padding:0 2px;
+    }
     
     #settingsPanel {
         width:100vw;
@@ -1815,6 +2061,7 @@ body[data-theme="light"] #heatmapCard {
                 <div class="settings-info-subnav" id="settingsInfoSubnav" aria-label="Information subcategories">
                     <button class="settings-info-subnav-button" data-info-view="instructions">Instructions</button>
                     <button class="settings-info-subnav-button" data-info-view="visual-indicator">Visual Indicator Types</button>
+                    <button class="settings-info-subnav-button" data-info-view="gcp-lcd">GCP &amp; LCD</button>
                     <button class="settings-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                     <button class="settings-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
                     <button class="settings-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
@@ -1829,6 +2076,7 @@ body[data-theme="light"] #heatmapCard {
                 <div class="mobile-info-subcategory-list">
                     <button class="mobile-info-subnav-button" data-info-view="instructions">Instructions</button>
                     <button class="mobile-info-subnav-button" data-info-view="visual-indicator">Visual Indicator Types</button>
+                    <button class="mobile-info-subnav-button" data-info-view="gcp-lcd">GCP &amp; LCD</button>
                     <button class="mobile-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                     <button class="mobile-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
                     <button class="mobile-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
@@ -1849,6 +2097,7 @@ body[data-theme="light"] #heatmapCard {
                     <nav class="settings-info-nav" aria-label="Information sections">
                         <button class="settings-info-button" data-info-view="instructions">Instructions</button>
                         <button class="settings-info-button active" data-info-view="visual-indicator">Visual Indicator Types</button>
+                        <button class="settings-info-button" data-info-view="gcp-lcd">GCP &amp; LCD</button>
                         <button class="settings-info-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                         <button class="settings-info-button" data-info-view="dashboard-items">Dashboard Items</button>
                         <button class="settings-info-button" data-info-view="dashboard-mode">Dashboard Modes</button>
@@ -1863,6 +2112,10 @@ body[data-theme="light"] #heatmapCard {
                         <section class="settings-info-section active" data-info-view="visual-indicator">
                             <button class="settings-info-accordion-button" data-info-view="visual-indicator" type="button" aria-expanded="true">Visual Indicator Types</button>
                             <div class="settings-rich-text" id="settingsInfoVisualIndicator"></div>
+                        </section>
+                        <section class="settings-info-section" data-info-view="gcp-lcd">
+                            <button class="settings-info-accordion-button" data-info-view="gcp-lcd" type="button" aria-expanded="false">GCP &amp; LCD</button>
+                            <div class="settings-rich-text" id="settingsInfoGcpLcd"></div>
                         </section>
                         <section class="settings-info-section" data-info-view="last-100">
                             <button class="settings-info-accordion-button" data-info-view="last-100" type="button" aria-expanded="false">Last 100 Numbers Modes</button>
@@ -1955,6 +2208,9 @@ body[data-theme="light"] #heatmapCard {
 			<select id="visualType">
 				<option value="number">Number</option>
 				<option value="dot">Dot (LCD)</option>
+                <option value="gauge">Gauge</option>
+                <option value="gauge-context">Gauge Signal</option>
+                <option value="gauge-gcp">Gauge GCP</option>
 			</select>
 		</div>
 
@@ -2186,11 +2442,29 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v16.5</span>
+        <span id="versionLine">v17</span>
     </div>
 
     <div id="number">0</div>
 	<div id="lcdDot"></div>
+
+    <div id="gaugeWrap" class="mode-basic">
+        <div class="gauge-viewport">
+            <div class="gauge-ring"></div>
+            <div class="gauge-inner"></div>
+            <div id="gaugeNeedle" class="gauge-needle"></div>
+            <div class="gauge-hub"></div>
+        </div>
+        <div class="gauge-readout">
+            <div id="gaugeValue">0</div>
+            <div id="gaugeZoneLabel">LOW</div>
+        </div>
+        <div id="gaugeScale" class="gauge-scale">
+            <span>LOW</span>
+            <span>MID</span>
+            <span>HIGH</span>
+        </div>
+    </div>
 
     <div class="block" id="controlsBlock">
         <label>
@@ -2387,6 +2661,7 @@ const settingsViewLabels = {
 const settingsInfoViewLabels = {
     instructions: "Instructions",
     "visual-indicator": "Visual Indicator Types",
+    "gcp-lcd": "GCP & LCD",
     "last-100": "Last 100 Numbers Modes",
     "dashboard-items": "Dashboard Items",
     "dashboard-mode": "Dashboard Modes",
@@ -2513,6 +2788,42 @@ function populateSettingsInfoSections() {
             && !text.includes("<h3>Local Consciousness Dot</h3>")) {
             const localDotText = "<h3>Local Consciousness Dot</h3><p>This is a quick access to the LCD Mode. It combines the Dot Indicator + None Mode (last 100 Numbers) + Session Mode + clean UI.</p><h3>Terry Mode</h3>";
             text = localDotText + text;
+        }
+
+        if (source.dataset.infoTarget === "settingsInfoVisualIndicator") {
+            const gaugeText = "<p><b>Gauge:</b> shows the live generated number as a moving needle on a half-circle dial. It uses your active Min and Max settings, so the scale adapts to your current range.</p>"
+                + "<p><b>Gauge Signal:</b> shows a live coherence dial on a flexible range. You can shape the visible signal window with Min and Max and watch how the needle reacts as the session changes.</p>"
+                + "<p><b>Gauge GCP:</b> is the Dot-as-dial view. It runs on a fixed 0 to 1 coherence scale, keeps the Dot thresholds, and presents them in a stable GCP-style gauge layout.</p>";
+
+            text = text.replace("<h3>Important requirement</h3>", "<h3>Notice</h3>");
+            text = text.replace(
+                /<p>To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode<\/b> to <b>None<\/b>\.[\s\S]*?<\/p>/,
+                "<p>To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>. Hit the red Reset button whenever you think the generator might be having trouble generating.</p>"
+            );
+
+            if (!text.includes("<b>Gauge:</b>")) {
+                text = text.replace("</p><h3>How GCP Dot and LC Dot work (compact explanation)</h3>", `</p>${gaugeText}<h3>How GCP Dot and LC Dot work (compact explanation)</h3>`);
+            }
+
+            const gcpStartMarker = "<h3>How GCP Dot and LC Dot work (compact explanation)</h3>";
+            const gcpEndMarker = "even if the interpretation is simplified for training use. It is best read as a quiet, low-noise phase in your local session.</p>";
+            const startIndex = text.indexOf(gcpStartMarker);
+            const endIndex = text.indexOf(gcpEndMarker);
+
+            if (startIndex >= 0 && endIndex > startIndex) {
+                const movedEnd = endIndex + gcpEndMarker.length;
+                const movedBlock = text.slice(startIndex, movedEnd).replace(" (compact explanation)", "");
+                const gcpTarget = document.getElementById("settingsInfoGcpLcd");
+                if (gcpTarget) {
+                    gcpTarget.innerHTML = renderSettingsInfoBlock("GCP & LCD", movedBlock);
+                }
+                text = text.slice(0, startIndex) + text.slice(movedEnd);
+            } else {
+                const gcpTarget = document.getElementById("settingsInfoGcpLcd");
+                if (gcpTarget && !gcpTarget.innerHTML.trim()) {
+                    gcpTarget.innerHTML = renderSettingsInfoBlock("GCP & LCD", "<p>This section explains how the GCP-style Dot and the local LCD logic map coherence from blue (stable) to red (strong anomaly).</p>");
+                }
+            }
         }
 
         target.innerHTML = renderSettingsInfoBlock(title, text);
@@ -2664,16 +2975,14 @@ settingsViewButtons.forEach(button => {
 
             setSettingsView("information");
 
-            if (isAlreadyActive && informationNavExpanded) {
-                setInformationNavExpanded(false);
-                setSettingsInfoView(null);
+            // Keep Information selected, but allow collapsing/expanding its subnavigation.
+            if (isAlreadyActive) {
+                setInformationNavExpanded(!informationNavExpanded);
             } else {
                 setInformationNavExpanded(true);
-                const hasActiveSection = Array.from(settingsInfoSections).some(section => section.classList.contains("active"));
-                if (!hasActiveSection) {
-                    setSettingsInfoView("instructions");
-                }
             }
+
+            setSettingsInfoView(null);
             return;
         }
 
@@ -2795,11 +3104,102 @@ themeSlider.addEventListener("change", () => {
 const showVisualToggle = document.getElementById("showVisualToggle");
 const visualType = document.getElementById("visualType");
 const lcdDot = document.getElementById("lcdDot");
+const gaugeWrap = document.getElementById("gaugeWrap");
+const gaugeNeedle = document.getElementById("gaugeNeedle");
+const gaugeValueEl = document.getElementById("gaugeValue");
+const gaugeZoneLabelEl = document.getElementById("gaugeZoneLabel");
+const gaugeScaleEl = document.getElementById("gaugeScale");
 const localConsciousnessDotToggle = document.getElementById("localConsciousnessDotToggle");
 const terryModeToggle = document.getElementById("terryModeToggle");
 const chartUiState = { savedMin: null, savedMax: null };
 let localDotModeState = null;
 let previousVisualType = visualType.value;
+let gaugeSmoothedValue = NaN;
+
+function getGaugeDotZoneFromP(normalizedP) {
+    if (normalizedP > 0.95) return "Normal";
+    if (normalizedP > 0.80) return "Elevated";
+    if (normalizedP > 0.45) return "High";
+    if (normalizedP > 0.15) return "Very High";
+    return "Extreme";
+}
+
+function getGaugeModeRange() {
+    let minVal = Number(minInput.value);
+    let maxVal = Number(maxInput.value);
+
+    if (!Number.isFinite(minVal)) minVal = 0;
+    if (!Number.isFinite(maxVal)) maxVal = 99;
+    if (maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
+    if (maxVal === minVal) maxVal = minVal + 1;
+
+    return { min: minVal, max: maxVal };
+}
+
+function formatGaugeScaleValue(value) {
+    if (!Number.isFinite(value)) return "0";
+    if (Math.abs(value - Math.round(value)) < 0.0001) {
+        return String(Math.round(value));
+    }
+    return value.toFixed(2);
+}
+
+function getGaugeSmoothingAlpha(mode) {
+    const speedVal = Math.max(1, Number(speedInput.value) || 100);
+
+    if (mode === "gauge" && speedVal <= 12) return 0.96;
+    if (mode === "gauge" && speedVal <= 20) return 0.86;
+    if (speedVal <= 35) return 0.72;
+    if (speedVal <= 60) return 0.58;
+    if (speedVal <= 100) return 0.44;
+
+    return mode === "gauge" ? 0.30 : 0.24;
+}
+
+function setGaugeScaleLabels(labels) {
+    if (!gaugeScaleEl) return;
+    gaugeScaleEl.innerHTML = "";
+    labels.forEach(label => {
+        const span = document.createElement("span");
+        span.innerText = label;
+        gaugeScaleEl.appendChild(span);
+    });
+}
+
+function updateGaugeDisplay(targetPercent, mode, readout, zoneLabel, scaleLabels) {
+    if (!gaugeWrap || !gaugeNeedle || !gaugeValueEl || !gaugeZoneLabelEl) return;
+
+    const clampedTarget = Math.max(0, Math.min(100, Number(targetPercent) || 0));
+    // Keep all gauge needles (Gauge, Gauge Signal, Gauge GCP) exactly aligned with the current value.
+    gaugeSmoothedValue = clampedTarget;
+    const displayed = Math.max(0, Math.min(100, gaugeSmoothedValue));
+    const angle = -90 + (displayed / 100) * 180;
+
+    gaugeNeedle.style.transform = `translate(-50%, -100%) rotate(${angle}deg)`;
+    gaugeValueEl.innerText = readout;
+    gaugeZoneLabelEl.innerText = zoneLabel;
+    setGaugeScaleLabels(scaleLabels);
+
+    if (mode === "gauge") {
+        gaugeWrap.classList.remove("mode-context");
+        gaugeWrap.classList.remove("mode-gcp");
+        gaugeWrap.classList.add("mode-basic");
+        return;
+    }
+
+    if (mode === "gauge-context") {
+        gaugeWrap.classList.remove("mode-basic");
+        gaugeWrap.classList.remove("mode-gcp");
+        gaugeWrap.classList.add("mode-context");
+        return;
+    }
+
+    if (mode === "gauge-gcp") {
+        gaugeWrap.classList.remove("mode-basic");
+        gaugeWrap.classList.remove("mode-context");
+        gaugeWrap.classList.add("mode-gcp");
+    }
+}
 
 // Hide UI / focus mode
 const hideUiToggle = document.getElementById("hideUiToggle");
@@ -2923,29 +3323,85 @@ document.addEventListener("click", (e) => {
     exitFocusMode();
 }, true);
 
-function updateVisualIndicator(p) {
-    // If visual indicator is disabled Ã¢â€ â€™ hide both
+function updateVisualIndicator(p, liveNumber = null) {
+    const liveValue = Number.isFinite(liveNumber) ? liveNumber : (Number(numberEl.innerText) || 0);
+
+    // If visual indicator is disabled -> hide all
     if (!showVisualToggle.checked) {
         numberEl.style.display = "none";
         lcdDot.style.display = "none";
+        if (gaugeWrap) gaugeWrap.style.display = "none";
         return;
     }
 
-    // If Number mode Ã¢â€ â€™ show number, hide dot
+    // Number mode
     if (visualType.value === "number") {
         numberEl.style.display = "block";
         lcdDot.style.display = "none";
+        if (gaugeWrap) gaugeWrap.style.display = "none";
         return;
     }
 
-    // If Dot mode Ã¢â€ â€™ hide number, show dot
-    numberEl.style.display = "none";
-    lcdDot.style.display = "block";
+    // Dot mode
+    if (visualType.value === "dot") {
+        numberEl.style.display = "none";
+        lcdDot.style.display = "block";
+        if (gaugeWrap) gaugeWrap.style.display = "none";
 
-    const palette = getDotPalette(normalizePValue(p));
-    const dotGradient = `radial-gradient(circle at 30% 30%, ${palette.light}, ${palette.dark})`;
-    lcdDot.style.background = dotGradient;
-    lcdDot.style.boxShadow = `0 0 22px ${palette.glow}`;
+        const palette = getDotPalette(normalizePValue(p));
+        const dotGradient = `radial-gradient(circle at 30% 30%, ${palette.light}, ${palette.dark})`;
+        lcdDot.style.background = dotGradient;
+        lcdDot.style.boxShadow = `0 0 22px ${palette.glow}`;
+        return;
+    }
+
+    // Gauge modes
+    numberEl.style.display = "none";
+    lcdDot.style.display = "none";
+    if (gaugeWrap) gaugeWrap.style.display = "block";
+
+    if (visualType.value === "gauge") {
+        const range = getGaugeModeRange();
+        const normalized = Math.max(0, Math.min(1, (liveValue - range.min) / (range.max - range.min)));
+        const target = normalized * 100;
+        const zone = normalized <= (1 / 3) ? "LOW" : (normalized <= (2 / 3) ? "MID" : "HIGH");
+        const mid = range.min + ((range.max - range.min) / 2);
+        updateGaugeDisplay(
+            target,
+            "gauge",
+            String(Math.round(liveValue)),
+            zone,
+            [formatGaugeScaleValue(range.min), formatGaugeScaleValue(mid), formatGaugeScaleValue(range.max)]
+        );
+        return;
+    }
+
+    const normalizedP = normalizePValue(p);
+
+    if (visualType.value === "gauge-context") {
+        const contextRange = getGaugeModeRange();
+        const contextMin = Math.max(0, Math.min(1, contextRange.min));
+        const contextMax = Math.max(0, Math.min(1, contextRange.max));
+        const span = Math.max(0.0001, contextMax - contextMin);
+        const contextNormalized = Math.max(0, Math.min(1, (normalizedP - contextMin) / span));
+        const score = (1 - contextNormalized) * 100;
+        const mid = contextMin + ((contextMax - contextMin) / 2);
+
+        updateGaugeDisplay(
+            score,
+            "gauge-context",
+            contextNormalized.toFixed(3),
+            getGaugeDotZoneFromP(normalizedP),
+            [formatGaugeScaleValue(contextMax), formatGaugeScaleValue(mid), formatGaugeScaleValue(contextMin)]
+        );
+        return;
+    }
+
+    if (visualType.value === "gauge-gcp") {
+        const score = (1 - normalizedP) * 100;
+        updateGaugeDisplay(score, "gauge-gcp", normalizedP.toFixed(3), getGaugeDotZoneFromP(normalizedP), ["1.00", "0.50", "0.00"]);
+        return;
+    }
 }
 
 // Show/hide history
@@ -2973,8 +3429,10 @@ if (localConsciousnessDotToggle) {
 
 function applyChartModeUI() {
     const dotLockActive = visualType.value === "dot" && historyMode.value === "none";
+    const gaugeGcpLockActive = visualType.value === "gauge-gcp";
+    const shouldLockRange = dotLockActive || gaugeGcpLockActive;
 
-    if (dotLockActive) {
+    if (shouldLockRange) {
         if (chartUiState.savedMin === null) chartUiState.savedMin = minInput.value;
         if (chartUiState.savedMax === null) chartUiState.savedMax = maxInput.value;
         minInput.value = "0";
@@ -2995,6 +3453,10 @@ visualType.addEventListener("change", () => {
     const switchedNumberToDot = previousVisualType === "number" && visualType.value === "dot";
     if (switchedNumberToDot) {
         reset();
+    }
+
+    if (visualType.value !== previousVisualType) {
+        gaugeSmoothedValue = NaN;
     }
 
     applyChartModeUI();
@@ -3240,6 +3702,7 @@ let pHistory = [];
 let timer = null;
 let autoStopTimeout = null;
 let chiObj = { p: 1, dev: 0 };
+let lastGeneratedNumber = 0;
 
 const numberEl = document.getElementById("number");
 const minInput = document.getElementById("min");
@@ -3262,6 +3725,18 @@ const heatmapEl = document.getElementById("heatmap");
 
 let lastUpdate = 0;
 const UPDATE_INTERVAL_MS = 60;
+
+function refreshGaugeFromRangeInputs() {
+    if (visualType.value === "gauge" || visualType.value === "gauge-context" || visualType.value === "gauge-gcp") {
+        updateVisualIndicator(chiObj.p, lastGeneratedNumber);
+    }
+    drawChart();
+}
+
+minInput.addEventListener("input", refreshGaugeFromRangeInputs);
+maxInput.addEventListener("input", refreshGaugeFromRangeInputs);
+minInput.addEventListener("change", refreshGaugeFromRangeInputs);
+maxInput.addEventListener("change", refreshGaugeFromRangeInputs);
 
 // ----------------------------
 // Random number generator
@@ -3366,7 +3841,12 @@ function step() {
     if (maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
 
     let n = rand(minVal, maxVal);
+    lastGeneratedNumber = n;
     numberEl.innerText = n;
+
+    // Keep the visual indicator in sync with every generated value.
+    updateVisualIndicator(chiObj.p, n);
+
     add(n);
     update();
 }
@@ -3408,7 +3888,7 @@ function update() {
     drawChart();
     updateLongestStreak();
 	
-	updateVisualIndicator(chiObj.p);
+    updateVisualIndicator(chiObj.p, lastGeneratedNumber);
 }
 
 // ----------------------------
@@ -3905,7 +4385,7 @@ function applyDefaultMode() {
     showVisualToggle.checked = true;
     visualType.value = "number";
     applyChartModeUI();
-    updateVisualIndicator(chiObj.p);
+    updateVisualIndicator(chiObj.p, lastGeneratedNumber);
 
     if (terryModeToggle) {
         terryModeToggle.checked = false;
@@ -4235,6 +4715,9 @@ function stop() {
 
 function reset() {
     history = [];
+    pHistory = [];
+    lastGeneratedNumber = 0;
+    numberEl.innerText = "0";
     totalEl.innerText = "0";
     entropyEl.innerText = "0.00 bit";
     chiEl.innerText = "0.000 p";
@@ -4245,9 +4728,7 @@ function reset() {
     renderHistory();
     drawHeatmap();
     drawChart();
-
-    numberEl.style.display = "block";
-    lcdDot.style.display = "none";
+    updateVisualIndicator(chiObj.p, lastGeneratedNumber);
 }
 
 // ----------------------------
@@ -4274,6 +4755,10 @@ window.addEventListener("keydown", e => {
 numberEl.addEventListener("click", toggleRunning);
 
 lcdDot.addEventListener("click", toggleRunning);
+
+if (gaugeWrap) {
+    gaugeWrap.addEventListener("click", toggleRunning);
+}
 
 // Info-Popup
 const infoOverlay = document.getElementById("infoOverlay");
