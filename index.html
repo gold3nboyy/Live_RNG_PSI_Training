@@ -2494,15 +2494,6 @@ function populateSettingsInfoSections() {
             text = text.replace("<h3>Visual cards</h3>", labelGuide + "<h3>Visual cards</h3>");
         }
 
-        if (source.dataset.infoTarget === "settingsInfoVisualIndicator"
-            && text.includes("To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>.")
-            && !text.includes("After switching from Type &quot;Number&quot; to Type &quot;Dot (LCD)&quot;")) {
-            text = text.replace(
-                "To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>.",
-                "To use full GCP Dot style and LCD behavior in this app, set <b>Last 100 Numbers Mode</b> to <b>None</b>. After switching from Type &quot;Number&quot; to Type &quot;Dot (LCD)&quot; the chart is still reading out the last 100 numbers history, hence spiking in the chart graph. Give it a bit to resolve itself or to instant fix: hit the Reset button next to the Stop button, this will reset the generated numbers instantly in the history."
-            );
-        }
-
         if (source.dataset.infoTarget === "settingsInfoTerryMode"
             && !text.includes("<h3>Local Consciousness Dot</h3>")) {
             const localDotText = "<h3>Local Consciousness Dot</h3><p>This is a quick access to the LCD Mode. It combines the Dot Indicator + None Mode (last 100 Numbers) + Session Mode + clean UI.</p><h3>Terry Mode</h3>";
@@ -2793,6 +2784,7 @@ const localConsciousnessDotToggle = document.getElementById("localConsciousnessD
 const terryModeToggle = document.getElementById("terryModeToggle");
 const chartUiState = { savedMin: null, savedMax: null };
 let localDotModeState = null;
+let previousVisualType = visualType.value;
 
 // Hide UI / focus mode
 const hideUiToggle = document.getElementById("hideUiToggle");
@@ -2975,9 +2967,15 @@ function applyChartModeUI() {
 }
 
 visualType.addEventListener("change", () => {
+    const switchedNumberToDot = previousVisualType === "number" && visualType.value === "dot";
+    if (switchedNumberToDot) {
+        reset();
+    }
+
     applyChartModeUI();
     updateVisualIndicator(chiObj.p);
     drawChart();
+    previousVisualType = visualType.value;
 });
 
 // Show/hide controls and timer
