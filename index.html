@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v17</title>
+<title>Random Number Generator v17.5</title>
 
 <style>
 :root {
@@ -802,6 +802,7 @@ body[data-theme="light"] #aboutContent {
     margin:26px 0 20px;
     display:none;
     user-select:none;
+    position:relative;
 }
 
 .gauge-viewport {
@@ -889,6 +890,73 @@ body[data-theme="light"] .gauge-inner {
     z-index:3;
 }
 
+.gauge-scale {
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:4;
+}
+
+.gauge-scale-mark,
+.gauge-scale-tick,
+.gauge-scale-dot,
+.gauge-scale-label {
+    position:absolute;
+}
+
+.gauge-scale-mark {
+    width:0;
+    height:0;
+}
+
+.gauge-scale-tick {
+    width:2px;
+    height:6px;
+    border-radius:999px;
+    background:rgba(235,240,248,0.9);
+    box-shadow:0 0 4px rgba(0,0,0,0.25);
+    transform-origin:50% 100%;
+}
+
+.gauge-scale-dot {
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:rgba(235,240,248,0.78);
+    box-shadow:0 0 3px rgba(0,0,0,0.2);
+    transform:translate(-50%, -50%);
+}
+
+.gauge-scale-label {
+    transform:translate(-50%, -50%);
+    white-space:nowrap;
+    font-size:10px;
+    font-variant-numeric:tabular-nums;
+    color:var(--text-main-dark);
+    text-shadow:0 1px 2px rgba(0,0,0,0.55);
+    letter-spacing:0.01em;
+}
+
+body[data-theme="light"] .gauge-scale-tick {
+    background:#4a525d;
+    box-shadow:0 0 2px rgba(255,255,255,0.2);
+}
+
+body[data-theme="light"] .gauge-scale-dot {
+    background:#4a525d;
+    box-shadow:0 0 2px rgba(255,255,255,0.18);
+}
+
+body[data-theme="light"] .gauge-scale-label {
+    color:#4a525d;
+    text-shadow:0 1px 1px rgba(255,255,255,0.3);
+}
+
+body[data-theme="light"] #gaugeValue,
+body[data-theme="light"] #gaugeWrap.mode-gcp #gaugeValue {
+    color:#5a616d;
+}
+
 .gauge-readout {
     margin-top:10px;
     display:flex;
@@ -901,7 +969,7 @@ body[data-theme="light"] .gauge-inner {
     font-size:18px;
     line-height:1;
     font-weight:700;
-    color:var(--accent-blue);
+    color:#d3d7de;
 }
 
 #gaugeZoneLabel {
@@ -913,45 +981,32 @@ body[data-theme="light"] .gauge-inner {
 }
 
 .gauge-scale {
-    margin-top:8px;
-    display:flex;
-    justify-content:space-between;
-    gap:8px;
-    padding:0 8px;
     font-size:12px;
-    opacity:0.78;
-}
-
-.gauge-scale span {
-    flex:1;
-    text-align:center;
-    white-space:nowrap;
 }
 
 #gaugeWrap.mode-gcp .gauge-ring {
     --ring-gradient:conic-gradient(from 180deg,
-        #0044aa 0deg,
-        #0044aa 108deg,
-        #007aff 138deg,
-        #2fbf71 180deg,
-        #c7a000 216deg,
-        #c76a00 243deg,
-        #b00000 270deg,
-        #b00000 360deg);
+    #002f86 0deg,
+    #0046a8 108deg,
+    #0a8fff 138deg,
+    #34c759 180deg,
+    #ffcc00 216deg,
+    #ff8a00 243deg,
+    #e33b2f 270deg,
+    #8f140f 360deg);
 }
 
 #gaugeWrap.mode-context .gauge-ring {
     --ring-gradient:conic-gradient(from 180deg,
         #2fbf71 0deg,
         #2fbf71 156deg,
-        #c7a000 210deg,
-        #c76a00 246deg,
-        #af1f00 270deg,
-        #af1f00 360deg);
+    #ffcc00 210deg,
+    #ff3b30 270deg,
+    #ff3b30 360deg);
 }
 
 #gaugeWrap.mode-gcp #gaugeValue {
-    color:#e8ecff;
+    color:#d3d7de;
 }
 .block {
     margin:10px 0;
@@ -1278,6 +1333,8 @@ body[data-theme="light"] #heatmapCard {
     border-color:var(--panel-border-light);
 }
 #heatmap {
+    --heatmap-label-width:40px;
+    --heatmap-row-gap:8px;
     display:flex;
     flex-direction:column;
     gap:4px;
@@ -1295,11 +1352,13 @@ body[data-theme="light"] #heatmapCard {
 .heat-row {
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:var(--heatmap-row-gap);
     margin-bottom:4px;
 }
 .heat-label {
-    width:40px;
+    width:var(--heatmap-label-width);
+    min-width:var(--heatmap-label-width);
+    flex:0 0 var(--heatmap-label-width);
     text-align:right;
     font-size:13px;
 }
@@ -1307,9 +1366,9 @@ body[data-theme="light"] #heatmapCard {
     height:10px;
     border-radius:6px;
     background:linear-gradient(90deg,var(--color-red),var(--color-yellow),var(--color-green));
-    background-size:240px 100%;
+    background-size:100% 100%;
     background-repeat:no-repeat;
-    max-width:240px;
+    max-width:100%;
     overflow:hidden;
 }
 
@@ -1405,6 +1464,7 @@ body[data-theme="light"] #heatmapCard {
     }
 
     .gauge-scale {
+        height:170px;
         font-size:11px;
     }
     
@@ -1706,13 +1766,12 @@ body[data-theme="light"] #heatmapCard {
     }
 
     .dashboard-layout {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        justify-content:stretch;
+        grid-template-columns:repeat(auto-fit, minmax(108px, 108px));
+        justify-content:center;
         gap:10px;
     }
 
-    #cardChart,
-    #heatmapCard {
+    #cardChart {
         grid-column:span 2;
     }
 
@@ -1722,8 +1781,24 @@ body[data-theme="light"] #heatmapCard {
     }
 
     #heatmapCard {
+        grid-column:span 2;
         width:100%;
         min-width:0;
+        padding:9px 8px 9px 6px;
+    }
+
+    #heatmapCard.heatmap-only {
+        grid-column:span 2;
+        width:100%;
+    }
+
+    #heatmap {
+        --heatmap-label-width:28px;
+        --heatmap-row-gap:3px;
+    }
+
+    .heat-label {
+        text-align:left;
     }
     
     .card {
@@ -1939,10 +2014,9 @@ body[data-theme="light"] #heatmapCard {
     }
 
     .gauge-scale {
+        height:150px;
         margin-top:4px;
         font-size:10px;
-        gap:4px;
-        padding:0 2px;
     }
     
     #settingsPanel {
@@ -2064,6 +2138,7 @@ body[data-theme="light"] #heatmapCard {
                     <button class="settings-info-subnav-button" data-info-view="gcp-lcd">GCP &amp; LCD</button>
                     <button class="settings-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                     <button class="settings-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
+                    <button class="settings-info-subnav-button" data-info-view="detection-labels">Detection Labels and Meaning</button>
                     <button class="settings-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
                     <button class="settings-info-subnav-button" data-info-view="terry-mode">Special</button>
                 </div>
@@ -2079,6 +2154,7 @@ body[data-theme="light"] #heatmapCard {
                     <button class="mobile-info-subnav-button" data-info-view="gcp-lcd">GCP &amp; LCD</button>
                     <button class="mobile-info-subnav-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                     <button class="mobile-info-subnav-button" data-info-view="dashboard-items">Dashboard Items</button>
+                    <button class="mobile-info-subnav-button" data-info-view="detection-labels">Detection Labels and Meaning</button>
                     <button class="mobile-info-subnav-button" data-info-view="dashboard-mode">Dashboard Modes</button>
                     <button class="mobile-info-subnav-button" data-info-view="terry-mode">Special</button>
                 </div>
@@ -2100,6 +2176,7 @@ body[data-theme="light"] #heatmapCard {
                         <button class="settings-info-button" data-info-view="gcp-lcd">GCP &amp; LCD</button>
                         <button class="settings-info-button" data-info-view="last-100">Last 100 Numbers Modes</button>
                         <button class="settings-info-button" data-info-view="dashboard-items">Dashboard Items</button>
+                        <button class="settings-info-button" data-info-view="detection-labels">Detection Labels and Meaning</button>
                         <button class="settings-info-button" data-info-view="dashboard-mode">Dashboard Modes</button>
                         <button class="settings-info-button" data-info-view="terry-mode">Special</button>
                     </nav>
@@ -2124,6 +2201,10 @@ body[data-theme="light"] #heatmapCard {
                         <section class="settings-info-section" data-info-view="dashboard-items">
                             <button class="settings-info-accordion-button" data-info-view="dashboard-items" type="button" aria-expanded="false">Dashboard Items</button>
                             <div class="settings-rich-text" id="settingsInfoDashboardItems"></div>
+                        </section>
+                        <section class="settings-info-section" data-info-view="detection-labels">
+                            <button class="settings-info-accordion-button" data-info-view="detection-labels" type="button" aria-expanded="false">Detection Labels and Meaning</button>
+                            <div class="settings-rich-text" id="settingsInfoDetectionLabels"></div>
                         </section>
                         <section class="settings-info-section" data-info-view="dashboard-mode">
                             <button class="settings-info-accordion-button" data-info-view="dashboard-mode" type="button" aria-expanded="false">Dashboard Modes</button>
@@ -2238,6 +2319,12 @@ body[data-theme="light"] #heatmapCard {
             </label>
         </div>
 
+        <span class="settings-info-source"
+            data-info-target="settingsInfoDetectionLabels"
+            data-title="Detection Labels and Meaning"
+            data-tip="">
+        </span>
+
         <div class="settings-subsection">
             <label class="settings-label">
                 Last 100 Numbers Mode
@@ -2293,6 +2380,14 @@ body[data-theme="light"] #heatmapCard {
             </label>
 
             <div class="settings-row">
+                <span>Show Total</span>
+                <label class="switch">
+                    <input type="checkbox" id="showTotalToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-row">
                 <span>Show Most Repeating</span>
                 <label class="switch">
                     <input type="checkbox" id="showMostRepeatToggle">
@@ -2317,9 +2412,9 @@ body[data-theme="light"] #heatmapCard {
             </div>
 
             <div class="settings-row">
-                <span>Show Total</span>
+                <span>Show Deviation</span>
                 <label class="switch">
-                    <input type="checkbox" id="showTotalToggle">
+                    <input type="checkbox" id="showDevToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -2341,17 +2436,41 @@ body[data-theme="light"] #heatmapCard {
             </div>
 
             <div class="settings-row">
-                <span>Show Deviation</span>
+                <span>Show Average + Target Drift</span>
                 <label class="switch">
-                    <input type="checkbox" id="showDevToggle">
+                    <input type="checkbox" id="showMeanToggle">
                     <span class="slider"></span>
                 </label>
             </div>
 
             <div class="settings-row">
-                <span>Show Chart</span>
+                <span>Show Runs Test</span>
                 <label class="switch">
-                    <input type="checkbox" id="showChartToggle" checked>
+                    <input type="checkbox" id="showRunsToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-row">
+                <span>Show CUSUM Drift</span>
+                <label class="switch">
+                    <input type="checkbox" id="showCusumToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-row">
+                <span>Show Regime Flag</span>
+                <label class="switch">
+                    <input type="checkbox" id="showRegimeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-row">
+                <span>Show Session Tone</span>
+                <label class="switch">
+                    <input type="checkbox" id="showSessionToneToggle">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -2360,6 +2479,14 @@ body[data-theme="light"] #heatmapCard {
                 <span>Show Heatmap (Top 10)</span>
                 <label class="switch">
                     <input type="checkbox" id="showHeatmapToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-row">
+                <span>Show Chart</span>
+                <label class="switch">
+                    <input type="checkbox" id="showChartToggle" checked>
                     <span class="slider"></span>
                 </label>
             </div>
@@ -2404,7 +2531,7 @@ body[data-theme="light"] #heatmapCard {
             <div>
                 <h2>About this generator</h2>
 
-                <h3>How it works</h3><p>This generator produces a continuous stream of hardware-based random numbers, similar to the noise sources used in scientific random event generators. Each number is independent and unpredictable, allowing you to observe natural fluctuations without algorithmic bias. The system is intentionally minimalistic to reduce cognitive load and support meditative or experimental use. By watching the live stream, you can explore how randomness behaves under different mental states.</p>
+                <h3>How it works</h3><p>This generator creates a continuous stream of random numbers locally in your browser on your own device. It draws on the randomness sources that your operating system and browser make available, so the sequence is produced on-device rather than fetched from an external server. In practice, that means the output can come from secure local entropy when available, with additional timing noise used in some modes to keep the stream lively and device-specific. The result is similar in spirit to the noise sources used in scientific random event generators, but presented in a simple and transparent way. Each number is independent and unpredictable, allowing you to observe natural fluctuations without algorithmic bias. The system is intentionally minimalistic to reduce cognitive load and support meditative or experimental use. By watching the live stream, you can explore how randomness behaves under different mental states.</p>
 
                 <h3>Background and research</h3>
                 <p>
@@ -2442,7 +2569,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v17</span>
+        <span id="versionLine">v17.5</span>
     </div>
 
     <div id="number">0</div>
@@ -2454,15 +2581,11 @@ body[data-theme="light"] #heatmapCard {
             <div class="gauge-inner"></div>
             <div id="gaugeNeedle" class="gauge-needle"></div>
             <div class="gauge-hub"></div>
+            <div id="gaugeScale" class="gauge-scale"></div>
         </div>
         <div class="gauge-readout">
             <div id="gaugeValue">0</div>
             <div id="gaugeZoneLabel">LOW</div>
-        </div>
-        <div id="gaugeScale" class="gauge-scale">
-            <span>LOW</span>
-            <span>MID</span>
-            <span>HIGH</span>
         </div>
     </div>
 
@@ -2510,7 +2633,12 @@ body[data-theme="light"] #heatmapCard {
 
         <div>
 
-            <div class="grid-3">
+            <div class="grid-4">
+
+                <div class="card" id="cardTotal">
+                    <h3>Total</h3>
+                    <div class="card-value" id="total">0</div>
+                </div>
 
                 <div class="card" id="cardMostRepeat">
                     <h3>Most Repeating</h3>
@@ -2531,9 +2659,10 @@ body[data-theme="light"] #heatmapCard {
 
             <div class="grid-4">
 
-                <div class="card" id="cardTotal">
-                    <h3>Total</h3>
-                    <div class="card-value" id="total">0</div>
+                <div class="card" id="cardDev">
+                    <h3>Deviation</h3>
+                    <div class="card-value" id="dev">0%</div>
+                    <div class="card-detect red" id="devDetect">No effect</div>
                 </div>
 
                 <div class="card" id="cardEntropy">
@@ -2548,10 +2677,34 @@ body[data-theme="light"] #heatmapCard {
                     <div class="card-detect red" id="chiDetect">No effect</div>
                 </div>
 
-                <div class="card" id="cardDev">
-                    <h3>Deviation</h3>
-                    <div class="card-value" id="dev">0%</div>
-                    <div class="card-detect red" id="devDetect">No effect</div>
+                <div class="card" id="cardMean">
+                    <h3>Average + Target</h3>
+                    <div class="card-value" id="meanValue">0.00</div>
+                    <div class="card-detect red" id="meanDetect">Centered</div>
+                </div>
+
+                <div class="card" id="cardRuns">
+                    <h3>Runs Test</h3>
+                    <div class="card-value" id="runsValue">0.00 z</div>
+                    <div class="card-detect red" id="runsDetect">Calm pattern</div>
+                </div>
+
+                <div class="card" id="cardCusum">
+                    <h3>CUSUM Drift</h3>
+                    <div class="card-value" id="cusumValue">0.00</div>
+                    <div class="card-detect red" id="cusumDetect">Stable drift</div>
+                </div>
+
+                <div class="card" id="cardRegime">
+                    <h3>Regime Flag</h3>
+                    <div class="card-value" id="regimeValue">Calm</div>
+                    <div class="card-detect red" id="regimeDetect">Balanced session</div>
+                </div>
+
+                <div class="card" id="cardSessionTone">
+                    <h3>Session Tone</h3>
+                    <div class="card-value" id="sessionToneValue">Quiet</div>
+                    <div class="card-detect red" id="sessionToneDetect">Soft baseline</div>
                 </div>
 
             </div>
@@ -2575,6 +2728,16 @@ body[data-theme="light"] #heatmapCard {
 <script>
 let settingsScrollLockY = 0;
 
+function ensureBodyScrollUnlockedWhenPanelClosed() {
+    const panel = document.getElementById("settingsPanel");
+    if (!panel) return;
+
+    if (!panel.classList.contains("open") && document.body.classList.contains("settings-open")) {
+        document.body.classList.remove("settings-open");
+        document.body.style.top = "";
+    }
+}
+
 function setSettingsPanelOpen(isOpen) {
     const panel = document.getElementById("settingsPanel");
     if (!panel) return;
@@ -2592,6 +2755,7 @@ function setSettingsPanelOpen(isOpen) {
         document.body.classList.remove("settings-open");
         document.body.style.top = "";
         window.scrollTo(0, lockedOffset);
+        ensureBodyScrollUnlockedWhenPanelClosed();
     }
 }
 
@@ -2664,6 +2828,7 @@ const settingsInfoViewLabels = {
     "gcp-lcd": "GCP & LCD",
     "last-100": "Last 100 Numbers Modes",
     "dashboard-items": "Dashboard Items",
+    "detection-labels": "Detection Labels and Meaning",
     "dashboard-mode": "Dashboard Modes",
     "terry-mode": "Special"
 };
@@ -2771,17 +2936,104 @@ function populateSettingsInfoSections() {
         const title = source.getAttribute("data-title") || "Info";
         let text = source.getAttribute("data-tip") || "";
 
-        if (source.dataset.infoTarget === "settingsInfoDashboardItems"
-            && text.includes("<h3>Visual cards</h3>")
-            && !text.includes("<h3>Detection labels and meaning</h3>")) {
-            const labelGuide = "<h3>Detection labels and meaning</h3>"
+        if (source.dataset.infoTarget === "settingsInfoDashboardItems") {
+            if (text.includes("<h3>Volume and distribution cards</h3>")
+                && !text.includes("<b>Average + Target Drift:</b>")) {
+                const advancedMetrics = "<p><b>Average + Target Drift:</b> This card shows the current average value for the active dashboard window and compares it with the natural center of your selected range. It helps you see whether the session is leaning upward, leaning downward, or staying close to balance. In short windows, this value can move around quickly, so it is most useful when viewed together with the chart and the regime flag. Over longer sessions, a persistent pull away from center can be easier to spot here than by looking at raw numbers one by one. Think of it as a simple compass for where the session is tending overall.</p>"
+                    + "<p><b>Runs Test:</b> This card looks at the rhythm of the sequence rather than just how often numbers appear. It asks whether the stream is switching sides of the range in a natural way or whether it is clumping into longer patches than expected. That makes it useful for spotting a structural feel in the sequence even when the frequency counts still look ordinary. A calm result suggests the up and down movement still looks natural, while a stronger result suggests the pattern is becoming more ordered or more sticky. It works best as a pattern card, not as a standalone proof card.</p>"
+                    + "<p><b>CUSUM Drift:</b> This card tracks whether many small pushes in the same direction are quietly stacking up over time. A session can look normal moment to moment while still building a slow directional drift, and this card is designed to catch that earlier than a single snapshot value would. It is especially useful when you want to know whether small movements are fading out or reinforcing each other. A low reading suggests the stream is wandering around its expected middle in a balanced way. A higher reading suggests that repeated small nudges are building into a clearer longer movement.</p>"
+                    + "<p><b>Regime Flag:</b> This card combines several signals into one plain-language state such as Calm, Drift, or Shift. It is designed for fast monitoring when you do not want to interpret every card separately on each update. Calm means the session still looks broadly balanced, Drift means a directional tendency is building, and Shift means multiple signals are now pointing to a stronger change in behavior. This makes it a useful summary card during active training sessions, especially when the dashboard is changing quickly. It is best read as a quick orientation label that should still be cross-checked with the cards around it.</p>"
+                    + "<p><b>Session Tone:</b> This card is a softer companion to the statistical cards. Instead of presenting another strict test value, it translates the current pattern mix into a simple atmosphere label such as Quiet, Focused, Building, or Turbulent. The goal is orientation, not proof: it helps you sense whether the session currently feels stable, gently coherent, directionally intensifying, or highly dynamic. For users who include contemplative or spiritual framing in their practice, this can be a useful reflective anchor because it invites attention to quality and context without claiming supernatural certainty. At the same time, it remains grounded in the neighboring metrics, so the tone label should be read as an interpretive summary of measurable behavior rather than a standalone claim about cause. In practical use, Session Tone works best when you glance at it first for quick context, then confirm the picture with Regime Flag, CUSUM Drift, and Runs Test.</p>";
+
+                text = text.replace(
+                    "<p><b>Deviation:</b> This card shows how far the current distribution is from ideal even spread, expressed as a percentage. It gives a direct sense of imbalance size that is easy to compare over time. Small deviations are common and expected, especially in shorter windows. Larger and persistent deviations can indicate stronger structure in the current run. Use this card with Chi² p because both metrics describe related behavior from different angles.</p>",
+                    "<p><b>Deviation:</b> This card shows how far the current distribution is from ideal even spread, expressed as a percentage. It gives a direct sense of imbalance size that is easy to compare over time. Small deviations are common and expected, especially in shorter windows. Larger and persistent deviations can indicate stronger structure in the current run. Use this card with Chi² p because both metrics describe related behavior from different angles.</p>" + advancedMetrics
+                );
+            }
+
+            const practicalWorkflowPattern = /<h3>Practical workflow<\/h3><p>[\s\S]*?<\/p>/;
+            const practicalWorkflowMatch = text.match(practicalWorkflowPattern);
+            const practicalWorkflowBlock = practicalWorkflowMatch ? practicalWorkflowMatch[0] : "";
+            if (practicalWorkflowBlock) {
+                text = text.replace(practicalWorkflowBlock, "");
+            }
+
+            const orderedTitles = [
+                "Total",
+                "Most Repeating",
+                "Least Repeating",
+                "Longest Streak",
+                "Deviation",
+                "Entropy",
+                "Chi² p",
+                "Average + Target Drift",
+                "Runs Test",
+                "CUSUM Drift",
+                "Regime Flag",
+                "Session Tone",
+                "Heatmap",
+                "Chart"
+            ];
+
+            const escapeRegex = value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const blockByTitle = {};
+
+            orderedTitles.forEach(titleKey => {
+                const pattern = new RegExp(`<p><b>${escapeRegex(titleKey)}:<\\/b>[\\s\\S]*?<\\/p>`);
+                const match = text.match(pattern);
+                if (!match) return;
+                blockByTitle[titleKey] = match[0];
+                text = text.replace(match[0], "");
+            });
+
+            const cardsHtml = orderedTitles.map(key => blockByTitle[key] || "").join("");
+
+            text = "<h3>Cards</h3>"
+                + cardsHtml
+                + practicalWorkflowBlock;
+        }
+
+        if (source.dataset.infoTarget === "settingsInfoDetectionLabels") {
+            text = "<h4>Deviation</h4>"
                 + "<p><b>No effect:</b> The metric is within its expected random range. Short local fluctuations may still occur, but there is no stable statistical evidence of directional structure in the active window.</p>"
                 + "<p><b>Weak shift:</b> A small deviation from baseline is present. This is often transient and can appear naturally in random streams, especially in shorter windows. Treat it as an observation cue, not as confirmation.</p>"
                 + "<p><b>Noticeable shift:</b> The deviation is clear enough to stand out from ordinary micro-noise. It deserves continued monitoring across both Last 100 and Session views to see whether the pattern persists or fades.</p>"
                 + "<p><b>Strong shift:</b> The metric is materially displaced from baseline behavior. At this level, cross-checking with the chart, heatmap, and neighboring metrics is recommended to distinguish sustained structure from short-term clustering.</p>"
-                + "<p><b>Extreme shift:</b> The deviation is highly pronounced for the current analysis window. This does not automatically prove causation, but it is a high-signal state that merits careful contextual review and longer-run confirmation.</p>";
-
-            text = text.replace("<h3>Visual cards</h3>", labelGuide + "<h3>Visual cards</h3>");
+                + "<p><b>Extreme shift:</b> The deviation is highly pronounced for the current analysis window. This does not automatically prove causation, but it is a high-signal state that merits careful contextual review and longer-run confirmation.</p>"
+                + "<h4>Entropy</h4>"
+                + "<p><b>No effect:</b> Entropy is close to the expected spread level for the active range and sample size. The stream still has normal local variation, but no clear compression pattern is present.</p>"
+                + "<p><b>Weak shift:</b> Entropy is slightly lower than baseline, which can happen naturally in short windows. Use this as an early hint and verify with Heatmap before treating it as a stable pattern.</p>"
+                + "<p><b>Noticeable shift:</b> Entropy reduction is now clear enough to suggest that values are clustering more than usual. This level is meaningful for monitoring, especially when the same tendency stays visible across updates.</p>"
+                + "<p><b>Strong shift:</b> Entropy is materially reduced and concentration is likely affecting several parts of the range. Cross-check with Deviation and Chi² p to separate temporary grouping from persistent structure.</p>"
+                + "<p><b>Extreme shift:</b> Entropy compression is very pronounced for the current analysis window. Treat this as a high-signal state that should be reviewed in context rather than used as a standalone conclusion.</p>"
+                + "<h4>Chi² p</h4>"
+                + "<p><b>No effect:</b> The p-value is high enough to indicate that observed frequencies are still compatible with random expectation. Small differences between bins are normal and do not imply stable directional structure.</p>"
+                + "<p><b>Weak shift:</b> The p-value has moved into a mildly unusual area, but this still occurs naturally in many short sequences. Treat it as a watch signal and compare with Deviation and Entropy before escalating interpretation.</p>"
+                + "<p><b>Noticeable shift:</b> The p-value now indicates a clearer departure from even-distribution behavior in the active window. At this level, continued confirmation across time and across cards becomes important.</p>"
+                + "<p><b>Strong shift:</b> The p-value suggests a pronounced statistical departure from baseline frequencies. This is a strong monitoring state, but it still benefits from context checks in chart, heatmap, and neighboring cards.</p>"
+                + "<p><b>Extreme shift:</b> The p-value is in a very low region for the current window, signaling a highly unusual frequency pattern. Use this as high evidence of structure in-window, while avoiding causal claims from one snapshot alone.</p>"
+                + "<h4>Average + Target</h4>"
+                + "<p><b>Center +value:</b> The session mean is currently above the configured center, so the drift is upward. Larger positive distance suggests stronger directional pull and should be checked with CUSUM and Regime.</p>"
+                + "<p><b>Center -value:</b> The session mean is currently below the configured center, so the drift is downward. Larger negative distance suggests stronger directional pull and should be checked with Runs and CUSUM.</p>"
+                + "<h4>Runs Test</h4>"
+                + "<p><b>Calm pattern:</b> The switching rhythm is still close to what a random sequence usually produces. No stable clustering signature is visible yet in the run structure.</p>"
+                + "<p><b>Slight clustering:</b> The run rhythm shows early signs of stickiness or reduced alternation. This can still be transient, so treat it as a weak structural cue.</p>"
+                + "<p><b>Noticeable structure:</b> The run sequence now shows a clear pattern that stands out from ordinary micro-noise. It is useful to verify this with CUSUM and Regime for stronger context.</p>"
+                + "<p><b>Strong structure:</b> The run behavior indicates strong ordering or clustering in sequence transitions. This is a high-signal pattern state, especially when other cards point in the same direction.</p>"
+                + "<h4>CUSUM Drift</h4>"
+                + "<p><b>Stable drift:</b> Cumulative movement is staying near balance, so directional pressure is currently low. Small local pushes exist, but they are not building into a persistent trend.</p>"
+                + "<p><b>Small build-up:</b> Repeated same-direction nudges are beginning to stack in the cumulative path. This is an early trend signal that should be tracked across several updates.</p>"
+                + "<p><b>Persistent push:</b> The cumulative curve shows sustained directional reinforcement over the active window. This level suggests non-trivial momentum and should be cross-checked with Regime and Average + Target.</p>"
+                + "<p><b>Strong accumulation:</b> Cumulative drift has become pronounced, meaning repeated directional pushes are strongly aligned. Treat this as a high-signal momentum state and validate with neighboring metrics.</p>"
+                + "<h4>Regime Flag</h4>"
+                + "<p><b>Calm:</b> Combined signals still look broadly balanced in the active analysis window. Use this as a low-intensity orientation state rather than a statement that nothing can change next.</p>"
+                + "<p><b>Drift:</b> Multiple indicators suggest directional tendency is building, but not yet fully dominant. This is a transition state where follow-up confirmation across cards is especially useful.</p>"
+                + "<p><b>Shift:</b> Several metrics are now aligned strongly enough to indicate a stronger change in session behavior. Treat it as a high-attention state and validate magnitude with CUSUM, Runs, and Deviation.</p>"
+                + "<h4>Session Tone</h4>"
+                + "<p><b>Quiet:</b> The metric blend currently suggests a soft baseline phase with low directional pressure. This is useful for calm monitoring and for establishing reference context before stronger moves appear.</p>"
+                + "<p><b>Focused:</b> The session shows a coherent rhythm without heavy turbulence. This often marks early structure and can be tracked for persistence rather than interpreted as proof.</p>"
+                + "<p><b>Building:</b> Directional and structural signals are gathering into a clearer movement pattern. This is a development phase where confirmation from Regime and CUSUM is especially helpful.</p>"
+                + "<p><b>Turbulent:</b> Several signals are moving strongly at once and the session is dynamically active. Use this as a high-intensity orientation label while staying grounded in cross-card evidence.</p>";
         }
 
         if (source.dataset.infoTarget === "settingsInfoTerryMode"
@@ -2860,6 +3112,11 @@ function organizeSettingsLayout() {
     const showEntropyRow = document.getElementById("showEntropyToggle").closest(".settings-row");
     const showChiRow = document.getElementById("showChiToggle").closest(".settings-row");
     const showDevRow = document.getElementById("showDevToggle").closest(".settings-row");
+    const showMeanRow = document.getElementById("showMeanToggle").closest(".settings-row");
+    const showRunsRow = document.getElementById("showRunsToggle").closest(".settings-row");
+    const showCusumRow = document.getElementById("showCusumToggle").closest(".settings-row");
+    const showRegimeRow = document.getElementById("showRegimeToggle").closest(".settings-row");
+    const showSessionToneRow = document.getElementById("showSessionToneToggle").closest(".settings-row");
     const showChartRow = document.getElementById("showChartToggle").closest(".settings-row");
     const showHeatmapRow = document.getElementById("showHeatmapToggle").closest(".settings-row");
     const dashboardModeSection = document.getElementById("dashboardMode").closest(".settings-subsection");
@@ -2920,15 +3177,20 @@ function organizeSettingsLayout() {
         dashboardItemsRightColumn.className = "settings-column-stack";
 
         dashboardItemsLeftColumn.append(
+            showTotalRow,
             showMostRepeatRow,
             showLeastRepeatRow,
             showLongestStreakRow,
-            showTotalRow,
+            showDevRow,
             showEntropyRow,
             showChiRow,
-            showDevRow,
-            showChartRow,
-            showHeatmapRow
+            showMeanRow,
+            showRunsRow,
+            showCusumRow,
+            showRegimeRow,
+            showSessionToneRow,
+            showHeatmapRow,
+            showChartRow
         );
 
         const dashboardItemsGrid = document.createElement("div");
@@ -3105,6 +3367,8 @@ const showVisualToggle = document.getElementById("showVisualToggle");
 const visualType = document.getElementById("visualType");
 const lcdDot = document.getElementById("lcdDot");
 const gaugeWrap = document.getElementById("gaugeWrap");
+const gaugeViewportEl = document.querySelector(".gauge-viewport");
+const gaugeRingEl = document.querySelector(".gauge-ring");
 const gaugeNeedle = document.getElementById("gaugeNeedle");
 const gaugeValueEl = document.getElementById("gaugeValue");
 const gaugeZoneLabelEl = document.getElementById("gaugeZoneLabel");
@@ -3144,6 +3408,18 @@ function formatGaugeScaleValue(value) {
     return value.toFixed(2);
 }
 
+function buildGaugeScaleLabels(minValue, maxValue, count = 6) {
+    const safeCount = Math.max(2, Math.floor(count));
+    const startValue = Number(minValue);
+    const endValue = Number(maxValue);
+    const span = endValue - startValue;
+
+    return Array.from({ length: safeCount }, (_, index) => {
+        const t = safeCount === 1 ? 0 : index / (safeCount - 1);
+        return formatGaugeScaleValue(startValue + (span * t));
+    });
+}
+
 function getGaugeSmoothingAlpha(mode) {
     const speedVal = Math.max(1, Number(speedInput.value) || 100);
 
@@ -3157,12 +3433,57 @@ function getGaugeSmoothingAlpha(mode) {
 }
 
 function setGaugeScaleLabels(labels) {
-    if (!gaugeScaleEl) return;
+    if (!gaugeScaleEl || !gaugeViewportEl || !gaugeRingEl) return;
     gaugeScaleEl.innerHTML = "";
-    labels.forEach(label => {
-        const span = document.createElement("span");
-        span.innerText = label;
-        gaugeScaleEl.appendChild(span);
+    const viewportRect = gaugeViewportEl.getBoundingClientRect();
+    const ringRect = gaugeRingEl.getBoundingClientRect();
+    if (!viewportRect.width || !viewportRect.height || !ringRect.width || !ringRect.height) return;
+
+    const centerX = (ringRect.left - viewportRect.left) + (ringRect.width / 2);
+    const centerY = (ringRect.top - viewportRect.top) + (ringRect.height / 2);
+    const ringRadius = ringRect.width / 2;
+    const tickRadius = ringRadius - 22;
+    const labelRadius = ringRadius - 39;
+    const dotRadius = ringRadius - 31;
+
+    labels.forEach((label, index) => {
+        const t = labels.length === 1 ? 0.5 : index / (labels.length - 1);
+        const angle = Math.PI - (t * Math.PI);
+        const angleDeg = (angle * 180) / Math.PI;
+        const isEdgeTick = index === 0 || index === labels.length - 1;
+        const tickRotation = isEdgeTick ? (angleDeg + 90) : (270 - angleDeg);
+
+        const mark = document.createElement("div");
+        mark.className = "gauge-scale-mark";
+        mark.style.left = `${centerX + (Math.cos(angle) * tickRadius)}px`;
+        mark.style.top = `${centerY - (Math.sin(angle) * tickRadius)}px`;
+
+        const tick = document.createElement("div");
+        tick.className = "gauge-scale-tick";
+        tick.style.left = "0";
+        tick.style.top = "0";
+        tick.style.transform = `translate(-50%, -100%) rotate(${tickRotation}deg) scaleY(0.88)`;
+        mark.appendChild(tick);
+        gaugeScaleEl.appendChild(mark);
+
+        const labelEl = document.createElement("div");
+        labelEl.className = "gauge-scale-label";
+        labelEl.innerText = label;
+        labelEl.style.left = `${centerX + (Math.cos(angle) * labelRadius)}px`;
+        labelEl.style.top = `${centerY - (Math.sin(angle) * labelRadius)}px`;
+        gaugeScaleEl.appendChild(labelEl);
+
+        if (index < labels.length - 1) {
+            const nextT = (index + 1) / (labels.length - 1);
+            const nextAngle = Math.PI - (nextT * Math.PI);
+            const midAngle = (angle + nextAngle) / 2;
+
+            const dot = document.createElement("div");
+            dot.className = "gauge-scale-dot";
+            dot.style.left = `${centerX + (Math.cos(midAngle) * dotRadius)}px`;
+            dot.style.top = `${centerY - (Math.sin(midAngle) * dotRadius)}px`;
+            gaugeScaleEl.appendChild(dot);
+        }
     });
 }
 
@@ -3288,6 +3609,8 @@ function activateLocalDotMode() {
     historyEl.classList.add("is-hidden");
     dashboardMode.value = "all";
 
+    reset();
+
     dashboardItemPairs.forEach(pair => {
         pair.toggle.checked = pair.toggle === showChartToggle;
     });
@@ -3365,13 +3688,12 @@ function updateVisualIndicator(p, liveNumber = null) {
         const normalized = Math.max(0, Math.min(1, (liveValue - range.min) / (range.max - range.min)));
         const target = normalized * 100;
         const zone = normalized <= (1 / 3) ? "LOW" : (normalized <= (2 / 3) ? "MID" : "HIGH");
-        const mid = range.min + ((range.max - range.min) / 2);
         updateGaugeDisplay(
             target,
             "gauge",
             String(Math.round(liveValue)),
             zone,
-            [formatGaugeScaleValue(range.min), formatGaugeScaleValue(mid), formatGaugeScaleValue(range.max)]
+            buildGaugeScaleLabels(range.min, range.max, 6)
         );
         return;
     }
@@ -3385,21 +3707,20 @@ function updateVisualIndicator(p, liveNumber = null) {
         const span = Math.max(0.0001, contextMax - contextMin);
         const contextNormalized = Math.max(0, Math.min(1, (normalizedP - contextMin) / span));
         const score = (1 - contextNormalized) * 100;
-        const mid = contextMin + ((contextMax - contextMin) / 2);
 
         updateGaugeDisplay(
             score,
             "gauge-context",
             contextNormalized.toFixed(3),
             getGaugeDotZoneFromP(normalizedP),
-            [formatGaugeScaleValue(contextMax), formatGaugeScaleValue(mid), formatGaugeScaleValue(contextMin)]
+            buildGaugeScaleLabels(contextMin, contextMax, 6)
         );
         return;
     }
 
     if (visualType.value === "gauge-gcp") {
         const score = (1 - normalizedP) * 100;
-        updateGaugeDisplay(score, "gauge-gcp", normalizedP.toFixed(3), getGaugeDotZoneFromP(normalizedP), ["1.00", "0.50", "0.00"]);
+        updateGaugeDisplay(score, "gauge-gcp", normalizedP.toFixed(3), getGaugeDotZoneFromP(normalizedP), buildGaugeScaleLabels(0, 1, 6));
         return;
     }
 }
@@ -3450,8 +3771,7 @@ function applyChartModeUI() {
 }
 
 visualType.addEventListener("change", () => {
-    const switchedNumberToDot = previousVisualType === "number" && visualType.value === "dot";
-    if (switchedNumberToDot) {
+    if (visualType.value !== previousVisualType) {
         reset();
     }
 
@@ -3497,6 +3817,11 @@ const showTotalToggle = document.getElementById("showTotalToggle");
 const showEntropyToggle = document.getElementById("showEntropyToggle");
 const showChiToggle = document.getElementById("showChiToggle");
 const showDevToggle = document.getElementById("showDevToggle");
+const showMeanToggle = document.getElementById("showMeanToggle");
+const showRunsToggle = document.getElementById("showRunsToggle");
+const showCusumToggle = document.getElementById("showCusumToggle");
+const showRegimeToggle = document.getElementById("showRegimeToggle");
+const showSessionToneToggle = document.getElementById("showSessionToneToggle");
 const showChartToggle = document.getElementById("showChartToggle");
 const showHeatmapToggle = document.getElementById("showHeatmapToggle");
 
@@ -3507,19 +3832,29 @@ const cardTotal = document.getElementById("cardTotal");
 const cardEntropy = document.getElementById("cardEntropy");
 const cardChi = document.getElementById("cardChi");
 const cardDev = document.getElementById("cardDev");
+const cardMean = document.getElementById("cardMean");
+const cardRuns = document.getElementById("cardRuns");
+const cardCusum = document.getElementById("cardCusum");
+const cardRegime = document.getElementById("cardRegime");
+const cardSessionTone = document.getElementById("cardSessionTone");
 const cardChart = document.getElementById("cardChart");
 const heatmapCard = document.getElementById("heatmapCard");
 
 const dashboardItemPairs = [
+    { toggle: showTotalToggle, card: cardTotal },
     { toggle: showMostRepeatToggle, card: cardMostRepeat },
     { toggle: showLeastRepeatToggle, card: cardLeastRepeat },
     { toggle: showLongestStreakToggle, card: cardLongestStreak },
-    { toggle: showTotalToggle, card: cardTotal },
+    { toggle: showDevToggle, card: cardDev },
     { toggle: showEntropyToggle, card: cardEntropy },
     { toggle: showChiToggle, card: cardChi },
-    { toggle: showDevToggle, card: cardDev },
-    { toggle: showChartToggle, card: cardChart },
-    { toggle: showHeatmapToggle, card: heatmapCard }
+    { toggle: showMeanToggle, card: cardMean },
+    { toggle: showRunsToggle, card: cardRuns },
+    { toggle: showCusumToggle, card: cardCusum },
+    { toggle: showRegimeToggle, card: cardRegime },
+    { toggle: showSessionToneToggle, card: cardSessionTone },
+    { toggle: showHeatmapToggle, card: heatmapCard },
+    { toggle: showChartToggle, card: cardChart }
 ];
 
 let dashboardSyncGuard = false;
@@ -3571,9 +3906,31 @@ function updateChartExclusiveLayout() {
         !showEntropyToggle.checked &&
         !showChiToggle.checked &&
         !showDevToggle.checked &&
+        !showMeanToggle.checked &&
+        !showRunsToggle.checked &&
+        !showCusumToggle.checked &&
+        !showRegimeToggle.checked &&
+        !showSessionToneToggle.checked &&
         !showHeatmapToggle.checked;
 
+    const onlyHeatmapVisible =
+        showHeatmapToggle.checked &&
+        !showChartToggle.checked &&
+        !showMostRepeatToggle.checked &&
+        !showLeastRepeatToggle.checked &&
+        !showLongestStreakToggle.checked &&
+        !showTotalToggle.checked &&
+        !showEntropyToggle.checked &&
+        !showChiToggle.checked &&
+        !showDevToggle.checked &&
+        !showMeanToggle.checked &&
+        !showRunsToggle.checked &&
+        !showCusumToggle.checked &&
+        !showRegimeToggle.checked &&
+        !showSessionToneToggle.checked;
+
     cardChart.classList.toggle("chart-only", onlyChartVisible);
+    heatmapCard.classList.toggle("heatmap-only", onlyHeatmapVisible);
 }
 
 function disableLocalDotModeForDashboardChange() {
@@ -3650,6 +4007,46 @@ showDevToggle.addEventListener("change", () => {
     syncDashboardContainerAndMasterToggle();
     dashboardSyncGuard = false;
 });
+showMeanToggle.addEventListener("change", () => {
+    if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
+    dashboardSyncGuard = true;
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    dashboardSyncGuard = false;
+});
+showRunsToggle.addEventListener("change", () => {
+    if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
+    dashboardSyncGuard = true;
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    dashboardSyncGuard = false;
+});
+showCusumToggle.addEventListener("change", () => {
+    if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
+    dashboardSyncGuard = true;
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    dashboardSyncGuard = false;
+});
+showRegimeToggle.addEventListener("change", () => {
+    if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
+    dashboardSyncGuard = true;
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    dashboardSyncGuard = false;
+});
+showSessionToneToggle.addEventListener("change", () => {
+    if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
+    dashboardSyncGuard = true;
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    dashboardSyncGuard = false;
+});
 showChartToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
     disableLocalDotModeForDashboardChange();
@@ -3718,6 +4115,16 @@ const chiEl = document.getElementById("chi");
 const chiDetectEl = document.getElementById("chiDetect");
 const devEl = document.getElementById("dev");
 const devDetectEl = document.getElementById("devDetect");
+const meanValueEl = document.getElementById("meanValue");
+const meanDetectEl = document.getElementById("meanDetect");
+const runsValueEl = document.getElementById("runsValue");
+const runsDetectEl = document.getElementById("runsDetect");
+const cusumValueEl = document.getElementById("cusumValue");
+const cusumDetectEl = document.getElementById("cusumDetect");
+const regimeValueEl = document.getElementById("regimeValue");
+const regimeDetectEl = document.getElementById("regimeDetect");
+const sessionToneValueEl = document.getElementById("sessionToneValue");
+const sessionToneDetectEl = document.getElementById("sessionToneDetect");
 const mostRepeatEl = document.getElementById("mostRepeat");
 const leastRepeatEl = document.getElementById("leastRepeat");
 const longestStreakEl = document.getElementById("longestStreak");
@@ -3859,6 +4266,12 @@ function update() {
     if (now - lastUpdate < UPDATE_INTERVAL_MS) return;
     lastUpdate = now;
 
+    const panel = document.getElementById("settingsPanel");
+    const canPreserveScroll =
+        !document.body.classList.contains("settings-open") &&
+        !(panel && panel.classList.contains("open"));
+    const scrollBeforeUpdate = canPreserveScroll ? (window.scrollY || window.pageYOffset || 0) : 0;
+
     let data = (dashboardMode.value === "recent")
     ? history.slice(0, 100)
     : history;
@@ -3882,11 +4295,33 @@ function update() {
     devEl.innerText = chiObj.dev + "%";
     applyDevDetection(chiObj.dev);
 
+    const rangeInfo = getConfiguredDashboardRange();
+    const orderedData = data.slice().reverse();
+    const averageMetrics = calcAverageDriftMetrics(orderedData, rangeInfo);
+    const runsMetrics = calcRunsMetrics(orderedData, rangeInfo);
+    const cusumMetrics = calcCusumMetrics(orderedData, rangeInfo);
+    const regimeMetrics = calcRegimeMetrics(averageMetrics, runsMetrics, cusumMetrics);
+    const sessionToneMetrics = calcSessionToneMetrics(averageMetrics, runsMetrics, cusumMetrics, regimeMetrics);
+
+    updateAverageDriftCard(averageMetrics);
+    updateRunsCard(runsMetrics);
+    updateCusumCard(cusumMetrics);
+    updateRegimeCard(regimeMetrics);
+    updateSessionToneCard(sessionToneMetrics);
+
     updateRepeating();
     renderHistory();
     drawHeatmap();
     drawChart();
     updateLongestStreak();
+
+    if (canPreserveScroll) {
+        const scrollAfterUpdate = window.scrollY || window.pageYOffset || 0;
+        // Guard against unintended "jump to top" while live tiles re-render.
+        if (scrollBeforeUpdate > 20 && scrollAfterUpdate + 10 < scrollBeforeUpdate) {
+            window.scrollTo(0, scrollBeforeUpdate);
+        }
+    }
 	
     updateVisualIndicator(chiObj.p, lastGeneratedNumber);
 }
@@ -3948,6 +4383,184 @@ function formatPValueForDisplay(value) {
         return "< 0.000 p";
     }
     return rounded + " p";
+}
+
+function getConfiguredDashboardRange() {
+    let minVal = Number(minInput.value);
+    let maxVal = Number(maxInput.value);
+    if (!Number.isFinite(minVal)) minVal = 0;
+    if (!Number.isFinite(maxVal)) maxVal = 99;
+    if (maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
+
+    const span = Math.max(1, maxVal - minVal);
+    const center = (minVal + maxVal) / 2;
+    return { min: minVal, max: maxVal, span, center };
+}
+
+function formatSignedNumber(value, digits = 2) {
+    const number = Number(value) || 0;
+    return `${number >= 0 ? "+" : ""}${number.toFixed(digits)}`;
+}
+
+function setDetectState(el, text, state) {
+    if (!el) return;
+    el.innerText = text;
+    el.className = "card-detect red";
+    if (state === "weak") el.className = "card-detect yellow";
+    if (state === "noticeable") el.className = "card-detect orange";
+    if (state === "strong" || state === "extreme") el.className = "card-detect green";
+}
+
+function calcAverageDriftMetrics(data, rangeInfo) {
+    if (!data.length) return { mean: 0, delta: 0, normalized: 0 };
+
+    const mean = data.reduce((sum, value) => sum + value, 0) / data.length;
+    const delta = mean - rangeInfo.center;
+    const normalized = Math.abs(delta) / Math.max(1, rangeInfo.span);
+    return { mean, delta, normalized };
+}
+
+function calcRunsMetrics(data, rangeInfo) {
+    const signs = [];
+    data.forEach(value => {
+        if (value > rangeInfo.center) signs.push(1);
+        if (value < rangeInfo.center) signs.push(-1);
+    });
+
+    if (signs.length < 12) {
+        return { z: 0, absZ: 0, runs: 0, usable: false };
+    }
+
+    let positive = 0;
+    let negative = 0;
+    signs.forEach(sign => {
+        if (sign > 0) positive += 1;
+        if (sign < 0) negative += 1;
+    });
+
+    if (positive < 2 || negative < 2) {
+        return { z: 0, absZ: 0, runs: 0, usable: false };
+    }
+
+    let runs = 1;
+    for (let index = 1; index < signs.length; index++) {
+        if (signs[index] !== signs[index - 1]) runs += 1;
+    }
+
+    const expectedRuns = ((2 * positive * negative) / (positive + negative)) + 1;
+    const varianceRuns = (2 * positive * negative * ((2 * positive * negative) - positive - negative)) /
+        (((positive + negative) ** 2) * Math.max(1, positive + negative - 1));
+    const z = varianceRuns > 0 ? (runs - expectedRuns) / Math.sqrt(varianceRuns) : 0;
+
+    return { z, absZ: Math.abs(z), runs, usable: true };
+}
+
+function calcCusumMetrics(data, rangeInfo) {
+    let cusum = 0;
+    let maxAbs = 0;
+    const scale = Math.max(1, rangeInfo.span);
+
+    data.forEach(value => {
+        cusum += (value - rangeInfo.center) / scale;
+        maxAbs = Math.max(maxAbs, Math.abs(cusum));
+    });
+
+    const normalized = data.length ? maxAbs / Math.max(1, Math.sqrt(data.length)) : 0;
+    return { latest: cusum, maxAbs, normalized };
+}
+
+function calcRegimeMetrics(averageMetrics, runsMetrics, cusumMetrics) {
+    if (averageMetrics.normalized >= 0.12 || runsMetrics.absZ >= 2.6 || cusumMetrics.normalized >= 1.8) {
+        return { value: "Shift", detail: "Multiple signals are lining up", state: "strong" };
+    }
+
+    if (averageMetrics.normalized >= 0.06 || runsMetrics.absZ >= 1.96 || cusumMetrics.normalized >= 0.95) {
+        return { value: "Drift", detail: "A directional tendency is building", state: "noticeable" };
+    }
+
+    return { value: "Calm", detail: "The session still looks balanced", state: "red" };
+}
+
+function calcSessionToneMetrics(averageMetrics, runsMetrics, cusumMetrics, regimeMetrics) {
+    if (
+        regimeMetrics.value === "Shift" ||
+        averageMetrics.normalized >= 0.16 ||
+        runsMetrics.absZ >= 2.8 ||
+        cusumMetrics.normalized >= 2.0
+    ) {
+        return { value: "Turbulent", detail: "Many signals are moving at once", state: "strong" };
+    }
+
+    if (
+        regimeMetrics.value === "Drift" ||
+        averageMetrics.normalized >= 0.07 ||
+        runsMetrics.absZ >= 1.96 ||
+        cusumMetrics.normalized >= 1.0
+    ) {
+        return { value: "Building", detail: "Directional momentum is gathering", state: "noticeable" };
+    }
+
+    if (
+        averageMetrics.normalized >= 0.03 ||
+        runsMetrics.absZ >= 1.2 ||
+        cusumMetrics.normalized >= 0.45
+    ) {
+        return { value: "Focused", detail: "A coherent rhythm is present", state: "weak" };
+    }
+
+    return { value: "Quiet", detail: "Soft baseline with balanced flow", state: "red" };
+}
+
+function updateAverageDriftCard(metrics) {
+    meanValueEl.innerText = metrics.mean.toFixed(2);
+
+    if (metrics.normalized < 0.03) {
+        setDetectState(meanDetectEl, `Center ${formatSignedNumber(metrics.delta)}`, "red");
+    } else if (metrics.normalized < 0.06) {
+        setDetectState(meanDetectEl, `Center ${formatSignedNumber(metrics.delta)}`, "weak");
+    } else if (metrics.normalized < 0.12) {
+        setDetectState(meanDetectEl, `Center ${formatSignedNumber(metrics.delta)}`, "noticeable");
+    } else {
+        setDetectState(meanDetectEl, `Center ${formatSignedNumber(metrics.delta)}`, "strong");
+    }
+}
+
+function updateRunsCard(metrics) {
+    runsValueEl.innerText = `${metrics.z.toFixed(2)} z`;
+
+    if (!metrics.usable || metrics.absZ < 1.0) {
+        setDetectState(runsDetectEl, "Calm pattern", "red");
+    } else if (metrics.absZ < 1.96) {
+        setDetectState(runsDetectEl, "Slight clustering", "weak");
+    } else if (metrics.absZ < 2.6) {
+        setDetectState(runsDetectEl, "Noticeable structure", "noticeable");
+    } else {
+        setDetectState(runsDetectEl, "Strong structure", "strong");
+    }
+}
+
+function updateCusumCard(metrics) {
+    cusumValueEl.innerText = metrics.normalized.toFixed(2);
+
+    if (metrics.normalized < 0.35) {
+        setDetectState(cusumDetectEl, "Stable drift", "red");
+    } else if (metrics.normalized < 0.7) {
+        setDetectState(cusumDetectEl, "Small build-up", "weak");
+    } else if (metrics.normalized < 1.4) {
+        setDetectState(cusumDetectEl, "Persistent push", "noticeable");
+    } else {
+        setDetectState(cusumDetectEl, "Strong accumulation", "strong");
+    }
+}
+
+function updateRegimeCard(metrics) {
+    regimeValueEl.innerText = metrics.value;
+    setDetectState(regimeDetectEl, metrics.detail, metrics.state);
+}
+
+function updateSessionToneCard(metrics) {
+    sessionToneValueEl.innerText = metrics.value;
+    setDetectState(sessionToneDetectEl, metrics.detail, metrics.state);
 }
 
 // Color interpolation for gradient transitions
@@ -4402,6 +5015,11 @@ function applyDefaultMode() {
     showEntropyToggle.checked = false;
     showChiToggle.checked = false;
     showDevToggle.checked = false;
+    showMeanToggle.checked = false;
+    showRunsToggle.checked = false;
+    showCusumToggle.checked = false;
+    showRegimeToggle.checked = false;
+    showSessionToneToggle.checked = false;
     showHeatmapToggle.checked = false;
     showChartToggle.checked = true;
     applyDashboardItemVisibility(false);
@@ -4434,6 +5052,11 @@ function drawHeatmap() {
     if (!entries.length) return;
 
     let maxVal = entries[0][1] || 1;
+    const heatmapWidth = Math.max(0, heatmapEl.clientWidth || 0);
+    const heatmapStyles = getComputedStyle(heatmapEl);
+    const labelWidth = parseFloat(heatmapStyles.getPropertyValue("--heatmap-label-width")) || 40;
+    const rowGap = parseFloat(heatmapStyles.getPropertyValue("--heatmap-row-gap")) || 8;
+    const maxBarWidth = Math.max(48, heatmapWidth - labelWidth - rowGap);
 
     entries.forEach(([n, v]) => {
         let row = document.createElement("div");
@@ -4447,7 +5070,9 @@ function drawHeatmap() {
         bar.className = "bar";
 
         let rel = v / maxVal;
-        bar.style.width = (rel * 240) + "px";
+        bar.style.width = `${rel * maxBarWidth}px`;
+        bar.style.maxWidth = `${maxBarWidth}px`;
+        bar.style.backgroundSize = `${maxBarWidth}px 100%`;
 
         row.appendChild(label);
         row.appendChild(bar);
@@ -4459,23 +5084,25 @@ function drawHeatmap() {
 // Chart
 // ----------------------------
 function drawChart() {
+    ensureBodyScrollUnlockedWhenPanelClosed();
     let c = document.getElementById("chart");
     if (!c) return;
     let ctx = c.getContext("2d");
 
-    const isDotChartActive = visualType.value === "dot" && historyMode.value === "none";
+    const isDotChartActive = (visualType.value === "dot" || visualType.value === "gauge-gcp") && historyMode.value === "none";
     const theme = document.body.getAttribute("data-theme") === "light" ? "light" : "dark";
     const neutralColor = theme === "light" ? "#007aff" : "#34c759";
 
     const baseWidth = (dashboardMode.value === "recent") ? 300 : 600;
     const measuredWidth = Math.floor(c.clientWidth || 0);
+    const measuredHeight = Math.floor(c.clientHeight || 0);
     c.width = Math.max(baseWidth, measuredWidth);
-    c.height = showHeatmapToggle.checked ? 246 : 160;
+    c.height = showHeatmapToggle.checked ? 246 : Math.max(160, measuredHeight);
 
     ctx.clearRect(0, 0, c.width, c.height);
 
     // For Number Mode: use history (generated numbers)
-    // For Dot Mode: use pHistory (p-value measurements)
+    // For Dot / Gauge GCP Mode: use pHistory (p-value measurements)
     let data, minVal, maxVal, range, drawMin, drawRange;
     
     if (isDotChartActive) {
@@ -4500,21 +5127,43 @@ function drawChart() {
         if (maxVal < minVal) [minVal, maxVal] = [maxVal, minVal];
         range = maxVal - minVal || 1;
 
-        // Add vertical headroom so peaks/troughs are not visually clipped.
-        const valuePadding = Math.max(0.5, range * 0.03);
-        drawMin = minVal - valuePadding;
-        drawRange = (maxVal + valuePadding) - drawMin;
+        const useMobileGaugeAutoscale =
+            isMobileLayout() &&
+            (visualType.value === "gauge" || visualType.value === "gauge-gcp") &&
+            data.length > 1;
+
+        if (useMobileGaugeAutoscale) {
+            // On mobile, Gauge/Gauge GCP lines can look vertically compressed with wide fixed ranges.
+            // Autoscaling to the visible data keeps the chart filling the card more consistently.
+            const dataMin = Math.min(...data);
+            const dataMax = Math.max(...data);
+            const valuePadding = 0;
+            drawMin = dataMin - valuePadding;
+            drawRange = (dataMax + valuePadding) - drawMin;
+        } else {
+            const valuePadding = 0;
+            drawMin = minVal - valuePadding;
+            drawRange = (maxVal + valuePadding) - drawMin;
+        }
+    }
+
+    if (!Number.isFinite(drawRange) || drawRange === 0) {
+        drawRange = 1;
     }
 
     if (!data.length) return;
 
-    // Keep extra space so the end marker circle and glow stay inside the chart bounds.
-    const padding = 6;
-    const endpointInset = 12;
+    const markerRadius = isDotChartActive ? 8 : 5.5;
+    const markerBlur = isDotChartActive ? 4 : 3;
+    const markerInset = Math.max(1, markerRadius + markerBlur);
+
+    const padding = 0;
+    const endpointInset = 0;
+    const curveInsetY = isDotChartActive ? 0 : 3;
     const rightPadding = padding + endpointInset;
-    const topPadding = padding + endpointInset;
-    const bottomPadding = padding + endpointInset;
-    const drawWidth = c.width - padding - rightPadding;
+    const topPadding = padding + endpointInset + curveInsetY;
+    const bottomPadding = padding + endpointInset + curveInsetY;
+    const drawWidth = Math.max(0, c.width - padding - rightPadding - markerInset);
     const drawHeight = c.height - topPadding - bottomPadding;
 
     const points = data.map((value, index) => {
@@ -4529,7 +5178,7 @@ function drawChart() {
         return { x, y, value, norm };
     });
 
-    // Light smoothing for both chart modes: keeps trends readable and reduces sharp corners.
+    // Light smoothing is used for dot mode only.
     function smoothPass(pts) {
         return pts.map((point, index, arr) => {
             if (index === 0 || index === arr.length - 1) return point;
@@ -4549,6 +5198,14 @@ function drawChart() {
     }
 
     if (!smoothedPoints.length) return;
+
+    function getSafeMarkerPoint(point, radius, blur) {
+        const safeInset = Math.max(1, radius + blur);
+        return {
+            x: Math.max(safeInset, Math.min(c.width - safeInset, point.x)),
+            y: Math.max(safeInset, Math.min(c.height - safeInset, point.y))
+        };
+    }
 
     // No need to reverse points for dot chart - data is already in correct order
     // pHistory points are now: [oldest (left), ..., newest (right)]
@@ -4570,46 +5227,64 @@ function drawChart() {
         }
     };
 
-    // DRAW NUMBER MODE: Smooth neutral green line
+    // DRAW NUMBER/GAUGE MODES: smooth Bezier connection between raw points
     if (!isDotChartActive) {
+        const lastPoint = points[points.length - 1];
+        const safeMarkerPoint = getSafeMarkerPoint(lastPoint, markerRadius, markerBlur);
+
         ctx.strokeStyle = neutralColor;
         ctx.lineWidth = 1.6;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.beginPath();
-        ctx.moveTo(smoothedPoints[0].x, smoothedPoints[0].y);
 
-        if (smoothedPoints.length === 2) {
-            ctx.lineTo(smoothedPoints[1].x, smoothedPoints[1].y);
+        if (points.length === 1) {
+            ctx.moveTo(points[0].x, points[0].y);
+            ctx.lineTo(safeMarkerPoint.x, safeMarkerPoint.y);
         } else {
-            for (let i = 1; i < smoothedPoints.length - 1; i++) {
-                const current = smoothedPoints[i];
-                const next = smoothedPoints[i + 1];
-                const midX = (current.x + next.x) / 2;
-                const midY = (current.y + next.y) / 2;
-                ctx.quadraticCurveTo(current.x, current.y, midX, midY);
+            ctx.moveTo(points[0].x, points[0].y);
+            const tension = 0.12;
+            const curveMinY = topPadding + 1;
+            const curveMaxY = c.height - bottomPadding - 1;
+
+            function clampY(value) {
+                return Math.max(curveMinY, Math.min(curveMaxY, value));
             }
 
-            const last = smoothedPoints[smoothedPoints.length - 1];
-            ctx.quadraticCurveTo(last.x, last.y, last.x, last.y);
+            for (let i = 0; i < points.length - 1; i++) {
+                const p0 = points[i - 1] || points[i];
+                const p1 = points[i];
+                const p2 = points[i + 1];
+                const p3 = points[i + 2] || p2;
+
+                const cp1x = p1.x + ((p2.x - p0.x) / 6) * tension;
+                const cp1y = clampY(p1.y + ((p2.y - p0.y) / 6) * tension);
+                const cp2x = p2.x - ((p3.x - p1.x) / 6) * tension;
+                const cp2y = clampY(p2.y - ((p3.y - p1.y) / 6) * tension);
+
+                ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+            }
+            ctx.lineTo(safeMarkerPoint.x, safeMarkerPoint.y);
         }
         ctx.stroke();
 
         // Add a subtle end-point marker for Number mode (theme-aware color).
-        const lastPoint = smoothedPoints[smoothedPoints.length - 1];
         const glow = theme === "light" ? "rgba(0,122,255,0.14)" : "rgba(52,199,89,0.14)";
         ctx.save();
-        ctx.shadowBlur = 3;
+        ctx.shadowBlur = markerBlur;
         ctx.shadowColor = glow;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
         ctx.beginPath();
-        ctx.arc(lastPoint.x, lastPoint.y, 5.5, 0, Math.PI * 2);
+        ctx.arc(safeMarkerPoint.x, safeMarkerPoint.y, markerRadius, 0, Math.PI * 2);
         ctx.fillStyle = neutralColor;
         ctx.fill();
         ctx.restore();
     } else {
         // DRAW DOT MODE: Colored line based on p-value anomalies (red=anomaly, blue=normal)
+        const lastPoint = smoothedPoints[smoothedPoints.length - 1];
+        const safeMarkerPoint = getSafeMarkerPoint(lastPoint, markerRadius, markerBlur);
+
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         
@@ -4624,7 +5299,7 @@ function drawChart() {
             ctx.globalAlpha = 0.9;
             ctx.beginPath();
             ctx.moveTo(smoothedPoints[0].x, smoothedPoints[0].y);
-            ctx.lineTo(smoothedPoints[1].x, smoothedPoints[1].y);
+            ctx.lineTo(safeMarkerPoint.x, safeMarkerPoint.y);
             ctx.stroke();
             ctx.globalAlpha = 1.0;
         } else {
@@ -4663,27 +5338,26 @@ function drawChart() {
             ctx.globalAlpha = 0.9;
             ctx.beginPath();
             ctx.moveTo(startX, startY);
-            ctx.lineTo(last.x, last.y);
+            ctx.lineTo(safeMarkerPoint.x, safeMarkerPoint.y);
             ctx.stroke();
             ctx.globalAlpha = 1.0;
         }
 
         // Draw final dot at the end with subtle glow
-        const lastPoint = smoothedPoints[smoothedPoints.length - 1];
         const lastP = getPointP(data.length - 1);
         const palette = getDotPalette(lastP);
 
         // Subtle glow around dot
         ctx.save();
-        ctx.shadowBlur = 4;
+        ctx.shadowBlur = markerBlur;
         ctx.shadowColor = palette.glow;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
-        const dotGradient = ctx.createRadialGradient(lastPoint.x, lastPoint.y, 0.5, lastPoint.x, lastPoint.y, 6);
+        const dotGradient = ctx.createRadialGradient(safeMarkerPoint.x, safeMarkerPoint.y, 0.5, safeMarkerPoint.x, safeMarkerPoint.y, 6);
         dotGradient.addColorStop(0, palette.light);
         dotGradient.addColorStop(1, palette.dark);
         ctx.beginPath();
-        ctx.arc(lastPoint.x, lastPoint.y, 8, 0, Math.PI * 2);
+        ctx.arc(safeMarkerPoint.x, safeMarkerPoint.y, markerRadius, 0, Math.PI * 2);
         ctx.fillStyle = dotGradient;
         ctx.fill();
         ctx.restore();
@@ -4722,6 +5396,21 @@ function reset() {
     entropyEl.innerText = "0.00 bit";
     chiEl.innerText = "0.000 p";
     devEl.innerText = "0%";
+    meanValueEl.innerText = "0.00";
+    meanDetectEl.innerText = "Centered";
+    meanDetectEl.className = "card-detect red";
+    runsValueEl.innerText = "0.00 z";
+    runsDetectEl.innerText = "Calm pattern";
+    runsDetectEl.className = "card-detect red";
+    cusumValueEl.innerText = "0.00";
+    cusumDetectEl.innerText = "Stable drift";
+    cusumDetectEl.className = "card-detect red";
+    regimeValueEl.innerText = "Calm";
+    regimeDetectEl.innerText = "Balanced session";
+    regimeDetectEl.className = "card-detect red";
+    sessionToneValueEl.innerText = "Quiet";
+    sessionToneDetectEl.innerText = "Soft baseline";
+    sessionToneDetectEl.className = "card-detect red";
     longestStreak = 0;
     longestStreakEl.innerText = "0 (-)";
 
