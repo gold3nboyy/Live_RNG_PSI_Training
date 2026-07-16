@@ -10,17 +10,24 @@ This project is inspired by decades of research into mind–matter interaction a
 ### Disclaimer
 This generator does not claim to demonstrate or prove any paranormal ability. Instead, it offers a simple, transparent way for you to explore these ideas yourself: by watching how the number flow behaves during periods of focused attention, intention, or PSI training, and deciding what—if anything—you make of the patterns you see. I'm just some guy vibe coding, with no codin skills at all. This is a work in progress. Check it out on mobile, should work as well.
 
-## Generator
-<img src="screenshots/RNG1591.jpg" alt="App Start" width="400">
+# Generator
+<img src="screenshots/full.jpg" alt="App Start" width="400">
 
-## Settings
-<img src="screenshots/RNG1591_settings.jpg" alt="App Settings" width="400">
+# Settings
+<img src="screenshots/settings.jpg" alt="App Settings" width="400">
 
-## Local Consciousness Dot
-<img src="screenshots/RNG1591_dot.jpg" alt="App Settings" width="400">
+# Local Consciousness Dot
+<img src="screenshots/dot.jpg" alt="App Settings" width="400">
 
-## Gauge
-<img src="screenshots/1607_gaugegcp.jpg" alt="App Start" width="400">
+# Gauge
+<img src="screenshots/gauge_cards.jpg" alt="App Start" width="400">
+
+# Info Texts
+<img src="screenshots/info.jpg" alt="App Start" width="400">
+
+# Mobile Version + Light Mode
+<img src="screenshots/mobile_light.jpg" alt="App Start" width="400">
+
 
 If you're interested to check out the code or work with it feel free to use it.
 📦 Download Code: Go to Green „Code“-Button → „Download ZIP“ 
