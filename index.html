@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v17.5</title>
+<title>Random Number Generator v17.6</title>
 
 <style>
 :root {
@@ -1264,6 +1264,19 @@ body[data-theme="light"] .card {
 .card-detect.orange {color:#ff9500;}
 .card-detect.green {color:var(--color-green);}
 
+.card-submetrics {
+    margin-top:8px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:3px;
+    font-size:12px;
+    opacity:0.92;
+}
+
+.card-submetrics span {
+    display:block;
+}
+
 /* CHART CARD */
 .chart-card {
     margin-top:0;
@@ -2476,6 +2489,14 @@ body[data-theme="light"] #heatmapCard {
             </div>
 
             <div class="settings-row">
+                <span>Show Generator Health</span>
+                <label class="switch">
+                    <input type="checkbox" id="showGeneratorHealthToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="settings-row">
                 <span>Show Heatmap (Top 10)</span>
                 <label class="switch">
                     <input type="checkbox" id="showHeatmapToggle">
@@ -2569,7 +2590,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v17.5</span>
+        <span id="versionLine">v17.6</span>
     </div>
 
     <div id="number">0</div>
@@ -2705,6 +2726,17 @@ body[data-theme="light"] #heatmapCard {
                     <h3>Session Tone</h3>
                     <div class="card-value" id="sessionToneValue">Quiet</div>
                     <div class="card-detect red" id="sessionToneDetect">Soft baseline</div>
+                </div>
+
+                <div class="card" id="cardGeneratorHealth">
+                    <h3>Generator Health</h3>
+                    <div class="card-value" id="generatorHealthValue">0 / 100</div>
+                    <div class="card-detect red" id="generatorHealthDetect">Waiting for signal</div>
+                    <div class="card-submetrics">
+                        <span id="generatorHealthRate">Rate: 0.00/s (avg 0.00/s)</span>
+                        <span id="generatorHealthJitter">Jitter: 0.00 ms</span>
+                        <span id="generatorHealthRender">Render: 0.00 ms | UI 0.00 ms</span>
+                    </div>
                 </div>
 
             </div>
@@ -2943,7 +2975,8 @@ function populateSettingsInfoSections() {
                     + "<p><b>Runs Test:</b> This card looks at the rhythm of the sequence rather than just how often numbers appear. It asks whether the stream is switching sides of the range in a natural way or whether it is clumping into longer patches than expected. That makes it useful for spotting a structural feel in the sequence even when the frequency counts still look ordinary. A calm result suggests the up and down movement still looks natural, while a stronger result suggests the pattern is becoming more ordered or more sticky. It works best as a pattern card, not as a standalone proof card.</p>"
                     + "<p><b>CUSUM Drift:</b> This card tracks whether many small pushes in the same direction are quietly stacking up over time. A session can look normal moment to moment while still building a slow directional drift, and this card is designed to catch that earlier than a single snapshot value would. It is especially useful when you want to know whether small movements are fading out or reinforcing each other. A low reading suggests the stream is wandering around its expected middle in a balanced way. A higher reading suggests that repeated small nudges are building into a clearer longer movement.</p>"
                     + "<p><b>Regime Flag:</b> This card combines several signals into one plain-language state such as Calm, Drift, or Shift. It is designed for fast monitoring when you do not want to interpret every card separately on each update. Calm means the session still looks broadly balanced, Drift means a directional tendency is building, and Shift means multiple signals are now pointing to a stronger change in behavior. This makes it a useful summary card during active training sessions, especially when the dashboard is changing quickly. It is best read as a quick orientation label that should still be cross-checked with the cards around it.</p>"
-                    + "<p><b>Session Tone:</b> This card is a softer companion to the statistical cards. Instead of presenting another strict test value, it translates the current pattern mix into a simple atmosphere label such as Quiet, Focused, Building, or Turbulent. The goal is orientation, not proof: it helps you sense whether the session currently feels stable, gently coherent, directionally intensifying, or highly dynamic. For users who include contemplative or spiritual framing in their practice, this can be a useful reflective anchor because it invites attention to quality and context without claiming supernatural certainty. At the same time, it remains grounded in the neighboring metrics, so the tone label should be read as an interpretive summary of measurable behavior rather than a standalone claim about cause. In practical use, Session Tone works best when you glance at it first for quick context, then confirm the picture with Regime Flag, CUSUM Drift, and Runs Test.</p>";
+                    + "<p><b>Session Tone:</b> This card is a softer companion to the statistical cards. Instead of presenting another strict test value, it translates the current pattern mix into a simple atmosphere label such as Quiet, Focused, Building, or Turbulent. The goal is orientation, not proof: it helps you sense whether the session currently feels stable, gently coherent, directionally intensifying, or highly dynamic. For users who include contemplative or spiritual framing in their practice, this can be a useful reflective anchor because it invites attention to quality and context without claiming supernatural certainty. At the same time, it remains grounded in the neighboring metrics, so the tone label should be read as an interpretive summary of measurable behavior rather than a standalone claim about cause. In practical use, Session Tone works best when you glance at it first for quick context, then confirm the picture with Regime Flag, CUSUM Drift, and Runs Test.</p>"
+                    + "<p><b>Generator Health:</b> This card tracks the technical runtime quality of your local generator pipeline rather than statistical drift in the values themselves. It summarizes output-rate stability, tick jitter, and rendering load into a compact health score so you can quickly tell whether sudden behavior changes are likely data effects or just device/runtime pressure. A high score suggests stable timing and smooth UI updates; a lower score suggests timing variance, dropped frame pressure, or heavier update cost. This card is meant as an engineering sanity check and works best when interpreted together with your configured speed and current device load.</p>";
 
                 text = text.replace(
                     "<p><b>Deviation:</b> This card shows how far the current distribution is from ideal even spread, expressed as a percentage. It gives a direct sense of imbalance size that is easy to compare over time. Small deviations are common and expected, especially in shorter windows. Larger and persistent deviations can indicate stronger structure in the current run. Use this card with Chi² p because both metrics describe related behavior from different angles.</p>",
@@ -2971,6 +3004,7 @@ function populateSettingsInfoSections() {
                 "CUSUM Drift",
                 "Regime Flag",
                 "Session Tone",
+                "Generator Health",
                 "Heatmap",
                 "Chart"
             ];
@@ -3117,6 +3151,7 @@ function organizeSettingsLayout() {
     const showCusumRow = document.getElementById("showCusumToggle").closest(".settings-row");
     const showRegimeRow = document.getElementById("showRegimeToggle").closest(".settings-row");
     const showSessionToneRow = document.getElementById("showSessionToneToggle").closest(".settings-row");
+    const showGeneratorHealthRow = document.getElementById("showGeneratorHealthToggle").closest(".settings-row");
     const showChartRow = document.getElementById("showChartToggle").closest(".settings-row");
     const showHeatmapRow = document.getElementById("showHeatmapToggle").closest(".settings-row");
     const dashboardModeSection = document.getElementById("dashboardMode").closest(".settings-subsection");
@@ -3189,6 +3224,7 @@ function organizeSettingsLayout() {
             showCusumRow,
             showRegimeRow,
             showSessionToneRow,
+            showGeneratorHealthRow,
             showHeatmapRow,
             showChartRow
         );
@@ -3822,6 +3858,7 @@ const showRunsToggle = document.getElementById("showRunsToggle");
 const showCusumToggle = document.getElementById("showCusumToggle");
 const showRegimeToggle = document.getElementById("showRegimeToggle");
 const showSessionToneToggle = document.getElementById("showSessionToneToggle");
+const showGeneratorHealthToggle = document.getElementById("showGeneratorHealthToggle");
 const showChartToggle = document.getElementById("showChartToggle");
 const showHeatmapToggle = document.getElementById("showHeatmapToggle");
 
@@ -3837,6 +3874,7 @@ const cardRuns = document.getElementById("cardRuns");
 const cardCusum = document.getElementById("cardCusum");
 const cardRegime = document.getElementById("cardRegime");
 const cardSessionTone = document.getElementById("cardSessionTone");
+const cardGeneratorHealth = document.getElementById("cardGeneratorHealth");
 const cardChart = document.getElementById("cardChart");
 const heatmapCard = document.getElementById("heatmapCard");
 
@@ -3853,6 +3891,7 @@ const dashboardItemPairs = [
     { toggle: showCusumToggle, card: cardCusum },
     { toggle: showRegimeToggle, card: cardRegime },
     { toggle: showSessionToneToggle, card: cardSessionTone },
+    { toggle: showGeneratorHealthToggle, card: cardGeneratorHealth },
     { toggle: showHeatmapToggle, card: heatmapCard },
     { toggle: showChartToggle, card: cardChart }
 ];
@@ -3911,6 +3950,7 @@ function updateChartExclusiveLayout() {
         !showCusumToggle.checked &&
         !showRegimeToggle.checked &&
         !showSessionToneToggle.checked &&
+        !showGeneratorHealthToggle.checked &&
         !showHeatmapToggle.checked;
 
     const onlyHeatmapVisible =
@@ -3927,7 +3967,8 @@ function updateChartExclusiveLayout() {
         !showRunsToggle.checked &&
         !showCusumToggle.checked &&
         !showRegimeToggle.checked &&
-        !showSessionToneToggle.checked;
+        !showSessionToneToggle.checked &&
+        !showGeneratorHealthToggle.checked;
 
     cardChart.classList.toggle("chart-only", onlyChartVisible);
     heatmapCard.classList.toggle("heatmap-only", onlyHeatmapVisible);
@@ -4047,6 +4088,14 @@ showSessionToneToggle.addEventListener("change", () => {
     syncDashboardContainerAndMasterToggle();
     dashboardSyncGuard = false;
 });
+showGeneratorHealthToggle.addEventListener("change", () => {
+    if (dashboardSyncGuard) return;
+    disableLocalDotModeForDashboardChange();
+    dashboardSyncGuard = true;
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    dashboardSyncGuard = false;
+});
 showChartToggle.addEventListener("change", () => {
     if (dashboardSyncGuard) return;
     disableLocalDotModeForDashboardChange();
@@ -4125,6 +4174,11 @@ const regimeValueEl = document.getElementById("regimeValue");
 const regimeDetectEl = document.getElementById("regimeDetect");
 const sessionToneValueEl = document.getElementById("sessionToneValue");
 const sessionToneDetectEl = document.getElementById("sessionToneDetect");
+const generatorHealthValueEl = document.getElementById("generatorHealthValue");
+const generatorHealthDetectEl = document.getElementById("generatorHealthDetect");
+const generatorHealthRateEl = document.getElementById("generatorHealthRate");
+const generatorHealthJitterEl = document.getElementById("generatorHealthJitter");
+const generatorHealthRenderEl = document.getElementById("generatorHealthRender");
 const mostRepeatEl = document.getElementById("mostRepeat");
 const leastRepeatEl = document.getElementById("leastRepeat");
 const longestStreakEl = document.getElementById("longestStreak");
@@ -4132,6 +4186,188 @@ const heatmapEl = document.getElementById("heatmap");
 
 let lastUpdate = 0;
 const UPDATE_INTERVAL_MS = 60;
+
+const HEALTH_WINDOW_MS = 30000;
+const HEALTH_UI_INTERVAL_MS = 500;
+const performanceHealth = {
+    stepTimes: [],
+    frameSamples: [],
+    uiSamples: [],
+    lastStepNow: null,
+    lastFrameNow: null,
+    lastPublishedNow: 0,
+    rafId: null
+};
+
+function nowMs() {
+    if (typeof performance !== "undefined" && typeof performance.now === "function") {
+        return performance.now();
+    }
+    return Date.now();
+}
+
+function trimHealthSamples(samples, cutoff) {
+    while (samples.length && samples[0].t < cutoff) {
+        samples.shift();
+    }
+}
+
+function recordGeneratorStep(now) {
+    if (!Number.isFinite(now)) return;
+    performanceHealth.stepTimes.push(now);
+    performanceHealth.lastStepNow = now;
+    const cutoff = now - HEALTH_WINDOW_MS;
+    while (performanceHealth.stepTimes.length && performanceHealth.stepTimes[0] < cutoff) {
+        performanceHealth.stepTimes.shift();
+    }
+}
+
+function recordUiCost(costMs, now) {
+    if (!Number.isFinite(costMs) || !Number.isFinite(now)) return;
+    performanceHealth.uiSamples.push({ t: now, v: Math.max(0, costMs) });
+    trimHealthSamples(performanceHealth.uiSamples, now - HEALTH_WINDOW_MS);
+}
+
+function startFrameSampler() {
+    if (typeof requestAnimationFrame !== "function") return;
+
+    const frameLoop = (timestamp) => {
+        const now = Number(timestamp);
+        if (Number.isFinite(now) && Number.isFinite(performanceHealth.lastFrameNow)) {
+            const frameDelta = now - performanceHealth.lastFrameNow;
+            if (frameDelta > 0 && frameDelta < 1000) {
+                performanceHealth.frameSamples.push({ t: now, v: frameDelta });
+                trimHealthSamples(performanceHealth.frameSamples, now - HEALTH_WINDOW_MS);
+            }
+        }
+        performanceHealth.lastFrameNow = now;
+        performanceHealth.rafId = requestAnimationFrame(frameLoop);
+    };
+
+    if (!performanceHealth.rafId) {
+        performanceHealth.rafId = requestAnimationFrame(frameLoop);
+    }
+}
+
+function meanOfSamples(samples) {
+    if (!samples.length) return 0;
+    const sum = samples.reduce((acc, sample) => acc + sample.v, 0);
+    return sum / samples.length;
+}
+
+function stdDevFromDeltas(timestamps) {
+    if (timestamps.length < 3) return 0;
+
+    const deltas = [];
+    for (let i = 1; i < timestamps.length; i++) {
+        const delta = timestamps[i] - timestamps[i - 1];
+        if (delta > 0 && delta < 10000) deltas.push(delta);
+    }
+    if (deltas.length < 2) return 0;
+
+    const mean = deltas.reduce((acc, value) => acc + value, 0) / deltas.length;
+    const variance = deltas.reduce((acc, value) => acc + ((value - mean) ** 2), 0) / deltas.length;
+    return Math.sqrt(Math.max(0, variance));
+}
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function computeGeneratorHealthMetrics(now) {
+    const cutoff = now - HEALTH_WINDOW_MS;
+    while (performanceHealth.stepTimes.length && performanceHealth.stepTimes[0] < cutoff) {
+        performanceHealth.stepTimes.shift();
+    }
+    trimHealthSamples(performanceHealth.frameSamples, cutoff);
+    trimHealthSamples(performanceHealth.uiSamples, cutoff);
+
+    const sortedStepTimes = performanceHealth.stepTimes.slice().sort((a, b) => a - b);
+    const spanMs = sortedStepTimes.length > 1 ? (sortedStepTimes[sortedStepTimes.length - 1] - sortedStepTimes[0]) : 0;
+    const currentRate = spanMs > 0 ? ((sortedStepTimes.length - 1) * 1000) / spanMs : 0;
+    const avgRate = sortedStepTimes.length > 0 ? (sortedStepTimes.length * 1000) / Math.max(1, HEALTH_WINDOW_MS) : 0;
+
+    const jitterMs = stdDevFromDeltas(sortedStepTimes);
+    const avgFrameMs = meanOfSamples(performanceHealth.frameSamples);
+    const avgUiMs = meanOfSamples(performanceHealth.uiSamples);
+    const droppedFrames = performanceHealth.frameSamples.filter(sample => sample.v > 24).length;
+    const droppedPct = performanceHealth.frameSamples.length
+        ? (droppedFrames / performanceHealth.frameSamples.length) * 100
+        : 0;
+
+    const configuredSpeedMs = Math.max(1, Number(speedInput.value) || 100);
+    const targetRate = 1000 / configuredSpeedMs;
+
+    const rateError = targetRate > 0 ? Math.abs(currentRate - targetRate) / targetRate : 0;
+    const rateScore = clamp(100 - (rateError * 180), 0, 100);
+
+    const jitterRatio = jitterMs / Math.max(1, configuredSpeedMs);
+    const jitterScore = clamp(100 - (jitterRatio * 320), 0, 100);
+
+    const framePenalty = Math.max(0, (avgFrameMs - 16.7) * 5.5);
+    const renderScore = clamp(100 - framePenalty - (droppedPct * 0.8) - (avgUiMs * 2.2), 0, 100);
+
+    const healthScore = clamp(Math.round((rateScore * 0.45) + (jitterScore * 0.30) + (renderScore * 0.25)), 0, 100);
+
+    return {
+        healthScore,
+        currentRate,
+        avgRate,
+        jitterMs,
+        avgFrameMs,
+        avgUiMs,
+        droppedPct,
+        sampleCount: sortedStepTimes.length
+    };
+}
+
+function updateGeneratorHealthCard(now) {
+    if (!Number.isFinite(now)) return;
+    if ((now - performanceHealth.lastPublishedNow) < HEALTH_UI_INTERVAL_MS) return;
+    performanceHealth.lastPublishedNow = now;
+
+    const metrics = computeGeneratorHealthMetrics(now);
+
+    generatorHealthValueEl.innerText = `${metrics.healthScore} / 100`;
+    generatorHealthRateEl.innerText = `Rate: ${metrics.currentRate.toFixed(2)}/s (avg ${metrics.avgRate.toFixed(2)}/s)`;
+    generatorHealthJitterEl.innerText = `Jitter: ${metrics.jitterMs.toFixed(2)} ms`;
+    generatorHealthRenderEl.innerText = `Render: ${metrics.avgFrameMs.toFixed(2)} ms | UI ${metrics.avgUiMs.toFixed(2)} ms`;
+
+    if (metrics.sampleCount < 5) {
+        generatorHealthDetectEl.innerText = "Calibrating";
+        generatorHealthDetectEl.className = "card-detect yellow";
+        return;
+    }
+
+    if (metrics.healthScore >= 85) {
+        generatorHealthDetectEl.innerText = "Stable runtime";
+        generatorHealthDetectEl.className = "card-detect green";
+    } else if (metrics.healthScore >= 65) {
+        generatorHealthDetectEl.innerText = "Moderate load";
+        generatorHealthDetectEl.className = "card-detect yellow";
+    } else if (metrics.healthScore >= 45) {
+        generatorHealthDetectEl.innerText = "Elevated jitter";
+        generatorHealthDetectEl.className = "card-detect orange";
+    } else {
+        generatorHealthDetectEl.innerText = "Unstable runtime";
+        generatorHealthDetectEl.className = "card-detect red";
+    }
+}
+
+function resetGeneratorHealthCard() {
+    performanceHealth.stepTimes = [];
+    performanceHealth.frameSamples = [];
+    performanceHealth.uiSamples = [];
+    performanceHealth.lastStepNow = null;
+    performanceHealth.lastPublishedNow = 0;
+
+    generatorHealthValueEl.innerText = "0 / 100";
+    generatorHealthDetectEl.innerText = "Waiting for signal";
+    generatorHealthDetectEl.className = "card-detect red";
+    generatorHealthRateEl.innerText = "Rate: 0.00/s (avg 0.00/s)";
+    generatorHealthJitterEl.innerText = "Jitter: 0.00 ms";
+    generatorHealthRenderEl.innerText = "Render: 0.00 ms | UI 0.00 ms";
+}
 
 function refreshGaugeFromRangeInputs() {
     if (visualType.value === "gauge" || visualType.value === "gauge-context" || visualType.value === "gauge-gcp") {
@@ -4255,6 +4491,7 @@ function step() {
     updateVisualIndicator(chiObj.p, n);
 
     add(n);
+    recordGeneratorStep(nowMs());
     update();
 }
 
@@ -4262,6 +4499,7 @@ function step() {
 // Update dashboard + history
 // ----------------------------
 function update() {
+    const updateStarted = nowMs();
     const now = Date.now();
     if (now - lastUpdate < UPDATE_INTERVAL_MS) return;
     lastUpdate = now;
@@ -4324,6 +4562,10 @@ function update() {
     }
 	
     updateVisualIndicator(chiObj.p, lastGeneratedNumber);
+
+    const updateFinished = nowMs();
+    recordUiCost(updateFinished - updateStarted, updateFinished);
+    updateGeneratorHealthCard(updateFinished);
 }
 
 // ----------------------------
@@ -5020,6 +5262,7 @@ function applyDefaultMode() {
     showCusumToggle.checked = false;
     showRegimeToggle.checked = false;
     showSessionToneToggle.checked = false;
+    showGeneratorHealthToggle.checked = false;
     showHeatmapToggle.checked = false;
     showChartToggle.checked = true;
     applyDashboardItemVisibility(false);
@@ -5411,6 +5654,7 @@ function reset() {
     sessionToneValueEl.innerText = "Quiet";
     sessionToneDetectEl.innerText = "Soft baseline";
     sessionToneDetectEl.className = "card-detect red";
+    resetGeneratorHealthCard();
     longestStreak = 0;
     longestStreakEl.innerText = "0 (-)";
 
@@ -5504,6 +5748,8 @@ function formatInfoText(title, text) {
 // Init
 // ----------------------------
 (function init() {
+    startFrameSampler();
+    resetGeneratorHealthCard();
     applyDefaultMode();
     update();
 })();
