@@ -24,3 +24,4 @@ If you're interested to check out the code or work with it feel free to use it.
 📦 Download Code: Go to Green „Code“-Button → „Download ZIP“ 
 (It's all in one HTML file and includes HTML, CSS and JavaScript)
 
+Wizard Mode is still in alpha, kinda broken atm. Gonna fix it in a while.
