@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-<title>Random Number Generator v17.6</title>
+<title>Random Number Generator v18</title>
 
 <style>
 :root {
@@ -66,6 +66,53 @@ body.local-dot-mode #heatmapCard {display:none;}
 
 body.local-dot-mode #dashboard {display:block;}
 body.local-dot-mode #cardChart {display:block !important;}
+
+body.wizard-mode {
+    background:#050612 !important;
+    color:var(--text-main-dark);
+}
+
+body.wizard-mode #mainWrapper,
+body.wizard-mode #settingsPanel,
+body.wizard-mode #uiHideLayer {
+    display:none !important;
+}
+
+body.wizard-mode #hamburger {
+    position:fixed;
+    z-index:5001 !important;
+    pointer-events:auto;
+    background:rgba(0,0,0,0.58);
+    border-radius:12px;
+    padding:8px;
+    width:46px;
+    height:38px;
+    box-shadow:0 0 18px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.18);
+}
+
+body.wizard-mode #hamburger div {
+    background:#ffffff !important;
+}
+
+body.wizard-mode #uiLayer {
+    display:block !important;
+    position:fixed;
+    z-index:5000;
+    pointer-events:none;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    width:100vw;
+    height:100vh;
+    min-height:100vh;
+}
+
+body.wizard-mode {
+    width:100vw;
+    height:100vh;
+    min-height:100vh;
+}
 
 /* HAMBURGER */
 #hamburger {
@@ -194,6 +241,10 @@ body[data-theme="light"] .settings-row {
     text-align: left;
     flex: 1;
     line-height:1.4;
+}
+
+.settings-row .settings-note {
+    opacity:0.62;
 }
 
 .settings-row label.switch {
@@ -558,50 +609,9 @@ body[data-theme="light"] .settings-rich-text {
     cursor:pointer;
 }
 
-.settings-legacy-source,
-.settings-info-source,
-.settings-footer.settings-legacy-source {
+.settings-source,
+.settings-info-source {
     display:none !important;
-}
-
-/* Info-Popup Overlay */
-.info-overlay {
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.45);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:5000;
-}
-
-/* Popup-Box */
-.info-popup {
-    background:var(--panel-dark);
-    color:var(--text-main-dark);
-    border:1px solid var(--panel-border-dark);
-    border-radius:12px;
-    padding:24px;
-    max-width:750px;
-    max-height:85vh;
-    overflow-y:auto;
-    box-shadow:0 8px 24px rgba(0,0,0,0.6);
-}
-body[data-theme="light"] .info-popup {
-    background:var(--panel-light);
-    color:var(--text-main-light);
-    border-color:var(--panel-border-light);
-}
-
-/* SchlieÃƒÅ¸en-Button */
-.info-close {
-    margin-top:20px;
-    background:#007aff;
-    color:white;
-    border:none;
-    border-radius:8px;
-    padding:10px 16px;
-    cursor:pointer;
 }
 
 .tip-dot {
@@ -621,23 +631,6 @@ body[data-theme="light"] .info-popup {
 .tip-dot-blue { background:#007aff; }
 .tip-dot-lightblue { background:#5ac8fa; }
 
-/* Info Content Columns */
-#infoContent {
-    column-count: 1;
-    column-gap: 24px;
-    column-fill: balance;
-    column-rule: none;
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    hyphens: auto;
-    overflow-wrap: break-word;
-    word-break: break-word;
-}
-
-#infoContent h2 {
-    column-span: all;
-}
-
 /* Icon-Stil */
 .settings-help::before {
     content:"i";
@@ -655,61 +648,14 @@ body[data-theme="light"] .settings-help::before {
     border-color:var(--panel-border-light);
 }
 
-/* SETTINGS FOOTER */
-.settings-footer {
-    display:flex;
-    gap:8px;
-    flex-shrink:0;
-    background:var(--panel-dark);
-    padding:12px 20px;
-    margin-top:auto;
-    
-}
-body[data-theme="light"] .settings-footer {
-    background:var(--panel-light);
-    
-}
-
-/* ABOUT OVERLAY */
-#aboutOverlay {
-    position:fixed;
-    inset:0;
-    background:var(--overlay-bg);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:4000;
-}
-#aboutOverlay.open {display:flex;}
-
-#aboutContent {
-    max-width:1100px;
-    max-height:80vh;
-    overflow-y:auto;
-    background:var(--panel-dark);
-    border-radius:16px;
-    border:1px solid var(--panel-border-dark);
-    padding:24px;
-    box-sizing:border-box;
-}
-body[data-theme="light"] #aboutContent {
-    background:var(--panel-light);
-    border-color:var(--panel-border-light);
-}
-
-#aboutClose {
-    margin-top:20px;
-    background:var(--accent-blue);
-    color:white;
-}
-
 /* ABOUT COLUMNS */
 .about-columns {
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:20px;
 }
-.about-columns h2,h3 {
+.about-columns h2,
+.about-columns h3 {
     margin-top:0;
 }
 
@@ -743,6 +689,170 @@ body[data-theme="light"] #aboutContent {
     pointer-events:none;
 }
 #uiHideLayer.active {display:block;cursor:pointer;pointer-events:auto;}
+
+#wizardModeScene {
+    --wizard-image:url("examples/wizard1_desktop.jpg");
+    --orb-core:#7bbcff;
+    --orb-dark:#0044aa;
+    --orb-glow:rgba(0, 68, 170, 0.42);
+    --orb-x:50%;
+    --orb-y:70%;
+    --orb-size:220px;
+    --orb-spill-face-y:54%;
+    --orb-spill-table-y:78%;
+    --wizard-media-x:0px;
+    --wizard-media-y:0px;
+    --wizard-media-width:100%;
+    --wizard-media-height:100%;
+    position:fixed;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    display:none;
+    z-index:2400;
+    overflow:hidden;
+    pointer-events:none;
+    width:100%;
+    height:100%;
+    min-width:100vw;
+    min-height:100vh;
+}
+
+body.wizard-mode #wizardModeScene {
+    display:block;
+    pointer-events:auto;
+}
+
+.wizard-space,
+.wizard-nebula,
+.wizard-roomlight,
+.wizard-figure,
+.wizard-orb-neutralize,
+.wizard-orb-spill,
+.wizard-orb {
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+}
+
+.wizard-space { z-index:1; }
+.wizard-nebula { z-index:2; }
+.wizard-roomlight { z-index:3; }
+.wizard-figure { z-index:4; }
+.wizard-orb-neutralize { z-index:5; }
+.wizard-orb-spill { z-index:6; }
+.wizard-orb { z-index:7; }
+
+.wizard-space {
+    background:#050612;
+}
+
+.wizard-space::after {
+    content:none;
+}
+
+.wizard-nebula {
+    display:none;
+}
+
+.wizard-roomlight {
+    display:none;
+}
+
+.wizard-figure {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+
+.wizard-picture {
+    position:absolute;
+    left:var(--wizard-media-x);
+    top:var(--wizard-media-y);
+    width:var(--wizard-media-width);
+    height:var(--wizard-media-height);
+    display:block;
+}
+
+.wizard-figure-image {
+    width:100%;
+    height:100%;
+    object-fit:fill;
+    object-position:center center;
+    filter:saturate(0.94) contrast(1.02) brightness(0.96);
+    pointer-events:none;
+}
+
+.wizard-figure::before {
+    content:"";
+    position:absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    background:
+        radial-gradient(ellipse at center, rgba(0,0,0,0) 24%, rgba(0,0,0,0.42) 58%, rgba(0,0,0,0.95) 100%),
+        linear-gradient(180deg, rgba(0,0,0,0.78), rgba(0,0,0,0.06) 22%, rgba(0,0,0,0.08) 68%, rgba(0,0,0,0.86));
+    opacity:1;
+    pointer-events:none;
+}
+
+.wizard-orb-spill {
+    background:
+        radial-gradient(circle calc(var(--orb-size) * 0.515) at var(--orb-x) var(--orb-y), color-mix(in srgb, var(--orb-core) 84%, transparent) 0%, color-mix(in srgb, var(--orb-core) 52%, transparent) 58%, rgba(0,0,0,0) 100%),
+        radial-gradient(ellipse calc(var(--orb-size) * 1.42) calc(var(--orb-size) * 0.96) at var(--orb-x) var(--orb-spill-up-y), color-mix(in srgb, var(--orb-core) 18%, transparent) 0%, rgba(0,0,0,0) 100%),
+        radial-gradient(ellipse calc(var(--orb-size) * 2.75) calc(var(--orb-size) * 1.14) at var(--orb-x) var(--orb-spill-face-y), color-mix(in srgb, var(--orb-core) 30%, transparent) 0%, rgba(0,0,0,0) 100%),
+        radial-gradient(ellipse calc(var(--orb-size) * 2.25) calc(var(--orb-size) * 0.96) at var(--orb-spill-left-x) var(--orb-spill-hand-y), color-mix(in srgb, var(--orb-core) 28%, transparent) 0%, rgba(0,0,0,0) 100%),
+        radial-gradient(ellipse calc(var(--orb-size) * 2.45) calc(var(--orb-size) * 0.86) at var(--orb-x) var(--orb-spill-table-y), color-mix(in srgb, var(--orb-core) 34%, transparent) 0%, rgba(0,0,0,0) 100%);
+    mix-blend-mode:screen;
+    opacity:0.9;
+    pointer-events:none;
+}
+
+.wizard-orb-neutralize {
+    display:none;
+}
+
+.wizard-orb {
+    width:var(--orb-size);
+    height:var(--orb-size);
+    left:var(--orb-x);
+    top:var(--orb-y);
+    border-radius:50%;
+    transform:translate(-50%, -50%);
+    background:
+        radial-gradient(circle at 50% 52%, rgba(255,255,255,0.34) 0 10%, rgba(255,255,255,0.14) 30%, rgba(255,255,255,0) 62%),
+        radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--orb-core) 78%, transparent) 0%, color-mix(in srgb, var(--orb-core) 62%, transparent) 44%, color-mix(in srgb, var(--orb-dark) 36%, transparent) 70%, rgba(0,0,0,0) 92%);
+    box-shadow:
+        0 0 calc(var(--orb-size) * 0.07) color-mix(in srgb, var(--orb-core) 96%, transparent),
+        0 0 calc(var(--orb-size) * 0.18) color-mix(in srgb, var(--orb-core) 68%, transparent),
+        0 0 calc(var(--orb-size) * 0.34) color-mix(in srgb, var(--orb-core) 44%, transparent),
+        0 0 calc(var(--orb-size) * 0.52) color-mix(in srgb, var(--orb-core) 20%, transparent);
+    border:0;
+    mix-blend-mode:screen;
+    opacity:1;
+    pointer-events:none;
+}
+
+.wizard-orb::before {
+    content:"";
+    position:absolute;
+    top:14%;
+    right:14%;
+    bottom:14%;
+    left:14%;
+    border-radius:50%;
+    background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0.30) 0%, rgba(255,255,255,0.12) 38%, rgba(255,255,255,0) 74%);
+    mix-blend-mode:screen;
+}
+
+.wizard-orb::after {
+    content:none;
+}
 
 /* MAIN UI */
 #center {
@@ -1118,7 +1228,6 @@ button:hover {
 .start-btn {background:var(--accent-green);}
 .stop-btn {background:#555;}
 .reset-btn {background:#ff3b30;}
-.settings-footer #aboutBtn {background:var(--accent-blue);color:white;}
 #resetDefaultsBtn {background:#666;color:white;font-size:14px;padding:10px 14px;}
 
 /* SWITCH */
@@ -1942,31 +2051,6 @@ body[data-theme="light"] #heatmapCard {
         max-width: 100%;
     }
     
-    #infoPopup {
-        width: 95vw;
-        max-width: 100%;
-        margin: auto;
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-    
-    #infoContent {
-        font-size: 13px;
-        line-height: 1.4;
-        column-count: 1;
-        column-gap: 20px;
-        hyphens: auto;
-    }
-    
-    #infoContent h2 {
-        font-size: 16px;
-        margin-bottom: 8px;
-        column-span: all;
-    }
-    
-    #infoContent p {
-        margin: 6px 0;
-    }
 }
 
 @media (max-width: 480px) {
@@ -2108,14 +2192,6 @@ body[data-theme="light"] #heatmapCard {
         font-size:11px;
     }
     
-    #infoContent {
-        font-size: 12px;
-        column-count: 1;
-    }
-    
-    #infoContent h2 {
-        font-size: 14px;
-    }
 }
 </style>
 </head>
@@ -2248,22 +2324,58 @@ body[data-theme="light"] #heatmapCard {
                                 <span class="slider"></span>
                             </label>
                         </div>
+                        <div class="settings-row">
+                            <span>Wizard Mode <span class="settings-note">(Desktop Version works fine, Mobile version in progress..)</span></span>
+                            <label class="switch">
+                                <input type="checkbox" id="wizardModeToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
                     <div class="settings-column-stack"></div>
                 </div>
-                <div class="settings-about-actions" id="settingsSpecialActions"></div>
+                <div class="settings-about-actions" id="settingsSpecialActions">
+                    <button id="resetDefaultsBtn">Reset To Default</button>
+                </div>
             </section>
 
             <section class="settings-view" data-settings-view="about">
                 <div class="settings-about-content">
-                    <div class="settings-rich-text" id="settingsAboutContent"></div>
+                    <div class="settings-rich-text" id="settingsAboutContent">
+                        <div class="about-columns">
+
+                            <div>
+                                <h2>About this generator</h2>
+
+                                <h3>How it works</h3><p>This generator creates a continuous stream of random numbers locally in your browser on your own device. It draws on the randomness sources that your operating system and browser make available, so the sequence is produced on-device rather than fetched from an external server. In practice, that means the output can come from secure local entropy when available, with additional timing noise used in some modes to keep the stream lively and device-specific. The result is similar in spirit to the noise sources used in scientific random event generators, but presented in a simple and transparent way. Each number is independent and unpredictable, allowing you to observe natural fluctuations without algorithmic bias. The system is intentionally minimalistic to reduce cognitive load and support meditative or experimental use. By watching the live stream, you can explore how randomness behaves under different mental states.</p>
+
+                                <h3>Background and research</h3>
+                                <p>
+                                    The concept is inspired by decades of mind-matter research at institutions such as the PEAR Lab and SRI International. These studies explored whether focused intention, emotional coherence, or meditative states could correlate with subtle statistical shifts in random systems. Results are debated, but modern work continues to investigate how mindset and physiological states influence perception of randomness. This generator provides a transparent way to explore similar ideas personally.
+                                </p>
+
+                                <h3>Disclaimer</h3>
+                                <p>
+                                    This tool does not claim to demonstrate or validate any paranormal ability. All deviations you observe can be explained through normal statistical variation, cognitive bias, or psychological factors such as expectation and pattern seeking. The generator is intended for personal exploration, mindfulness practice, and curiosity-driven experimentation. Use it as a reflective tool rather than a diagnostic instrument. This tool is resource-efficient and runs entirely in your browser. It places only a moderate load on your system, even during extended sessions. It's a work in progress, so please forgive any bugs or problems, I'm still testing and exploring, new to vibecoding.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3>Tip</h3>
+                                <p>
+                                    You can use spacebar or click/tap the number, to start and stop the generator.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
                 <div class="settings-about-actions" id="settingsAboutActions"></div>
             </section>
         </div>
     </div>
 
-    <div class="settings-section settings-legacy-source">
+    <div class="settings-section settings-source">
 
         <div class="settings-row" id="themeRow">
             <span>Light Mode</span>
@@ -2530,55 +2642,24 @@ body[data-theme="light"] #heatmapCard {
 
     </div>
 
-    <div class="settings-footer settings-legacy-source">
-        <button id="resetDefaultsBtn">Reset To Default</button>
-        <button id="aboutBtn">About</button>
-    </div>
-
-</div>
-
-<div id="infoOverlay" class="info-overlay">
-    <div class="info-popup" id="infoPopup">
-        <div id="infoContent"></div>
-        <button class="info-close" id="infoClose">Close</button>
-    </div>
-</div>
-
-<div id="aboutOverlay">
-    <div id="aboutContent">
-
-        <div class="about-columns">
-
-            <div>
-                <h2>About this generator</h2>
-
-                <h3>How it works</h3><p>This generator creates a continuous stream of random numbers locally in your browser on your own device. It draws on the randomness sources that your operating system and browser make available, so the sequence is produced on-device rather than fetched from an external server. In practice, that means the output can come from secure local entropy when available, with additional timing noise used in some modes to keep the stream lively and device-specific. The result is similar in spirit to the noise sources used in scientific random event generators, but presented in a simple and transparent way. Each number is independent and unpredictable, allowing you to observe natural fluctuations without algorithmic bias. The system is intentionally minimalistic to reduce cognitive load and support meditative or experimental use. By watching the live stream, you can explore how randomness behaves under different mental states.</p>
-
-                <h3>Background and research</h3>
-                <p>
-                    The concept is inspired by decades of mind-matter research at institutions such as the PEAR Lab and SRI International. These studies explored whether focused intention, emotional coherence, or meditative states could correlate with subtle statistical shifts in random systems. Results are debated, but modern work continues to investigate how mindset and physiological states influence perception of randomness. This generator provides a transparent way to explore similar ideas personally.
-                </p>
-
-                <h3>Disclaimer</h3>
-                <p>
-                    This tool does not claim to demonstrate or validate any paranormal ability. All deviations you observe can be explained through normal statistical variation, cognitive bias, or psychological factors such as expectation and pattern seeking. The generator is intended for personal exploration, mindfulness practice, and curiosity-driven experimentation. Use it as a reflective tool rather than a diagnostic instrument. This tool is resource-efficient and runs entirely in your browser. It places only a moderate load on your system, even during extended sessions. It's a work in progress, so please forgive any bugs or problems, I'm still testing and exploring, new to vibecoding.
-                </p>
-            </div>
-
-            <div>
-                <h3>Tip</h3>
-                <p>
-                    You can use spacebar or click/tap the number, to start and stop the generator.
-                </p>
-            </div>
-
-        </div>
-
-        <button id="aboutClose">Close</button>
-    </div>
 </div>
 
 <div id="uiHideLayer"></div>
+
+<div id="wizardModeScene" aria-hidden="true">
+    <div class="wizard-space"></div>
+    <div class="wizard-nebula"></div>
+    <div class="wizard-roomlight"></div>
+    <div class="wizard-figure">
+        <picture class="wizard-picture">
+            <source srcset="examples/wizard1_mobile.jpg" media="(max-width: 768px), (max-aspect-ratio: 3/4)">
+            <img class="wizard-figure-image" src="examples/wizard1_desktop.jpg" alt="Wizard with crystal orb">
+        </picture>
+    </div>
+    <div class="wizard-orb-neutralize"></div>
+    <div class="wizard-orb-spill"></div>
+    <div class="wizard-orb"></div>
+</div>
 
 </div>
 
@@ -2590,7 +2671,7 @@ body[data-theme="light"] #heatmapCard {
         <span class="title-line">Continuous Live Running</span>
         <span class="title-line">Random Number Generator</span>
         <span class="title-line">for Psi & ESP Training</span>
-        <span id="versionLine">v17.6</span>
+        <span id="versionLine">v18</span>
     </div>
 
     <div id="number">0</div>
@@ -2793,6 +2874,10 @@ function setSettingsPanelOpen(isOpen) {
 
 // Toggle settings panel
 function toggleSettings() {
+    if (document.body.classList.contains("wizard-mode")) {
+        deactivateWizardMode();
+    }
+
     const panel = document.getElementById("settingsPanel");
     setSettingsPanelOpen(!panel.classList.contains("open"));
     if (isMobileLayout()) {
@@ -2820,15 +2905,6 @@ document.addEventListener("click", (e) => {
         resetMobileStack();
     }
 });
-
-// About overlay
-const aboutOverlay = document.getElementById("aboutOverlay");
-document.getElementById("aboutBtn").onclick = () => {
-    aboutOverlay.classList.add("open");
-};
-document.getElementById("aboutClose").onclick = () => {
-    aboutOverlay.classList.remove("open");
-};
 
 const settingsViewButtons = document.querySelectorAll(".settings-nav-button");
 const settingsViews = document.querySelectorAll(".settings-view");
@@ -3073,7 +3149,14 @@ function populateSettingsInfoSections() {
         if (source.dataset.infoTarget === "settingsInfoTerryMode"
             && !text.includes("<h3>Local Consciousness Dot</h3>")) {
             const localDotText = "<h3>Local Consciousness Dot</h3><p>This is a quick access to the LCD Mode. It combines the Dot Indicator + None Mode (last 100 Numbers) + Session Mode + clean UI.</p><h3>Terry Mode</h3>";
-            text = localDotText + text;
+            const wizardText = "<h3>Wizard Mode</h3>"
+                + "<p>Wizard Mode is a special hybrid mode. Terry Mode provides the random stream underneath: the generator uses the TempleOS-inspired LCG path, including the timing-noise mix, so the session is driven by the Terry-style software RNG instead of the default browser RNG.</p>"
+                + "<p>The Local Consciousness Dot part then joins in as both visual interpreter and GCP-style drift influence. It watches the live statistical state of the running session through the same p-value/coherence logic used for the Dot. Low p-values mean stronger local anomaly/coherence pressure, while higher p-values mean a more stable baseline state.</p>"
+                + "<p>In Wizard Mode this Dot/GCP state does more than color the orb. It also creates a small, smoothed drift signal that gently bends the Terry stream. Terry Mode still provides the base random motion, but the Dot state can lean that motion toward the current coherence direction instead of only decorating it visually.</p>"
+                + "<p>In simple terms: Terry Mode makes the stream, the Dot mode reads the session mood, and Wizard Mode lets that mood shape both the glowing orb and a soft drift in the output.</p>"
+                + "<p>The mode also hides the normal interface so the generator can run like a quiet ritual surface: the stream moves, the dot becomes color, and the orb becomes the visible sign of the current local coherence state. It is not a new proof engine or a separate hardware source; it is a focused visual chamber for the same live session.</p>"
+                + "<p><i>The wizard does not command the light. He keeps watch while the signal passes through the dark. The orb may brighten, fade, or change its color, but the work is to stay soft in attention and let the signal breathe. Remember: do not ponder the dot</i></p>";
+            text = localDotText + text + wizardText;
         }
 
         if (source.dataset.infoTarget === "settingsInfoVisualIndicator") {
@@ -3116,18 +3199,12 @@ function populateSettingsInfoSections() {
 
     });
 
-    const aboutSource = document.querySelector("#aboutContent .about-columns");
-    const aboutTarget = document.getElementById("settingsAboutContent");
-    if (aboutSource && aboutTarget) {
-        aboutTarget.innerHTML = aboutSource.innerHTML;
-    }
 }
 
 function organizeSettingsLayout() {
     const headerControls = document.getElementById("settingsHeaderControls");
     const controlsGroup = document.getElementById("settingsControlsGroup");
     const dashboardGroup = document.getElementById("settingsDashboardGroup");
-    const specialActions = document.getElementById("settingsSpecialActions");
 
     const themeRow = document.getElementById("themeSlider").closest(".settings-row");
     const hideUiRow = document.getElementById("hideUiToggle").closest(".settings-row");
@@ -3155,7 +3232,6 @@ function organizeSettingsLayout() {
     const showChartRow = document.getElementById("showChartToggle").closest(".settings-row");
     const showHeatmapRow = document.getElementById("showHeatmapToggle").closest(".settings-row");
     const dashboardModeSection = document.getElementById("dashboardMode").closest(".settings-subsection");
-    const resetButton = document.getElementById("resetDefaultsBtn");
 
     if (headerControls) {
         headerControls.append(themeRow, hideUiRow);
@@ -3235,10 +3311,6 @@ function organizeSettingsLayout() {
 
         dashboardItemsSection.append(dashboardItemsGrid);
         dashboardGroup.append(dashboardTopRow, dashboardItemsSection);
-    }
-
-    if (specialActions && resetButton) {
-        specialActions.append(resetButton);
     }
 
     document.querySelectorAll("#settingsControlsGroup .settings-info-source, #settingsDashboardGroup .settings-info-source").forEach(el => {
@@ -3411,8 +3483,15 @@ const gaugeZoneLabelEl = document.getElementById("gaugeZoneLabel");
 const gaugeScaleEl = document.getElementById("gaugeScale");
 const localConsciousnessDotToggle = document.getElementById("localConsciousnessDotToggle");
 const terryModeToggle = document.getElementById("terryModeToggle");
+const wizardModeToggle = document.getElementById("wizardModeToggle");
+const wizardModeScene = document.getElementById("wizardModeScene");
+const wizardFigureImage = document.querySelector(".wizard-figure-image");
+if (wizardModeScene && wizardModeScene.parentElement !== document.body) {
+    document.body.appendChild(wizardModeScene);
+}
 const chartUiState = { savedMin: null, savedMax: null };
 let localDotModeState = null;
+let wizardModeState = null;
 let previousVisualType = visualType.value;
 let gaugeSmoothedValue = NaN;
 
@@ -3580,6 +3659,149 @@ function setLocalDotModePresentation(active) {
     document.body.classList.toggle("local-dot-mode", active);
 }
 
+function isWizardModeActive() {
+    return document.body.classList.contains("wizard-mode");
+}
+
+function mapPToWizardDotValue(min, max, normalizedP) {
+    const clampedP = normalizePValue(normalizedP);
+    const range = Math.max(1, max - min);
+    const coherence = 1 - clampedP;
+    return min + Math.round(coherence * range);
+}
+
+function updateWizardSceneMetrics() {
+    if (!wizardModeScene) return;
+
+    const sceneRect = wizardModeScene.getBoundingClientRect();
+    const sceneWidth = sceneRect.width || window.innerWidth || 1;
+    const sceneHeight = sceneRect.height || window.innerHeight || 1;
+    const imageWidth = (wizardFigureImage && wizardFigureImage.naturalWidth) || 1024;
+    const imageHeight = (wizardFigureImage && wizardFigureImage.naturalHeight) || 1536;
+    const scale = Math.max(sceneWidth / imageWidth, sceneHeight / imageHeight);
+    const renderedWidth = imageWidth * scale;
+    const renderedHeight = imageHeight * scale;
+    const offsetX = (sceneWidth - renderedWidth) / 2;
+    const offsetY = (sceneHeight - renderedHeight) / 2;
+    const isMobileWizard = imageHeight > imageWidth;
+    const orbSourceX = imageWidth * (isMobileWizard ? 0.535 : 0.512);
+    const orbSourceY = imageHeight * (isMobileWizard ? 0.345 : 0.484);
+    const orbSourceSize = imageWidth * (isMobileWizard ? 0.112 : 0.052);
+
+    const orbCenterX = offsetX + (orbSourceX * scale);
+    const orbCenterY = offsetY + (orbSourceY * scale);
+    const orbSize = orbSourceSize * scale;
+
+    wizardModeScene.style.setProperty("--wizard-media-x", `${offsetX}px`);
+    wizardModeScene.style.setProperty("--wizard-media-y", `${offsetY}px`);
+    wizardModeScene.style.setProperty("--wizard-media-width", `${renderedWidth}px`);
+    wizardModeScene.style.setProperty("--wizard-media-height", `${renderedHeight}px`);
+    wizardModeScene.style.setProperty("--orb-x", `${orbCenterX}px`);
+    wizardModeScene.style.setProperty("--orb-y", `${orbCenterY}px`);
+    wizardModeScene.style.setProperty("--orb-size", `${orbSize}px`);
+    wizardModeScene.style.setProperty("--orb-spill-up-y", `${orbCenterY - (orbSize * 0.58)}px`);
+    wizardModeScene.style.setProperty("--orb-spill-face-y", `${orbCenterY}px`);
+    wizardModeScene.style.setProperty("--orb-spill-left-x", `${orbCenterX - (orbSize * 0.82)}px`);
+    wizardModeScene.style.setProperty("--orb-spill-hand-y", `${orbCenterY + (orbSize * 0.22)}px`);
+    wizardModeScene.style.setProperty("--orb-spill-table-y", `${orbCenterY + (orbSize * 0.42)}px`);
+}
+
+function updateWizardOrbFromP(p) {
+    if (!wizardModeScene) return;
+    updateWizardSceneMetrics();
+    const palette = getDotPalette(normalizePValue(p));
+    wizardModeScene.style.setProperty("--orb-core", palette.light);
+    wizardModeScene.style.setProperty("--orb-dark", palette.dark);
+    wizardModeScene.style.setProperty("--orb-glow", palette.glow);
+}
+
+function ensureGeneratorRunning() {
+    if (!timer) start();
+}
+
+function captureWizardModeState() {
+    return {
+        themeChecked: themeSlider.checked,
+        themeValue: document.body.getAttribute("data-theme") || "dark",
+        terryEnabled: terryModeToggle ? terryModeToggle.checked : false,
+        localDotEnabled: localConsciousnessDotToggle ? localConsciousnessDotToggle.checked : false,
+        dashboardMode: dashboardMode.value
+    };
+}
+
+function deactivateWizardMode() {
+    if (!isWizardModeActive()) return;
+
+    document.body.classList.remove("wizard-mode");
+    if (wizardModeToggle) wizardModeToggle.checked = false;
+    if (themeSlider) themeSlider.disabled = false;
+
+    if (wizardModeState) {
+        if (themeSlider) {
+            themeSlider.checked = wizardModeState.themeChecked;
+        }
+        document.body.setAttribute("data-theme", wizardModeState.themeValue === "light" ? "light" : "dark");
+
+        if (terryModeToggle) {
+            terryModeToggle.checked = !!wizardModeState.terryEnabled;
+        }
+
+        if (localConsciousnessDotToggle) {
+            const shouldEnableLocalDot = !!wizardModeState.localDotEnabled;
+            if (shouldEnableLocalDot !== localConsciousnessDotToggle.checked) {
+                localConsciousnessDotToggle.checked = shouldEnableLocalDot;
+                if (shouldEnableLocalDot) {
+                    activateLocalDotMode();
+                } else {
+                    restoreLocalDotModeState();
+                }
+            }
+        }
+
+        dashboardMode.value = wizardModeState.dashboardMode || "recent";
+    }
+
+    wizardModeState = null;
+    wizardDriftState = 0;
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    updateWizardOrbFromP(chiObj.p);
+    updateVisualIndicator(chiObj.p, lastGeneratedNumber);
+    drawChart();
+}
+
+function activateWizardMode() {
+    if (isWizardModeActive()) return;
+
+    wizardModeState = captureWizardModeState();
+
+    exitFocusMode();
+    if (localConsciousnessDotToggle && localConsciousnessDotToggle.checked) {
+        localConsciousnessDotToggle.checked = false;
+        restoreLocalDotModeState();
+    }
+
+    document.body.setAttribute("data-theme", "dark");
+    if (themeSlider) {
+        themeSlider.checked = false;
+        themeSlider.disabled = true;
+    }
+
+    if (terryModeToggle) {
+        terryModeToggle.checked = true;
+    }
+
+    dashboardMode.value = "all";
+    applyDashboardItemVisibility();
+    syncDashboardContainerAndMasterToggle();
+    wizardDriftState = 0;
+
+    document.body.classList.add("wizard-mode");
+    reset();
+    updateWizardOrbFromP(chiObj.p);
+    ensureGeneratorRunning();
+}
+
 function captureLocalDotModeState() {
     return {
         showVisual: showVisualToggle.checked,
@@ -3658,6 +3880,7 @@ function activateLocalDotMode() {
     drawHeatmap();
     drawChart();
     updateVisualIndicator(chiObj.p);
+    ensureGeneratorRunning();
 }
 
 hideUiToggle.addEventListener("change", () => {
@@ -3711,6 +3934,7 @@ function updateVisualIndicator(p, liveNumber = null) {
         const dotGradient = `radial-gradient(circle at 30% 30%, ${palette.light}, ${palette.dark})`;
         lcdDot.style.background = dotGradient;
         lcdDot.style.boxShadow = `0 0 22px ${palette.glow}`;
+        updateWizardOrbFromP(p);
         return;
     }
 
@@ -3783,6 +4007,34 @@ if (localConsciousnessDotToggle) {
         }
     });
 }
+
+if (wizardModeToggle) {
+    wizardModeToggle.addEventListener("change", () => {
+        if (wizardModeToggle.checked) {
+            activateWizardMode();
+        } else {
+            deactivateWizardMode();
+        }
+    });
+}
+
+if (wizardModeScene) {
+    wizardModeScene.addEventListener("click", (event) => {
+        if (!isWizardModeActive()) return;
+        suppressCurrentGeneratorToggle();
+        deactivateWizardMode();
+    });
+}
+
+if (wizardFigureImage) {
+    wizardFigureImage.addEventListener("load", updateWizardSceneMetrics);
+}
+
+window.addEventListener("resize", () => {
+    if (isWizardModeActive()) {
+        updateWizardSceneMetrics();
+    }
+});
 
 function applyChartModeUI() {
     const dotLockActive = visualType.value === "dot" && historyMode.value === "none";
@@ -4393,6 +4645,7 @@ const TERRY_C = 1442695040888963407n;
 const TERRY_MASK_64 = 0xFFFFFFFFFFFFFFFFn;
 let terrySeed = 0n;
 let terryUseTimerNoise = true;
+let wizardDriftState = 0;
 
 function terryTscLike() {
     const perfUs = (typeof performance !== "undefined")
@@ -4467,6 +4720,20 @@ function rand(min, max) {
     min = Math.floor(Number(min) || 0);
     max = Math.floor(Number(max) || 0);
     if (min > max) [min, max] = [max, min];
+
+    if (isWizardModeActive()) {
+        const terryValue = terryRand(min, max);
+        const normalizedP = normalizePValue(chiObj.p);
+        const dotValue = mapPToWizardDotValue(min, max, normalizedP);
+        const range = Math.max(1, max - min);
+        const gcpCoherence = 1 - normalizedP;
+        const targetDrift = (gcpCoherence - 0.5) * range * 0.24;
+        wizardDriftState = (wizardDriftState * 0.88) + (targetDrift * 0.12);
+        const driftedTerryValue = terryValue + wizardDriftState;
+        const blendWeight = 0.30 + (gcpCoherence * 0.25);
+        const blended = Math.round(((1 - blendWeight) * driftedTerryValue) + (blendWeight * dotValue));
+        return Math.max(min, Math.min(max, blended));
+    }
 
     if (terryModeToggle && terryModeToggle.checked) {
         return terryRand(min, max);
@@ -4562,6 +4829,7 @@ function update() {
     }
 	
     updateVisualIndicator(chiObj.p, lastGeneratedNumber);
+    updateWizardOrbFromP(chiObj.p);
 
     const updateFinished = nowMs();
     recordUiCost(updateFinished - updateStarted, updateFinished);
@@ -5211,7 +5479,12 @@ function updateLongestStreak() {
 }
 
 function applyDefaultMode() {
+    if (isWizardModeActive()) {
+        deactivateWizardMode();
+    }
+
     themeSlider.checked = false;
+    themeSlider.disabled = false;
     document.body.setAttribute("data-theme", "dark");
 
     if (localConsciousnessDotToggle) {
@@ -5244,6 +5517,9 @@ function applyDefaultMode() {
 
     if (terryModeToggle) {
         terryModeToggle.checked = false;
+    }
+    if (wizardModeToggle) {
+        wizardModeToggle.checked = false;
     }
     terryUseTimerNoise = true;
     terrySeed = 0n;
@@ -5662,6 +5938,7 @@ function reset() {
     drawHeatmap();
     drawChart();
     updateVisualIndicator(chiObj.p, lastGeneratedNumber);
+    updateWizardOrbFromP(chiObj.p);
 }
 
 // ----------------------------
@@ -5693,63 +5970,13 @@ if (gaugeWrap) {
     gaugeWrap.addEventListener("click", toggleRunning);
 }
 
-// Info-Popup
-const infoOverlay = document.getElementById("infoOverlay");
-const infoPopup = document.getElementById("infoPopup");
-const infoContent = document.getElementById("infoContent");
-const infoClose = document.getElementById("infoClose");
-
-// Open the popup when clicking the info icon
-document.querySelectorAll(".settings-help").forEach(el => {
-    el.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const title = el.getAttribute("data-title");
-		const text = el.getAttribute("data-tip");
-		infoContent.innerHTML = formatInfoText(title, text);
-        infoOverlay.style.display = "flex";
-    });
-});
-
-// Close via button
-infoClose.addEventListener("click", () => {
-    infoOverlay.style.display = "none";
-});
-
-// Close by clicking outside the popup
-infoOverlay.addEventListener("click", (e) => {
-    if (e.target === infoOverlay) {
-        infoOverlay.style.display = "none";
-    }
-});
-
-function formatInfoText(title, text) {
-    const safeTitle = title || "Info";
-    const rawText = (text || "").trim();
-    const hasHtml = /<\/?(p|br|strong|b|ul|ol|li|h[1-6])\b/i.test(rawText);
-
-    let html = `<h2 style="margin-top:0; font-size:18px; margin-bottom:12px; font-weight:bold;">${safeTitle}</h2>`;
-
-    if (hasHtml) {
-        html += `<div style="line-height:1.6; text-align:left;">${rawText}</div>`;
-        return html;
-    }
-
-    const sections = rawText.split(/\n\n+/);
-    sections.forEach(section => {
-        if (!section.trim()) return;
-        const formatted = section.replace(/\n/g, "<br>");
-        html += `<p style="margin:8px 0; line-height:1.6; text-align:left;">${formatted}</p>`;
-    });
-
-    return html;
-}
-
 // ----------------------------
 // Init
 // ----------------------------
 (function init() {
     startFrameSampler();
     resetGeneratorHealthCard();
+    updateWizardOrbFromP(chiObj.p);
     applyDefaultMode();
     update();
 })();
