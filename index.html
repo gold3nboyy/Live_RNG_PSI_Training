@@ -3494,6 +3494,7 @@ let localDotModeState = null;
 let wizardModeState = null;
 let previousVisualType = visualType.value;
 let gaugeSmoothedValue = NaN;
+let wizardOrbDisplayP = 1;
 
 function getGaugeDotZoneFromP(normalizedP) {
     if (normalizedP > 0.95) return "Normal";
@@ -3663,13 +3664,6 @@ function isWizardModeActive() {
     return document.body.classList.contains("wizard-mode");
 }
 
-function mapPToWizardDotValue(min, max, normalizedP) {
-    const clampedP = normalizePValue(normalizedP);
-    const range = Math.max(1, max - min);
-    const coherence = 1 - clampedP;
-    return min + Math.round(coherence * range);
-}
-
 function updateWizardSceneMetrics() {
     if (!wizardModeScene) return;
 
@@ -3709,10 +3703,24 @@ function updateWizardSceneMetrics() {
 function updateWizardOrbFromP(p) {
     if (!wizardModeScene) return;
     updateWizardSceneMetrics();
-    const palette = getDotPalette(normalizePValue(p));
+    const palette = getDotPalette(getWizardOrbDisplayP(p));
     wizardModeScene.style.setProperty("--orb-core", palette.light);
     wizardModeScene.style.setProperty("--orb-dark", palette.dark);
     wizardModeScene.style.setProperty("--orb-glow", palette.glow);
+}
+
+function getWizardOrbDisplayP(p) {
+    const normalized = normalizePValue(p);
+    if (!isWizardModeActive()) {
+        wizardOrbDisplayP = normalized;
+        return normalized;
+    }
+
+    const reliability = Math.min(1, Math.max(0, (history.length - 20) / 80));
+    const targetP = 1 - ((1 - normalized) * reliability);
+    const alpha = targetP > wizardOrbDisplayP ? 0.22 : 0.08;
+    wizardOrbDisplayP += (targetP - wizardOrbDisplayP) * alpha;
+    return wizardOrbDisplayP;
 }
 
 function ensureGeneratorRunning() {
@@ -3762,7 +3770,7 @@ function deactivateWizardMode() {
     }
 
     wizardModeState = null;
-    wizardDriftState = 0;
+    wizardOrbDisplayP = normalizePValue(chiObj.p);
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
     updateWizardOrbFromP(chiObj.p);
@@ -3794,7 +3802,7 @@ function activateWizardMode() {
     dashboardMode.value = "all";
     applyDashboardItemVisibility();
     syncDashboardContainerAndMasterToggle();
-    wizardDriftState = 0;
+    wizardOrbDisplayP = 1;
 
     document.body.classList.add("wizard-mode");
     reset();
@@ -4645,7 +4653,6 @@ const TERRY_C = 1442695040888963407n;
 const TERRY_MASK_64 = 0xFFFFFFFFFFFFFFFFn;
 let terrySeed = 0n;
 let terryUseTimerNoise = true;
-let wizardDriftState = 0;
 
 function terryTscLike() {
     const perfUs = (typeof performance !== "undefined")
@@ -4722,17 +4729,7 @@ function rand(min, max) {
     if (min > max) [min, max] = [max, min];
 
     if (isWizardModeActive()) {
-        const terryValue = terryRand(min, max);
-        const normalizedP = normalizePValue(chiObj.p);
-        const dotValue = mapPToWizardDotValue(min, max, normalizedP);
-        const range = Math.max(1, max - min);
-        const gcpCoherence = 1 - normalizedP;
-        const targetDrift = (gcpCoherence - 0.5) * range * 0.24;
-        wizardDriftState = (wizardDriftState * 0.88) + (targetDrift * 0.12);
-        const driftedTerryValue = terryValue + wizardDriftState;
-        const blendWeight = 0.30 + (gcpCoherence * 0.25);
-        const blended = Math.round(((1 - blendWeight) * driftedTerryValue) + (blendWeight * dotValue));
-        return Math.max(min, Math.min(max, blended));
+        return terryRand(min, max);
     }
 
     if (terryModeToggle && terryModeToggle.checked) {
@@ -5909,6 +5906,8 @@ function stop() {
 function reset() {
     history = [];
     pHistory = [];
+    chiObj = { p: 1, dev: 0 };
+    wizardOrbDisplayP = 1;
     lastGeneratedNumber = 0;
     numberEl.innerText = "0";
     totalEl.innerText = "0";
